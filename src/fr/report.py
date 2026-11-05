@@ -131,7 +131,7 @@ def render_markdown(report: dict) -> str:
                           _fmt(100 * b["fraction_of_error_power"], 3), _fmt(b["sqnr_db"], 2)]
                          for b in q["sqnr"]["breakdown"]]), "",
               "Per-layer SQNR:", "",
-              _md_table(["layer", "weights", "% |w|<2^-6", "abs max", "std", "SQNR (dB)"],
+              _md_table(["layer", "weights", "% abs(w)<2^-6", "abs max", "std", "SQNR (dB)"],
                         [[n, f"{v['count']:,}", _fmt(100 * v["frac_abs_lt_2^-6"], 1),
                           _fmt(v["stats"]["abs_max"], 3), _fmt(v["stats"]["std"], 5),
                           _fmt(v["sqnr_db"], 2)] for n, v in q["sqnr"]["per_layer"].items()]), ""]
