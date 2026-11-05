@@ -20,6 +20,8 @@ def test_normalization_policy():
     assert resolve_normalization("auto", "checkpoint", {"data": {"normalize": False}}) is None
     nested = {"transforms": {"mean": [0.5, 0.5, 0.5], "std": [0.2, 0.2, 0.2]}}
     assert resolve_normalization("auto", "checkpoint", nested)[1] == (0.2, 0.2, 0.2)
+    legacy = {"model": "ResNet-18", "training_transform": "ToTensor", "random_seed": 42}
+    assert resolve_normalization("auto", "checkpoint", legacy) is None
     for unknown in ({}, {"lr": 0.1, "epochs": 5}, {"normalize": True}, None):
         with pytest.raises(NormalizationUnknown):
             resolve_normalization("auto", "checkpoint", unknown)

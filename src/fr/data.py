@@ -68,6 +68,9 @@ def norm_from_checkpoint_config(config) -> Norm | str:
     std = _find(config, {"std", "norm_std", "normalize_std", "cifar_std"})
     if mean is not None and std is not None:
         return (tuple(float(x) for x in mean), tuple(float(x) for x in std))
+    tt = config.get("training_transform")
+    if isinstance(tt, str) and tt.strip().lower() == "totensor":
+        return None   # legacy checkpoint: config says it was trained with ToTensor() only
     flag = _find(config, {"normalize", "normalization", "use_normalization"})
     if flag is False:
         return None
