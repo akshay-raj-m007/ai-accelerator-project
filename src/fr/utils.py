@@ -41,13 +41,25 @@ def git_info() -> dict:
         return {"commit": "unknown", "dirty": None}
 
 
+def _pkg_version(name: str) -> str:
+    """Installed version via package metadata; never raises (some builds lack __version__)."""
+    try:
+        from importlib.metadata import version
+        return version(name)
+    except Exception:
+        try:
+            return str(getattr(__import__(name), "__version__", "unknown"))
+        except Exception:
+            return "unknown"
+
+
 def env_info() -> dict:
     cuda = torch.cuda.is_available()
     return {
         "python": platform.python_version(),
         "platform": platform.platform(),
         "torch": torch.__version__,
-        "torchvision": __import__("torchvision").__version__,
+        "torchvision": _pkg_version("torchvision"),
         "numpy": np.__version__,
         "cuda_available": cuda,
         "cuda_version": torch.version.cuda,
