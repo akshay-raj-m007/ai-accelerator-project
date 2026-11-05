@@ -1,0 +1,4 @@
+# PyTorch/torchvision are installed separately for your CUDA version (see README).
+numpy>=1.24
+PyYAML>=6.0
+pytest>=7.0

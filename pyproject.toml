@@ -1,0 +1,17 @@
+[project]
+name = "fr"
+version = "0.1.0"
+description = "Fault robustness of custom FP/INT formats: step 1 baseline + E4M11 PTQ"
+requires-python = ">=3.9"
+dependencies = ["numpy", "PyYAML", "torch", "torchvision"]
+
+[build-system]
+requires = ["setuptools>=61"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
