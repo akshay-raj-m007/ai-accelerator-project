@@ -1,0 +1,15 @@
+# Train ResNet-18 (CIFAR variant) from random initialisation.
+init: scratch
+normalize: auto          # -> standard CIFAR-10 mean/std
+epochs: 200
+lr: 0.1
+batch_size: 128
+momentum: 0.9
+nesterov: true
+weight_decay: 0.0005
+warmup_epochs: 5
+label_smoothing: 0.0
+val_size: 5000
+amp: true
+seed: 0
+num_workers: 4

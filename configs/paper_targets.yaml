@@ -1,0 +1,45 @@
+# Targets for ResNet-18 / CIFAR-10 from Haripriya & Tudu, "Fault Robustness of Custom
+# Floating-Point and Integer Formats" (PDF page numbers = pages of the supplied PDF).
+# `null` means the paper does not give the number. Nothing here is guessed or tuned.
+model: resnet18
+dataset: cifar10
+
+fp32_accuracy_percent:
+  value: 96.55
+  source: "Sec 5.1, p.4: '... FP32 baselines on CIFAR-10 (96.55%, 94.0%, 92.58% respectively)' (ResNet-18 first)"
+
+e4m11_accuracy_percent:
+  value: null
+  source: "Only shown as a bar in Fig. 2 (p.4); no ResNet-18/E4M11 number in the text"
+
+e4m11_accuracy_drop_pp:
+  value: null          # no ResNet-18-specific E4M11 drop is stated
+  range_min: 0.1
+  range_max: 0.2
+  source: "Sec 5.1, p.4: 'all formats with E>=4 remain within 0.1-0.2% of the ... FP32 baselines'"
+  note: >
+    Range covers all Float16 formats with E>=4 and all three models, not E4M11/ResNet-18
+    specifically. Sec 5.5 (p.6): E4M11 'within 0.6% of FP32 accuracy across all nine
+    model-dataset combinations (0.23% average degradation)'; abstract: 0.23% average drop.
+
+e4m11_sqnr_db:
+  value: 78.7          # Fig. 5 (p.5), row R18-C10, column E4M11 (read from the heat-map)
+  range_min: 78.7
+  range_max: 79.8
+  source: "Sec 5.2, p.5: 'E4M11 ... across all nine model-dataset combinations (78.7-79.8 dB)'; Fig. 5 row R18-C10"
+  context_r18_c10_db:    # same row of Fig. 5, for orientation only
+    E5M10: 73.7
+    INT16: 69.3
+    INT8: 21.1
+
+weight_range:
+  w_min: -0.846
+  w_max: 2.261
+  abs_max: 2.261
+  source: "Appendix A.2 Table 3 (p.8), ResNet-18 / CIFAR-10; Table 3 does not state which tensors (Conv/Linear only or all parameters) are included"
+
+format_constants:        # Sec 3.3 / App A.2, for the unit tests
+  max_finite: 255.9375
+  min_normal: 0.015625
+  example_3_14_word: "0x448F"
+  example_3_14_decoded: 3.1396

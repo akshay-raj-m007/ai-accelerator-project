@@ -1,0 +1,17 @@
+# Fine-tune the existing resnet18_cifar10_checkpoint.pth (expected at $FR_ROOT/checkpoints/).
+# Input normalization is taken from checkpoint["config"]; if it cannot be determined the
+# run stops and asks you to pass --normalize none|cifar10 explicitly.
+init: checkpoint
+normalize: auto
+epochs: 60
+lr: 0.01
+batch_size: 128
+momentum: 0.9
+nesterov: true
+weight_decay: 0.0005
+warmup_epochs: 2
+label_smoothing: 0.0
+val_size: 5000
+amp: true
+seed: 0
+num_workers: 4
