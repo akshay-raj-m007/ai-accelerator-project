@@ -117,6 +117,30 @@ def split_indices(n: int, val_size: int, seed: int):
     return perm[val_size:], perm[:val_size]
 
 
+def get_val_loader(data_dir, norm: Norm, eval_batch_size: int, val_size: int, seed: int,
+                   num_workers: int = 0, pin_memory: bool = False, subset: Optional[int] = None):
+    """The held-out validation split only (no augmentation), same indices as ``get_train_val_loaders``."""
+    plain = _cifar10(data_dir, True, make_transform(norm, train=False))
+    _, va_idx = split_indices(len(plain), val_size, seed)
+    if subset:
+        va_idx = va_idx[:subset]
+    return DataLoader(Subset(plain, va_idx), batch_size=eval_batch_size, shuffle=False,
+                      num_workers=num_workers, pin_memory=pin_memory)
+
+
+def get_calibration_loader(data_dir, norm: Norm, n: int, val_size: int, seed: int,
+                           batch_size: int = 1, num_workers: int = 0):
+    """``n`` un-augmented images from the *training* part of the split (never validation or test).
+
+    Used for Fisher information, so no test or validation image influences the sensitivity scores.
+    ``val_size``/``seed`` must equal the values used when the checkpoint was trained.
+    """
+    plain = _cifar10(data_dir, True, make_transform(norm, train=False))
+    tr_idx, _ = split_indices(len(plain), val_size, seed)
+    return DataLoader(Subset(plain, tr_idx[:n]), batch_size=batch_size, shuffle=False,
+                      num_workers=num_workers)
+
+
 def get_train_val_loaders(data_dir, norm: Norm, batch_size: int, eval_batch_size: int,
                           val_size: int, seed: int, num_workers: int = 0,
                           train_subset: Optional[int] = None, pin_memory: bool = False):

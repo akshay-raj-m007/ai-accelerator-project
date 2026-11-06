@@ -15,7 +15,8 @@ paper and the deviation table.
 ## Layout
 
 ```
-src/fr/        config, data, model, e4m11, quantize, sqnr, evaluate, train, report, step1
+src/fr/        config, data, model, e4m11, quantize, sqnr, evaluate, train, report, step1, faults,
+               formats8, sensitivity, allocation, mixed, mixed_run
 scripts/       train_baseline.py  eval_fp32.py  quantize_eval.py  inspect_checkpoint.py  run_step1.sh
 configs/       finetune.yaml  scratch.yaml  paper_targets.yaml
 tests/         pytest suite (CPU only, no dataset download)
@@ -149,3 +150,24 @@ baseline (`subnormal`, bias 7). Resumable: re-run the same command. Day-9 style 
 ```bash
 python scripts/fault_campaign.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch
 ```
+
+## Step 3: Fisher sensitivity and mixed E4M11 / 8-bit storage (clean metrics)
+
+Layers with low sensitivity are stored as INT8 (per-tensor; per-channel as an ablation) or FP8 E4M3 (with subnormals;
+without and with a per-tensor power-of-two scale) while the rest stay E4M11 (baseline: `subnormal`, bias 7).
+Design decisions and limits: docs/CODE_SUMMARY.md section 9. Fault injection on mixed buffers is a later step.
+
+```bash
+export FR_ROOT=$HOME/fr_runs
+# 1. diagonal Fisher on 1,024 training images (true + empirical), per-layer summary in the log
+python scripts/fisher_sensitivity.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch
+# 2. validation sweep: 4 arms x targets (14, 12, 10 bits) x [lambda 0, .25, .5, .75, 1, product, worst, 5 random]
+python scripts/mixed_precision.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch
+# 3. test-set evaluation of the saved selections + report (lambda was chosen on validation)
+python scripts/mixed_precision.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch --phase final
+```
+
+Outputs under `$FR_ROOT/results/scratch/`: `sensitivity/fisher_{true,empirical}.pt` and `*_layers.json`;
+`mixed/mixed_val.csv`, `selections.json`, `layer_table.json`, `sweep_meta.json`, `mixed_test.csv`, `mixed_report.md`.
+Both phases are resumable (re-run the same command). Useful options: `--arms`, `--targets`, `--lambdas`,
+`--random-draws`, `--fisher-kind empirical`, `--fisher-mode total`, `--score-norm zscore`.

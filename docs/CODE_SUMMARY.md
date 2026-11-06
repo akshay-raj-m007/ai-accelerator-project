@@ -119,3 +119,29 @@ Findings to carry forward: (i) SQNR plateaus at 79.71 dB (11-bit rounding noise)
 78.7-79.8 dB sits; (ii) SQNR is a poor accuracy predictor here; (iii) clipping a handful of the largest weights costs ~30 dB SQNR.
 Bias != 7 remains available (`--e4m11-bias`, `scripts/bias_sweep.py`) as a sensitivity study, not the baseline.
 Fault injection must decode es = 0 words as subnormal values.
+
+## 9. Mixed-precision experiment: Fisher sensitivity + 8-bit formats (new, not in the fault-robustness paper)
+
+Goal: keep sensitive Conv/Linear layers in E4M11 (fixed baseline above) and store the least sensitive ones in an
+8-bit format, chosen with a Fisher-based score, then compare clean metrics (faults come in a later step).
+Sources: LAMPQ (Kim et al., AAAI 2026, `lampq_paper.pdf`): Lemma 1 (Hessian trace as layer sensitivity), Lemma 2
+(expected Hessian ~ Fisher), `Omega_i = alpha_t tr(F_i)`, ILP bit allocation under an average-bit budget; fault paper
+Eq. 3 (per-tensor symmetric INT) and Table 2 (F8E4M3, max ~240). None of this is part of the fault paper's protocol.
+
+Code: `formats8.py` (codecs), `sensitivity.py` (Fisher), `allocation.py` (scores, exact selection), `mixed.py`
+(mixed quantizer, bit accounting), `mixed_run.py` (pipelines), scripts `fisher_sensitivity.py`, `mixed_precision.py`.
+
+| # | Decision | Reason / status |
+|---|---|---|
+| M1 | Fisher is the **diagonal**, computed on the **FP32** model, one backward pass per calibration image (BN in eval mode), 1,024 images from the *training* split (LAMPQ uses 1,024). `true` Fisher samples the label from the model (Lemma 2); `empirical` uses dataset labels. Both are produced and labelled. | The true Fisher is what Lemma 2 relates to the Hessian. A model that fits its training data has tiny empirical-Fisher gradients, so the two can differ a lot (visible even on the smoke model). Which one to use is a choice; default `true`. |
+| M2 | `Error_i` = relative weight error `sum (w - w^)^2 / sum w^2` of the 8-bit format on layer i. `Fisher_i` = trace per parameter (`--fisher-mode total` for the raw trace). `S_i = lam * norm(Error_i) + (1 - lam) * norm(Fisher_i)`, rank normalization by default (`zscore`, `minmax` available). | Requested weighted sum; rank normalization is robust to one outlier layer. lam = 0 is Fisher only and does not depend on the 8-bit format, so it is the shared selection across arms. |
+| M3 | An extra scorer `product`: `damage_i = sum F_jj (w_j - w^_j)^2` (second-order loss estimate, additive over layers), plus `random` and `worst` controls. | The weighted sum is a heuristic; the product is the form the Taylor argument actually gives, so it is the natural reference. |
+| M4 | Selection = exact minimisation of the summed score over **all 2^21 layer subsets** whose switched-weight count lies in `[need, need (1 + tol)]`, `need = N (16 - T) / 8`, `tol = 5%` (doubled if the window is empty). `random` and `worst` use the same window. | This is the LAMPQ ILP solved exactly; with only two options per layer the `gamma^-B` penalty only rescales and is dropped. A common window keeps the budgets of all methods matched. |
+| M5 | Arms: `int8_pt` (per-tensor, Eq. 3; primary), `int8_pc` (per-channel; ablation), `fp8` (E4M3, bias 7, **subnormals on**, no scale), `fp8_scaled` (+ per-tensor power-of-two scale). Round to nearest, ties to even. | Requested. FP8 with subnormals deviates from the paper's flush-to-zero rule for the same reason as D10; `fp8` shows what happens without a scale (weights are far below 2^-6). |
+| M6 | Size = payload bits per weight (16 / 8). Scale metadata (32 bit per INT8 tensor or channel, 8 bit per scaled-FP8 tensor) is reported separately and is assumed fault-free. | Keeps the target comparable across arms; metadata is tiny but not zero. |
+| M7 | Layer choice (`lambda`) is made on the **validation** split (5,000 images, SE about 0.3 pp); the test set is evaluated only for the saved selections in `--phase final`. Selections are stored in `selections.json`. | Prevents tuning on the test set. |
+| M8 | LAMPQ's type-aware scaling `alpha_t` is not used. | ResNet-18 has only conv and fc layers; `alpha_t` exists to compare the four ViT layer types. |
+
+Limitation to keep in mind: Fisher/Hessian sensitivity assumes a small perturbation around a minimum. That is
+reasonable for 8-bit rounding noise, but it is not expected to predict the effect of exponent bit flips (weights
+scaled by up to 2^8), where the loss saturates; that comparison belongs to the fault step.
