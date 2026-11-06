@@ -29,12 +29,14 @@ def main():
     ap.add_argument("--quantize-scope", choices=["convlinear", "all"], default="convlinear")
     ap.add_argument("--all-ones", choices=["clamp", "ieee", "literal"], default="clamp",
                     help="decode policy for the reserved all-ones exponent (paper mode only)")
+    ap.add_argument("--e4m11-bias", type=int, default=7,
+                    help="exponent bias (paper: 7). Other values are a deviation from the paper")
     ap.add_argument("--targets", default=str(DEFAULT_TARGETS))
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     cfg = config_from_args(args)
     modes = ("paper", "legacy", "subnormal") if args.compare_modes else (args.e4m11_mode,)
-    quantize_eval(cfg, args.checkpoint, modes, args.quantize_scope, args.all_ones, Path(args.targets))
+    quantize_eval(cfg, args.checkpoint, modes, args.quantize_scope, args.all_ones, args.e4m11_bias, Path(args.targets))
     print("written:", cfg.results_dir() / "step1_report.md")
 
 

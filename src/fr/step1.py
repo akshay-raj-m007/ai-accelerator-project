@@ -61,7 +61,7 @@ def eval_fp32(cfg: Config, checkpoint, diagnose_normalization: bool = False) -> 
 
 def quantize_eval(cfg: Config, checkpoint, modes: Sequence[str] = ("paper",),
                   scope: str = "convlinear", all_ones: str = "clamp",
-                  targets_path: Optional[Path] = None) -> dict:
+                  bias: int = 7, targets_path: Optional[Path] = None) -> dict:
     device = resolve_device(cfg.device)
     model, ckpt = load_model(checkpoint)
     norm = fdata.resolve_normalization(cfg.normalize, "checkpoint", ckpt.get("config"))
@@ -79,11 +79,11 @@ def quantize_eval(cfg: Config, checkpoint, modes: Sequence[str] = ("paper",),
         "fp32": fp32, "e4m11": {}, "paper_targets_comparison": {},
     }
     for mode in modes:
-        qmodel, buffers = quantize_model(model, mode=mode, scope=scope, all_ones=all_ones)
+        qmodel, buffers = quantize_model(model, mode=mode, scope=scope, all_ones=all_ones, bias=bias)
         metrics = evaluate(qmodel, loader, device)
         deq_cl = conv_linear_weights(qmodel)
         entry = {
-            "mode": mode, "scope": scope, "all_ones": all_ones,
+            "mode": mode, "scope": scope, "all_ones": all_ones, "bias": bias,
             "n_tensors": len(buffers), "n_words": total_words(buffers),
             "metrics": metrics,
             "accuracy_drop_pp": fp32["metrics"]["accuracy_percent"] - metrics["accuracy_percent"],

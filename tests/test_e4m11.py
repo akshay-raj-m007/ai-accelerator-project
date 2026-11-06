@@ -214,3 +214,41 @@ def test_subnormal_torch_decoder_matches_numpy():
     a = E.decode(words, "subnormal")
     b = E.decode_torch(torch.from_numpy(words.astype(np.int32)), mode="subnormal").numpy()
     np.testing.assert_array_equal(a, b)
+
+
+# ------------------------------------------------------------------ bias option
+def test_default_bias_is_paper_bias():
+    x = _sample_values()
+    for mode in E.MODES:
+        np.testing.assert_array_equal(E.encode(x, mode), E.encode(x, mode, bias=7))
+    assert E.max_finite(7) == 255.9375 and E.max_finite(11) == (2 - 2.0 ** -11) * 2.0 ** 3
+
+
+@pytest.mark.parametrize("bias", [9, 11, 14, 16])
+@pytest.mark.parametrize("mode", ["paper", "subnormal"])
+def test_bias_roundtrip_and_ranges(bias, mode):
+    lo_stored, hi_stored = (0 if mode == "subnormal" else 1), 14
+    words = np.array([(s << 15) | (es << 11) | m for s in (0, 1) for es in range(lo_stored, hi_stored + 1)
+                      for m in range(0, 2048)], dtype=np.uint16)
+    dec = E.decode(words, mode, bias=bias)
+    np.testing.assert_array_equal(E.encode(dec, mode, bias), words)
+    assert float(np.max(dec)) == E.max_finite(bias)
+    # min normal moves with the bias
+    assert float(E.decode(U16(0x0800), mode, bias=bias)) == 2.0 ** (1 - bias)
+    # clipping at the new max
+    assert float(E.quantize_dequantize(np.float32(1e6), mode, bias)) == pytest.approx(E.max_finite(bias))
+
+
+def test_bias_flush_threshold_and_subnormal_step():
+    b = 12
+    assert float(E.quantize_dequantize(np.float64(2.0 ** -b * 0.99), "paper", b)) == 0.0
+    s = float(E.quantize_dequantize(np.float64(2.0 ** -b * 0.99), "subnormal", b))
+    assert abs(s - 2.0 ** -b * 0.99) <= 2.0 ** (1 - b - 11) / 2 * 1.0001
+
+
+def test_torch_decoder_with_bias():
+    words = np.arange(65536, dtype=np.uint16)
+    for mode in ("paper", "subnormal"):
+        a = E.decode(words, mode, bias=11)
+        b = E.decode_torch(torch.from_numpy(words.astype(np.int32)), mode=mode, bias=11).numpy()
+        np.testing.assert_array_equal(a, b)

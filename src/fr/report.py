@@ -112,7 +112,7 @@ def render_markdown(report: dict) -> str:
                     [[k, v["count"], _fmt(v["min"], 3), _fmt(v["max"], 3), _fmt(v["abs_max"], 3),
                       _fmt(v["mean"], 5), _fmt(v["std"], 5)] for k, v in fp["weight_stats"].items()]), ""]
     for mode, q in report["e4m11"].items():
-        L += [f"## E4M11, mode=`{mode}`, scope=`{q['scope']}`, all-ones decode=`{q['all_ones']}`", "",
+        L += [f"## E4M11, mode=`{mode}`, scope=`{q['scope']}`, bias={q.get('bias', 7)}, all-ones decode=`{q['all_ones']}`", "",
               _md_table(["metric", "FP32", "E4M11"],
                         [["accuracy (%)", _fmt(fp["metrics"]["accuracy_percent"], 2),
                           _fmt(q["metrics"]["accuracy_percent"], 2)],

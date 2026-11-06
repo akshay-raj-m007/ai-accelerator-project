@@ -58,24 +58,33 @@ def _as_f64(values) -> np.ndarray:
     return x
 
 
-def encode(values, mode: str = "paper") -> np.ndarray:
-    """FP32/FP64 array -> uint16 E4M11 words (same shape)."""
+def max_finite(bias: int = BIAS) -> float:
+    return (2.0 - 2.0 ** -M_BITS) * 2.0 ** (EXP_MAX_STORED - bias)
+
+
+def encode(values, mode: str = "paper", bias: int = BIAS) -> np.ndarray:
+    """FP32/FP64 array -> uint16 E4M11 words (same shape).
+
+    ``bias`` (default 7 = paper) shifts the 14 usable binades to [2^(1-bias), 2^(15-bias)); every
+    other rule (flush below 2^-bias, clip to max_finite(bias), carry) is the paper rule re-expressed
+    in terms of the bias. bias != 7 is a deviation from the paper (Table 1).
+    """
     if mode not in MODES:
         raise ValueError(f"mode must be one of {MODES}, got {mode!r}")
     x = _as_f64(values)
     shape = x.shape
     x = x.reshape(-1)
     sign = np.signbit(x).astype(np.uint16)
-    a = np.minimum(np.abs(x), MAX_FINITE)            # Alg.1 step 2
+    a = np.minimum(np.abs(x), max_finite(bias))      # Alg.1 step 2
     word = (sign << 15).astype(np.uint16)
     if mode == "subnormal":
-        sub = a < MIN_NORMAL
-        ms = np.rint(a[sub] / SUBNORMAL_STEP).astype(np.int64)    # 0..2048
+        sub = a < 2.0 ** (1 - bias)
+        ms = np.rint(a[sub] / 2.0 ** (1 - bias - M_BITS)).astype(np.int64)    # 0..2048
         # m == 2048 is exactly 2^-6: es=1, m=0 (carry into the normal range)
         word[sub] |= np.where(ms >= (1 << M_BITS), 1 << M_BITS, ms).astype(np.uint16)
         normal = ~sub
     else:
-        normal = a >= FLUSH_THRESHOLD                # Alg.1 step 3 (flush below 2^-7)
+        normal = a >= 2.0 ** -bias                   # Alg.1 step 3 (flush below 2^-bias)
     if not normal.any():
         return word.reshape(shape)
     v = a[normal]
@@ -83,7 +92,7 @@ def encode(values, mode: str = "paper") -> np.ndarray:
         e = np.floor(np.log2(v)).astype(np.int64)    # as in the notebook
     else:
         e = np.frexp(v)[1].astype(np.int64) - 1      # exact floor(log2 v)
-    e = np.clip(e, 1 - BIAS, EXP_MAX_STORED - BIAS)  # Alg.1 step 5: [-6, 7]
+    e = np.clip(e, 1 - bias, EXP_MAX_STORED - bias)  # Alg.1 step 5: [-6, 7] for bias 7
     frac = np.ldexp(v, -e) - 1.0
     if mode == "legacy":
         frac = np.clip(frac, 0.0, 1.0 - 2.0 ** -M_BITS)
@@ -94,15 +103,15 @@ def encode(values, mode: str = "paper") -> np.ndarray:
         carry = m >= (1 << M_BITS)                   # Eq. 4 carry
         e = e + carry
         m = np.where(carry, 0, m)
-        over = e > EXP_MAX_STORED - BIAS             # unreachable after the vmax clip
-        e = np.where(over, EXP_MAX_STORED - BIAS, e)
+        over = e > EXP_MAX_STORED - bias             # unreachable after the vmax clip
+        e = np.where(over, EXP_MAX_STORED - bias, e)
         m = np.where(over, MANT_MASK, m)
-    es = (e + BIAS).astype(np.uint16)
+    es = (e + bias).astype(np.uint16)
     word[normal] |= (es << M_BITS) | m.astype(np.uint16)
     return word.reshape(shape)
 
 
-def decode(words, mode: str = "paper", all_ones: str = "clamp") -> np.ndarray:
+def decode(words, mode: str = "paper", all_ones: str = "clamp", bias: int = BIAS) -> np.ndarray:
     """uint16 E4M11 words -> float32 array (same shape)."""
     if mode not in MODES:
         raise ValueError(f"mode must be one of {MODES}, got {mode!r}")
@@ -118,9 +127,9 @@ def decode(words, mode: str = "paper", all_ones: str = "clamp") -> np.ndarray:
         e_used = np.where(es == 0, 1, es)
     else:
         e_used = np.clip(es, 1, EXP_MAX_STORED)
-    val = (1.0 + m / (1 << M_BITS)) * np.exp2(e_used - BIAS)
+    val = (1.0 + m / (1 << M_BITS)) * np.exp2(e_used - bias)
     if mode == "subnormal":
-        val = np.where(es == 0, m * SUBNORMAL_STEP, val)
+        val = np.where(es == 0, m * 2.0 ** (1 - bias - M_BITS), val)
     else:
         val = np.where(es == 0, 0.0, val)            # Alg.2 step 6
     if all_ones == "ieee":
@@ -129,26 +138,26 @@ def decode(words, mode: str = "paper", all_ones: str = "clamp") -> np.ndarray:
     return val.astype(np.float32)
 
 
-def quantize_dequantize(values, mode: str = "paper") -> np.ndarray:
+def quantize_dequantize(values, mode: str = "paper", bias: int = BIAS) -> np.ndarray:
     """Round-trip FP -> E4M11 -> float32."""
-    return decode(encode(values, mode), mode)
+    return decode(encode(values, mode, bias), mode, bias=bias)
 
 
 # ----------------------------------------------------------------- torch helpers
-def encode_tensor(t, mode: str = "paper") -> np.ndarray:
+def encode_tensor(t, mode: str = "paper", bias: int = BIAS) -> np.ndarray:
     """torch tensor -> uint16 numpy words (torch has no usable uint16 ops)."""
-    return encode(t.detach().float().cpu().numpy(), mode)
+    return encode(t.detach().float().cpu().numpy(), mode, bias)
 
 
 def decode_to_tensor(words, dtype=None, device=None, mode: str = "paper",
-                     all_ones: str = "clamp"):
+                     all_ones: str = "clamp", bias: int = BIAS):
     """uint16 words -> torch tensor (float32 by default)."""
     import torch
-    out = torch.from_numpy(decode(words, mode, all_ones))
+    out = torch.from_numpy(decode(words, mode, all_ones, bias))
     return out.to(device=device, dtype=dtype or torch.float32)
 
 
-def decode_torch(words_int, all_ones: str = "clamp", mode: str = "paper"):
+def decode_torch(words_int, all_ones: str = "clamp", mode: str = "paper", bias: int = BIAS):
     """Pure-torch decoder for int32/int64 tensors holding the 16-bit words.
 
     Runs on any device (useful for fault injection on GPU later). Equivalent to
@@ -160,8 +169,8 @@ def decode_torch(words_int, all_ones: str = "clamp", mode: str = "paper"):
     es = (w >> M_BITS) & 0xF
     m = (w & MANT_MASK).to(torch.float64)
     e_used = es.clamp(1, EXP_MAX_STORED) if all_ones != "literal" else es.clamp(min=1)
-    val = (1.0 + m / (1 << M_BITS)) * torch.exp2((e_used - BIAS).to(torch.float64))
-    zero_val = m * SUBNORMAL_STEP if mode == "subnormal" else torch.zeros_like(val)
+    val = (1.0 + m / (1 << M_BITS)) * torch.exp2((e_used - bias).to(torch.float64))
+    zero_val = m * 2.0 ** (1 - bias - M_BITS) if mode == "subnormal" else torch.zeros_like(val)
     val = torch.where(es == 0, zero_val, val)
     if all_ones == "ieee":
         special = torch.where(m == 0, torch.full_like(val, float("inf")),

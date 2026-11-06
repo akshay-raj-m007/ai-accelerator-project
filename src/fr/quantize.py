@@ -43,7 +43,7 @@ def all_parameters(model: nn.Module) -> "OrderedDict[str, np.ndarray]":
 
 
 def quantize_model(model: nn.Module, mode: str = "paper", scope: str = "convlinear",
-                   all_ones: str = "clamp"):
+                   all_ones: str = "clamp", bias: int = e4m11.BIAS):
     """Deep-copy ``model`` and replace the selected parameters by E4M11 round-trips.
 
     Returns ``(quantized_model_on_cpu, buffers)`` where ``buffers`` maps the
@@ -55,8 +55,8 @@ def quantize_model(model: nn.Module, mode: str = "paper", scope: str = "convline
     with torch.no_grad():
         for name, p in target_parameters(q, scope):
             original = p.detach().cpu().numpy()
-            words = e4m11.encode(original.reshape(-1), mode)
-            deq = e4m11.decode(words, mode, all_ones).reshape(original.shape)
+            words = e4m11.encode(original.reshape(-1), mode, bias)
+            deq = e4m11.decode(words, mode, all_ones, bias).reshape(original.shape)
             p.copy_(torch.from_numpy(deq).to(p.dtype))
             buffers[name] = {"words": words, "shape": tuple(original.shape),
                              "global_start": start, "count": int(words.size)}
