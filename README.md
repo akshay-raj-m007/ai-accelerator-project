@@ -29,6 +29,9 @@ Key decisions (all justified in the code docstrings / CODE_SUMMARY):
 * `mode="subnormal"` is an **exploratory, non-paper** variant (es=0 stores subnormals `m*2^-17` instead of flushing to
   zero). It exists because the paper's flush rule zeroes ~87 % of trained ResNet-18 weights (see CODE_SUMMARY/report).
   Reported next to `paper`/`legacy` via `--compare-modes`; never the default.
+* **Fixed baseline for later steps: `--e4m11-mode subnormal` (bias 7)**. Accuracy 95.11 % = FP32; SQNR 69.27 dB.
+  Reproduce: `python scripts/quantize_eval.py --checkpoint <best.pth> --run-name <run> --compare-modes`
+  (the report lists paper, legacy and subnormal side by side). See docs/CODE_SUMMARY.md section 8.
 * Default quantized scope is **Conv2d/Linear weights only** (`--quantize-scope convlinear`); `all` (also BN gamma/beta and
   the fc bias) reproduces the old notebook.
 * Input normalization is never guessed. For `--init checkpoint` it is read from `checkpoint["config"]`; if it is not

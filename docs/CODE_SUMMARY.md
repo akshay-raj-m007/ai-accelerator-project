@@ -97,3 +97,25 @@ Decision: `subnormal` is used as the working E4M11 baseline for the fault-inject
 from Sec. 3 / App. B.1 ("subnormal numbers are flushed to zero"). Accuracy agrees with the paper's claim (<= 0.2 pp drop);
 SQNR does **not** reproduce the paper's 78.7 dB (9.4 dB lower). `paper`-exact results are always reported alongside.
 Fault injection must decode es = 0 words as subnormal values, not zero.
+
+## 8. Baseline fixed (final): `subnormal`, bias 7
+
+Bias sweep on the scratch ResNet-18 (FP32 95.11 %, max |w| 0.5556), Conv+Linear weights, full test set:
+
+| bias | paper-rule (flush) SQNR / acc | subnormal SQNR / acc |
+|---|---|---|
+| 7 (paper) | 6.64 dB / 28.44 % | **69.27 dB / 95.11 %** |
+| 8 | 11.53 / 94.76 | 74.62 / 95.11 |
+| 9 | 17.20 / 95.18 | 78.09 / 95.11 |
+| 10 | 23.97 / 95.15 | 79.37 / 95.11 |
+| 11 | 31.79 / 95.11 | 79.65 / 95.11 |
+| 12-15 | 40.33-66.90 / 95.11 | 79.70-79.71 / 95.11 |
+| 16 | 49.41 / 95.16 | 49.42 / 95.16 (max value 0.4999 < max |w|: a few weights clip) |
+
+Decision: **baseline = E4M11 with subnormals at the paper's bias 7** (`--e4m11-mode subnormal`, default `--e4m11-bias 7`).
+This is the smallest deviation that restores accuracy: the single change is that stored exponent 0 holds `m*2^-17` instead of
+zero (all es = 1..14 words are identical to the paper). SQNR is 69.27 dB, 9.4 dB below the paper's 78.7 dB, and is accepted.
+Findings to carry forward: (i) SQNR plateaus at 79.71 dB (11-bit rounding noise) once the range fits, which is where the paper's
+78.7-79.8 dB sits; (ii) SQNR is a poor accuracy predictor here; (iii) clipping a handful of the largest weights costs ~30 dB SQNR.
+Bias != 7 remains available (`--e4m11-bias`, `scripts/bias_sweep.py`) as a sensitivity study, not the baseline.
+Fault injection must decode es = 0 words as subnormal values.
