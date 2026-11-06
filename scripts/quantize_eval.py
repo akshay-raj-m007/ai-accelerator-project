@@ -24,8 +24,8 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     add_config_args(ap)
     ap.add_argument("--checkpoint", required=True)
-    ap.add_argument("--e4m11-mode", choices=["paper", "legacy"], default="paper")
-    ap.add_argument("--compare-modes", action="store_true", help="run paper and legacy")
+    ap.add_argument("--e4m11-mode", choices=["paper", "legacy", "subnormal"], default="paper")
+    ap.add_argument("--compare-modes", action="store_true", help="run paper, legacy and subnormal")
     ap.add_argument("--quantize-scope", choices=["convlinear", "all"], default="convlinear")
     ap.add_argument("--all-ones", choices=["clamp", "ieee", "literal"], default="clamp",
                     help="decode policy for the reserved all-ones exponent (paper mode only)")
@@ -33,7 +33,7 @@ def main():
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     cfg = config_from_args(args)
-    modes = ("paper", "legacy") if args.compare_modes else (args.e4m11_mode,)
+    modes = ("paper", "legacy", "subnormal") if args.compare_modes else (args.e4m11_mode,)
     quantize_eval(cfg, args.checkpoint, modes, args.quantize_scope, args.all_ones, Path(args.targets))
     print("written:", cfg.results_dir() / "step1_report.md")
 

@@ -114,3 +114,10 @@ def test_sqnr_is_limited_by_flush_for_small_gaussian_weights():
     r = sqnr_report({"w": w}, {"w": E.quantize_dequantize(w)})
     assert r["overall"]["sqnr_db"] < 40.0
     assert r["breakdown"][0]["fraction_of_error_power"] > 0.5
+
+
+def test_subnormal_mode_removes_flush_loss_for_small_weights():
+    w = np.random.default_rng(0).normal(0, 0.0064, 300_000).astype(np.float32)
+    p = sqnr_report({"w": w}, {"w": E.quantize_dequantize(w, "paper")})["overall"]["sqnr_db"]
+    s = sqnr_report({"w": w}, {"w": E.quantize_dequantize(w, "subnormal")})["overall"]["sqnr_db"]
+    assert p < 10 and s > 60

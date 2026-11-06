@@ -169,3 +169,48 @@ def test_torch_decoder_matches_numpy(policy):
     np.testing.assert_array_equal(a, b)                       # also equal for nan/inf positions
     t = E.decode_to_tensor(words, all_ones=policy)
     np.testing.assert_array_equal(t.numpy(), a)
+
+
+# ------------------------------------------------------------------ subnormal mode
+def test_subnormal_mode_basics():
+    step = 2.0 ** -17
+    assert E.SUBNORMAL_STEP == step
+    # tiny value is kept (paper/legacy flush it to zero)
+    x = np.float32(0.001)
+    assert float(E.quantize_dequantize(x, "paper")) == 0.0
+    q = float(E.quantize_dequantize(x, "subnormal"))
+    assert abs(q - 0.001) <= step / 2 + 1e-12
+    assert int(E.encode(np.float32(step), "subnormal")) == 0x0001
+    assert int(E.encode(np.float32(-step), "subnormal")) == 0x8001
+    assert float(E.decode(U16(0x0001), "subnormal")) == step
+    assert float(E.decode(U16(0x07FF), "subnormal")) == 2047 * step
+    # rounding up into the normal range: just below 2^-6 -> exactly 2^-6 (es=1, m=0)
+    assert int(E.encode(np.float64(2.0 ** -6 * (1 - 2 ** -14)), "subnormal")) == 0x0800
+    # values >= 2^-6 are identical to paper mode
+    x = _sample_values()
+    big = np.abs(x) >= 2.0 ** -6
+    np.testing.assert_array_equal(E.encode(x[big], "subnormal"), E.encode(x[big], "paper"))
+    assert int(E.encode(np.float32(0.0), "subnormal")) == 0
+    assert int(E.encode(np.float32(-0.0), "subnormal")) == 0x8000
+
+
+def test_subnormal_idempotent_all_words():
+    words = np.array([(s << 15) | (es << 11) | m for s in (0, 1) for es in range(0, 15)
+                      for m in range(0, 2048)], dtype=np.uint16)
+    dec = E.decode(words, "subnormal")
+    re = E.encode(dec, "subnormal")
+    # (+-0 and es=0,m=0 map to the same signed zero; every other word is stable)
+    np.testing.assert_array_equal(re, words)
+
+
+def test_subnormal_absolute_error_bound_in_small_range():
+    x = np.random.default_rng(2).uniform(-2.0 ** -6, 2.0 ** -6, 200_000)
+    q = E.quantize_dequantize(x, "subnormal")
+    assert np.max(np.abs(q - x)) <= 2.0 ** -18 * 1.0001
+
+
+def test_subnormal_torch_decoder_matches_numpy():
+    words = np.arange(65536, dtype=np.uint16)
+    a = E.decode(words, "subnormal")
+    b = E.decode_torch(torch.from_numpy(words.astype(np.int32)), mode="subnormal").numpy()
+    np.testing.assert_array_equal(a, b)

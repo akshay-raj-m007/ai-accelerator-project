@@ -14,6 +14,14 @@ Two encoder modes:
     [0, 1 - 2^-11] and the mantissa to [0, 2^11 - 1] (this equals Algorithm 1
     steps 7-8 literally) and there is **no carry**.
 
+``subnormal``  (NOT in the paper; exploratory)
+    Same 16-bit layout and bias 7, but es == 0 stores a subnormal
+    ``(-1)^s * m * 2^-17`` (= m/2^11 * 2^-6) instead of flushing to zero, as in
+    IEEE formats. Normals (|w| >= 2^-6) are encoded exactly as in ``paper``
+    mode. This contradicts the paper's Sec. 3 "subnormal numbers are flushed to
+    zero" and exists to test whether the flush rule alone explains the accuracy
+    collapse on small trained weights.
+
 The decoder is Algorithm 2 (exponent clamped to [1, 14], es == 0 -> zero).
 ``all_ones`` selects how es == 15 is read (only reachable via bit flips):
 
@@ -35,8 +43,9 @@ EXP_MAX_STORED = (1 << E_BITS) - 2                 # 14 (15 = all ones, reserved
 MAX_FINITE = (2.0 - 2.0 ** -M_BITS) * 2.0 ** BIAS  # 255.9375
 MIN_NORMAL = 2.0 ** (1 - BIAS)                     # 2^-6
 FLUSH_THRESHOLD = 2.0 ** -BIAS                     # 2^-7 (Alg. 1 step 3)
+SUBNORMAL_STEP = 2.0 ** (1 - BIAS - M_BITS)        # 2^-17
 
-MODES = ("paper", "legacy")
+MODES = ("paper", "legacy", "subnormal")
 ALL_ONES = ("clamp", "ieee", "literal")
 
 
@@ -59,7 +68,14 @@ def encode(values, mode: str = "paper") -> np.ndarray:
     sign = np.signbit(x).astype(np.uint16)
     a = np.minimum(np.abs(x), MAX_FINITE)            # Alg.1 step 2
     word = (sign << 15).astype(np.uint16)
-    normal = a >= FLUSH_THRESHOLD                    # Alg.1 step 3 (flush below 2^-7)
+    if mode == "subnormal":
+        sub = a < MIN_NORMAL
+        ms = np.rint(a[sub] / SUBNORMAL_STEP).astype(np.int64)    # 0..2048
+        # m == 2048 is exactly 2^-6: es=1, m=0 (carry into the normal range)
+        word[sub] |= np.where(ms >= (1 << M_BITS), 1 << M_BITS, ms).astype(np.uint16)
+        normal = ~sub
+    else:
+        normal = a >= FLUSH_THRESHOLD                # Alg.1 step 3 (flush below 2^-7)
     if not normal.any():
         return word.reshape(shape)
     v = a[normal]
@@ -73,7 +89,7 @@ def encode(values, mode: str = "paper") -> np.ndarray:
         frac = np.clip(frac, 0.0, 1.0 - 2.0 ** -M_BITS)
         m = np.clip(np.rint(frac * (1 << M_BITS)), 0, MANT_MASK).astype(np.int64)
     else:
-        frac = np.maximum(frac, 0.0)                 # [2^-7, 2^-6) -> 2^-6
+        frac = np.maximum(frac, 0.0)                 # [2^-7, 2^-6) -> 2^-6 (paper mode)
         m = np.rint(frac * (1 << M_BITS)).astype(np.int64)
         carry = m >= (1 << M_BITS)                   # Eq. 4 carry
         e = e + carry
@@ -103,7 +119,10 @@ def decode(words, mode: str = "paper", all_ones: str = "clamp") -> np.ndarray:
     else:
         e_used = np.clip(es, 1, EXP_MAX_STORED)
     val = (1.0 + m / (1 << M_BITS)) * np.exp2(e_used - BIAS)
-    val = np.where(es == 0, 0.0, val)                # Alg.2 step 6
+    if mode == "subnormal":
+        val = np.where(es == 0, m * SUBNORMAL_STEP, val)
+    else:
+        val = np.where(es == 0, 0.0, val)            # Alg.2 step 6
     if all_ones == "ieee":
         val = np.where(es == 15, np.where(m == 0, np.inf, np.nan), val)
     val = np.where(sign, -val, val)
@@ -129,7 +148,7 @@ def decode_to_tensor(words, dtype=None, device=None, mode: str = "paper",
     return out.to(device=device, dtype=dtype or torch.float32)
 
 
-def decode_torch(words_int, all_ones: str = "clamp"):
+def decode_torch(words_int, all_ones: str = "clamp", mode: str = "paper"):
     """Pure-torch decoder for int32/int64 tensors holding the 16-bit words.
 
     Runs on any device (useful for fault injection on GPU later). Equivalent to
@@ -142,7 +161,8 @@ def decode_torch(words_int, all_ones: str = "clamp"):
     m = (w & MANT_MASK).to(torch.float64)
     e_used = es.clamp(1, EXP_MAX_STORED) if all_ones != "literal" else es.clamp(min=1)
     val = (1.0 + m / (1 << M_BITS)) * torch.exp2((e_used - BIAS).to(torch.float64))
-    val = torch.where(es == 0, torch.zeros_like(val), val)
+    zero_val = m * SUBNORMAL_STEP if mode == "subnormal" else torch.zeros_like(val)
+    val = torch.where(es == 0, zero_val, val)
     if all_ones == "ieee":
         special = torch.where(m == 0, torch.full_like(val, float("inf")),
                               torch.full_like(val, float("nan")))

@@ -26,6 +26,9 @@ Key decisions (all justified in the code docstrings / CODE_SUMMARY):
 
 * `e4m11.py` `mode="paper"` (default): Eq. 4 with mantissa carry + Algorithm 1 flush/clip; `mode="legacy"`
   reproduces the old notebook bit-for-bit (verified in tests against a literal copy of the notebook code).
+* `mode="subnormal"` is an **exploratory, non-paper** variant (es=0 stores subnormals `m*2^-17` instead of flushing to
+  zero). It exists because the paper's flush rule zeroes ~87 % of trained ResNet-18 weights (see CODE_SUMMARY/report).
+  Reported next to `paper`/`legacy` via `--compare-modes`; never the default.
 * Default quantized scope is **Conv2d/Linear weights only** (`--quantize-scope convlinear`); `all` (also BN gamma/beta and
   the fc bias) reproduces the old notebook.
 * Input normalization is never guessed. For `--init checkpoint` it is read from `checkpoint["config"]`; if it is not

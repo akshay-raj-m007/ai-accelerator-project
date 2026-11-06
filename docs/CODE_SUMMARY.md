@@ -74,3 +74,11 @@ question for the fault step (default `clamp` = Alg 2; `ieee` and `literal` optio
 | D7 | Rounding mode | half-to-even (`np.rint`) | "round" unspecified | half-to-even kept in both modes |
 | D8 | Weight stats | never computed | Table 3 (min/max) | `eval_fp32.py` reports conv+linear and all-parameter stats |
 | D9 | Hard-coded Colab paths, notebook state | Drive paths | n/a | all paths via CLI / `FR_ROOT` |
+
+## 6. Addendum: findings after the first full run (ResNet-18, scratch-trained, 95.11 % FP32)
+
+* `paper`/`legacy` E4M11: 28.44 % accuracy, 6.64 dB SQNR. 87.2 % of Conv+Linear weights are < 2^-7 and are flushed.
+* A line-by-line transcription of Alg. 1 / Alg. 2 matches our encoder/decoder. The only difference is that Alg. 1 read literally
+  maps flushed values to `a_safe = 1` (stored as 0x3800 = 1.0); we follow App. B.1 ("flushed to signed zero").
+* Even an untrained Kaiming-init ResNet-18 gives only 18.3 dB under the paper's rules, so the paper's 78.7-79.8 dB cannot be
+  produced by the stated format on typical ResNet-18 weights. The `subnormal` mode (not in the paper) tests the flush rule as the cause.
