@@ -82,3 +82,18 @@ question for the fault step (default `clamp` = Alg 2; `ieee` and `literal` optio
   maps flushed values to `a_safe = 1` (stored as 0x3800 = 1.0); we follow App. B.1 ("flushed to signed zero").
 * Even an untrained Kaiming-init ResNet-18 gives only 18.3 dB under the paper's rules, so the paper's 78.7-79.8 dB cannot be
   produced by the stated format on typical ResNet-18 weights. The `subnormal` mode (not in the paper) tests the flush rule as the cause.
+
+## 7. Baseline decision (D10)
+
+Measured on the scratch-trained ResNet-18 (FP32 95.11 %, 9511/10000), Conv+Linear weights, full test set:
+
+| E4M11 mode | accuracy drop | SQNR (Eq. 6) | note |
+|---|---|---|---|
+| `paper` | +66.67 pp (28.44 %) | 6.64 dB | paper-exact; 87.2 % of weights flushed |
+| `legacy` | +66.67 pp | 6.64 dB | identical to `paper` (carry never matters here) |
+| `subnormal` | **0.00 pp** | **69.27 dB** | not in the paper; es=0 stores m*2^-17 |
+
+Decision: `subnormal` is used as the working E4M11 baseline for the fault-injection step, **as a documented deviation (D10)**
+from Sec. 3 / App. B.1 ("subnormal numbers are flushed to zero"). Accuracy agrees with the paper's claim (<= 0.2 pp drop);
+SQNR does **not** reproduce the paper's 78.7 dB (9.4 dB lower). `paper`-exact results are always reported alongside.
+Fault injection must decode es = 0 words as subnormal values, not zero.
