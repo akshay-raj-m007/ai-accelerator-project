@@ -164,3 +164,23 @@ Two diagnostics were added (no change to the selections or to the accuracy table
 Caveat for S1: churn is measured against the E4M11 model, not against the dataset labels; a flip is not an error.
 Caveat for S2: the stability analysis ranks layers by trace per parameter (the quantity of the lambda sum); it does
 not test whether the per-weight diagonal gives the same damage ranking.
+
+## 11. Part D: bit-flip faults on mixed E4M11 / 8-bit storage (project extension)
+
+Goal: test whether the Fisher-chosen mixed layouts (less storage) lose only a little under the paper's random
+bit-flip fault model, compared with all-E4M11 and with random mixed layouts of the same size.
+Code: `faults_mixed.py` (injector, sampling, campaign, comparison), `scripts/mixed_fault_campaign.py`. The pure-E4M11
+campaign of `faults.py` is unchanged and remains the paper-protocol reference.
+
+| # | Decision | Status |
+|---|---|---|
+| F1 | Bit groups per format: E4M11 as before (App. B.3: exp 14-11, sign 15, MSB 10-6, LSB 5-0); FP8 E4M3: exp 6-3, sign 7, MSB 2-1, LSB 0; INT8: sign 7, MSB 6-3, LSB 2-0, exponent empty. | FP8/INT8 follow Sec. 4.2 (upper ceil(M/2)); E4M11 follows App. B.3. The paper itself is inconsistent between the two (Sec. 4.2 vs App. B.3). INT8 bit 7 is the two's-complement sign position (a flip is +-128 steps). The group `any` does not depend on this split. |
+| F2 | Two sampling models. `weights` (default): k weights uniformly with replacement among weights that have bits in the group, then a bit uniformly in that weight. `bits`: k bits uniformly over all group bits (a 16-bit weight is struck twice as often as an 8-bit one). | The paper says "k weights are selected uniformly" (Sec. 4.3). For a pure-E4M11 buffer both reduce to the validated protocol. With group `any` and `weights` the struck weights are identical for every layout, so layouts are compared pairwise. |
+| F3 | Groups are conditional on the bits that exist. An INT8 layer has no exponent bits, so an exponent-group experiment cannot hit it; a layout with no such bits skips the group (recorded as `skipped_groups`). | Paper: the exponent group "is empty by construction" for integer formats. Consequence: exponent-group results of different layouts are not on the same footing; the system-level comparison is the group `any`. |
+| F4 | Scale metadata (INT8 scales, scaled-FP8 exponent) is assumed fault-free. | Not in the paper. A fault in a per-tensor scale would corrupt a whole layer; the result files state the assumption. |
+| F5 | Per trial, besides accuracy and cross-entropy: prediction flips and KL(softmax(clean) \|\| softmax(faulty)) against the same layout's fault-free output, non-finite output flag, number of flips landing in 8-bit layers. Summaries report the mean with a 95 % bootstrap interval, the median and the 10th percentile. | Exponent damage is heavy-tailed (a few catastrophic trials dominate the mean), so the mean alone is a poor summary. |
+| F6 | One random stream per (seed, group, sampling, k, trial), independent of the layout. | Reproducible, resumable, and the basis of the paired comparison. |
+
+Statistical power: in the pure-E4M11 campaign the std of the accuracy at k = 8 exponent flips was 3.7 pp, so 100
+trials give a standard error of about 0.4 pp for the mean. Differences between layouts below that need more trials
+(or the paired differences, medians and KL), and should not be reported as findings from 100 trials alone.

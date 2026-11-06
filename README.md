@@ -183,3 +183,31 @@ python scripts/mixed_precision.py --checkpoint $FR_ROOT/checkpoints/scratch/best
 python scripts/fisher_stability.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch
 #     -> results/scratch/sensitivity/traces_{train,val}_true.npz, fisher_stability.md / .json
 ```
+
+## Step 4 (part D): bit flips on mixed E4M11 / 8-bit storage
+
+Same fault protocol as step 2, applied to the mixed layouts of step 3 (docs/CODE_SUMMARY.md section 11 for the bit
+groups, sampling models and assumptions). Every layout has its own resumable campaign directory; comparison tables are
+written to `results/<run>/mixed_faults/<sampling>/comparison.md`.
+
+```bash
+# plan only: layouts and number of evaluations
+python scripts/mixed_fault_campaign.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch --dry-run
+
+# core comparison (default): e4m11, all:int8_pc/int8_pt/fp8_scaled and, at 12 bits/weight, the saved selections
+# product / lambda=0 / random 0 / random 1 / worst for int8_pc, int8_pt, fp8_scaled; group any, k = 8, 100 trials
+nohup python scripts/mixed_fault_campaign.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch \
+    > $FR_ROOT/mixed_faults.out 2>&1 &
+
+# second budget (references are resumed, only the new layouts run)
+python scripts/mixed_fault_campaign.py --checkpoint ... --run-name scratch --targets 10
+
+# decomposition by paper bit group for chosen layouts
+python scripts/mixed_fault_campaign.py --checkpoint ... --run-name scratch \
+    --layouts e4m11 all:int8_pc int8_pc:T10:product int8_pc:T10:random:0 fp8_scaled:T12:product \
+    --groups exponent sign mantissa_msb --ks 8 --trials 100
+
+# more trials for the layouts that matter (resumes from the existing trials)
+python scripts/mixed_fault_campaign.py --checkpoint ... --run-name scratch \
+    --layouts e4m11 int8_pc:T10:product int8_pc:T10:random:0 --trials 500
+```
