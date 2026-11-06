@@ -136,3 +136,16 @@ nohup bash scripts/run_step1.sh > $FR_ROOT/step1.out 2>&1 &
 
 The reports state mismatches with the paper as they are; nothing is tuned toward the targets. Small reports can be committed with
 `git add -f results/<run>/step1_report.md` (`results/` is git-ignored).
+
+## Step 2: random bit-flip fault injection (paper Sec. 4, App. B.3)
+
+`scripts/fault_campaign.py` flips bits in the packed **E4M11 buffer** (not in FP32), decodes, and evaluates:
+one experiment per (fault group, k = 1..8 flips), 100 trials each; k weight indices drawn uniformly from the whole
+Conv/Linear buffer with replacement, one bit per index drawn uniformly from the group (exponent 14-11, sign 15,
+mantissa MSB 10-6, mantissa LSB 5-0); the clean buffer is restored after every trial. Default format = the fixed
+baseline (`subnormal`, bias 7). Resumable: re-run the same command. Day-9 style (single layer, fixed bit) is available via
+`--groups bit14 --ks 100 --layer layer4.0.conv1`. Output: `results/<run>/faults_<mode>_b<bias>/{trials.csv,summary.md,summary.json}`.
+
+```bash
+python scripts/fault_campaign.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch
+```

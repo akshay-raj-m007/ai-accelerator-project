@@ -43,3 +43,22 @@ format_constants:        # Sec 3.3 / App A.2, for the unit tests
   min_normal: 0.015625
   example_3_14_word: "0x448F"
   example_3_14_decoded: 3.1396
+
+# Mean accuracy drop at k = 8 simultaneous flips, ResNet-18 / CIFAR-10 (percent points).
+# The paper does not say whether "drop" is relative to the format's own clean accuracy or to FP32.
+fault_drop_pp_at_8_flips:
+  exponent:
+    value: 1.1
+    source: "Sec 5.3, p.5: 'At 8 bit-flips its mean accuracy drop is 1.1% for ResNet-18' (E4M11, exponent bits)"
+  sign:
+    value: null
+    upper_bound: 0.3
+    source: "Sec 5.4, p.6: 'Sign-bit faults produce mean accuracy drops below 0.3% for all floating-point formats ... at 8 bit-flips'"
+  mantissa_msb:
+    value: null
+    upper_bound: 0.05
+    source: "Sec 5.4, p.6: 'Mantissa MSB faults produce mean accuracy drops below 0.05% on CIFAR-10'"
+  mantissa_lsb:
+    value: null
+    upper_bound: 0.01
+    source: "Sec 5.4, p.6: 'mean accuracy drops below 0.01% across all formats, models, and datasets'"
