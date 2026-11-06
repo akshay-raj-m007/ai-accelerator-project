@@ -35,6 +35,48 @@ def weight_params(model: nn.Module):
             if isinstance(m, (nn.Conv2d, nn.Linear))]
 
 
+def iter_sample_grads(model: nn.Module, loader, device, kind: str = "true", seed: int = 0,
+                      max_samples: Optional[int] = None):
+    """Yield ``(grads, nll_true_label, correct)`` for every calibration sample, one backward pass each.
+
+    ``grads`` are the gradients of ``-log p(y | x)`` w.r.t. the Conv2d/Linear weights (same order as
+    ``weight_params``), with ``y`` sampled from the model (``kind="true"``) or the dataset label
+    (``"empirical"``). ``nll_true_label`` / ``correct`` always refer to the dataset label. The model is put in
+    eval mode and restored afterwards.
+    """
+    if kind not in KINDS:
+        raise ValueError(f"kind must be one of {KINDS}")
+    was_training = model.training
+    model.eval().to(device)
+    params = [p for _, p in weight_params(model)]
+    saved_flags = [p.requires_grad for p in params]
+    for p in params:
+        p.requires_grad_(True)
+    gen = torch.Generator(device=device).manual_seed(int(seed))
+    n = 0
+    try:
+        for images, labels in loader:
+            for i in range(images.shape[0]):
+                if max_samples is not None and n >= max_samples:
+                    return
+                x = images[i:i + 1].to(device)
+                true_y = labels[i:i + 1].to(device)
+                logits = model(x)
+                logp = torch.log_softmax(logits.float(), dim=1)
+                y = (torch.multinomial(logp.detach().exp(), 1, generator=gen).view(1)
+                     if kind == "true" else true_y)
+                loss = -logp.gather(1, y.view(1, 1)).sum()
+                grads = torch.autograd.grad(loss, params)
+                nll = float(-logp.detach().gather(1, true_y.view(1, 1)).sum())
+                correct = bool(logits.argmax(1).item() == true_y.item())
+                n += 1
+                yield grads, nll, correct
+    finally:
+        for p, f in zip(params, saved_flags):
+            p.requires_grad_(f)
+        model.train(was_training)
+
+
 def compute_fisher(model: nn.Module, loader, device, kind: str = "true", seed: int = 0,
                    max_samples: Optional[int] = None) -> Dict[str, object]:
     """Diagonal Fisher of every Conv2d/Linear weight.
@@ -43,48 +85,44 @@ def compute_fisher(model: nn.Module, loader, device, kind: str = "true", seed: i
     "mean_nll"}``. ``loader`` yields (images, labels); any batch size is accepted (samples are processed one
     at a time).
     """
-    if kind not in KINDS:
-        raise ValueError(f"kind must be one of {KINDS}")
-    was_training = model.training
-    model.eval().to(device)
     named = weight_params(model)
-    params = [p for _, p in named]
-    saved_flags = [p.requires_grad for p in params]
-    for p in params:
-        p.requires_grad_(True)
-    acc = [torch.zeros_like(p, dtype=torch.float64) for p in params]
-    gen = torch.Generator(device=device).manual_seed(int(seed))
+    acc = None
     n = 0
     nll_sum = 0.0
-    try:
-        for images, labels in loader:
-            for i in range(images.shape[0]):
-                if max_samples is not None and n >= max_samples:
-                    break
-                x = images[i:i + 1].to(device)
-                logits = model(x)
-                logp = torch.log_softmax(logits.float(), dim=1)
-                if kind == "true":
-                    y = torch.multinomial(logp.detach().exp(), 1, generator=gen).view(1)
-                else:
-                    y = labels[i:i + 1].to(device)
-                loss = -logp.gather(1, y.view(1, 1)).sum()
-                grads = torch.autograd.grad(loss, params)
-                for a, g in zip(acc, grads):
-                    a.add_(g.double().pow(2))
-                nll_sum += float(-logp.detach().gather(1, labels[i:i + 1].to(device).view(1, 1)).sum())
-                n += 1
-            if max_samples is not None and n >= max_samples:
-                break
-    finally:
-        for p, f in zip(params, saved_flags):
-            p.requires_grad_(f)
-        model.train(was_training)
+    for grads, nll, _ in iter_sample_grads(model, loader, device, kind, seed, max_samples):
+        if acc is None:
+            acc = [torch.zeros_like(g, dtype=torch.float64) for g in grads]
+        for a, g in zip(acc, grads):
+            a.add_(g.double().pow(2))
+        nll_sum += nll
+        n += 1
     if n == 0:
         raise ValueError("empty calibration loader")
     fisher = OrderedDict((name, (a / n).float().cpu()) for (name, _), a in zip(named, acc))
     return {"fisher": fisher, "n_samples": n, "kind": kind, "seed": int(seed),
             "mean_nll": nll_sum / n}
+
+
+def per_sample_layer_traces(model: nn.Module, loader, device, kind: str = "true", seed: int = 0,
+                            max_samples: Optional[int] = None) -> Dict[str, object]:
+    """Per-sample Fisher trace of every layer: ``traces[i, l] = sum_j (d loss_i / d w_lj)^2``.
+
+    Any subset of samples gives that subset's layer trace as the mean of its rows, which makes stability
+    analyses (different sample sizes / disjoint subsets) free after one pass. Also returns the per-sample NLL
+    and whether the model classified the sample correctly.
+    """
+    names = [n for n, _ in weight_params(model)]
+    counts = [int(p.numel()) for _, p in weight_params(model)]
+    rows, nlls, oks = [], [], []
+    for grads, nll, correct in iter_sample_grads(model, loader, device, kind, seed, max_samples):
+        rows.append([float(g.double().pow(2).sum()) for g in grads])
+        nlls.append(nll)
+        oks.append(correct)
+    if not rows:
+        raise ValueError("empty calibration loader")
+    return {"names": names, "counts": np.asarray(counts, dtype=np.int64),
+            "traces": np.asarray(rows, dtype=np.float64), "nll": np.asarray(nlls, dtype=np.float64),
+            "correct": np.asarray(oks, dtype=bool), "kind": kind, "seed": int(seed)}
 
 
 def layer_summary(fisher: Dict[str, torch.Tensor]) -> "OrderedDict[str, dict]":

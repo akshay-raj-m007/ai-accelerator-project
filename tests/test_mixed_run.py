@@ -67,6 +67,34 @@ def test_pipeline_end_to_end(env):
     assert "## int8_pt, target <= 12 bits/weight" in md and "lambda (best on val)" in md
     assert "random (n=1)" in md
 
+    # prediction churn: reference row is exactly zero, resumable, test limited to the final-phase configs
+    ch = R.run_churn(cfg, ck)
+    base = cfg.results_dir() / "mixed"
+    val_ch = list(csv.DictReader(open(base / "mixed_churn_val.csv")))
+    test_ch = list(csv.DictReader(open(base / "mixed_churn_test.csv")))
+    assert {r["config_id"] for r in val_ch} == set(ids) and {r["config_id"] for r in test_ch} == set(ids)
+    ref = [r for r in val_ch if r["config_id"] == "baseline|e4m11_all"][0]
+    assert int(ref["flips"]) == 0 and float(ref["kl"]) < 1e-12
+    assert all(int(r["flips"]) >= int(r["c2w"]) and int(r["flips"]) >= int(r["w2c"]) for r in val_ch)
+    assert "Prediction churn" in open(ch["report"], encoding="utf-8").read()
+    R.run_churn(cfg, ck)
+    assert len(list(csv.DictReader(open(base / "mixed_churn_val.csv")))) == len(val_ch)
+
+
+def test_run_stability_end_to_end(env):
+    cfg, ck = env
+    out = R.run_stability(cfg, ck, ("train", "val"), pool=24, kind="true", sizes=(4, 8, 24))
+    d = cfg.results_dir() / "sensitivity"
+    assert (d / "traces_train_true.npz").exists() and (d / "traces_val_true.npz").exists()
+    md = open(out["report"], encoding="utf-8").read()
+    assert "## Source: train (24 images" in md and "## Source: val (24 images" in md
+    assert "Training images vs held-out images" in md
+    z = np.load(d / "traces_train_true.npz")
+    assert z["traces"].shape == (24, 21) and (z["traces"] >= 0).all()
+    mtime = (d / "traces_train_true.npz").stat().st_mtime_ns
+    R.run_stability(cfg, ck, ("train", "val"), pool=24, kind="true", sizes=(4, 8, 24))
+    assert (d / "traces_train_true.npz").stat().st_mtime_ns == mtime             # cached traces are reused
+
 
 def test_pick_lambda_best_tie_breaks():
     rows = [{"config_id": f"a|T12|lambda|{l}", "arm": "a", "target_avg_bits": "12", "method": "lambda",

@@ -22,7 +22,7 @@ from typing import Dict, List, Optional, Sequence
 
 import numpy as np
 
-from . import allocation, data as fdata, faults, formats8, mixed, sensitivity
+from . import allocation, churn, data as fdata, faults, formats8, mixed, sensitivity, stability
 from .config import Config
 from .model import load_model
 from .quantize import conv_linear_weights
@@ -262,6 +262,19 @@ def pick_lambda_best(val_rows: List[dict]) -> Dict[tuple, str]:
     return {k: v[1] for k, v in best.items()}
 
 
+def wanted_ids(val_rows: List[dict]):
+    """Config ids evaluated on the test split: references, product/worst/random, the two lambda end points and
+    the lambda chosen on validation. Returns (ids, set of lambda-best ids)."""
+    best_ids = set(pick_lambda_best(val_rows).values())
+    wanted = []
+    for r in val_rows:
+        if r["method"] in ("baseline", "product", "worst", "random"):
+            wanted.append(r["config_id"])
+        elif r["method"] == "lambda" and (r["config_id"] in best_ids or float(r["param"]) in (0.0, 1.0)):
+            wanted.append(r["config_id"])
+    return wanted, best_ids
+
+
 def run_final(cfg: Config, checkpoint, sweep_dir: Optional[Path] = None,
               test_subset: Optional[int] = None) -> dict:
     device = resolve_device(cfg.device)
@@ -281,16 +294,8 @@ def run_final(cfg: Config, checkpoint, sweep_dir: Optional[Path] = None,
     weights = conv_linear_weights(model)
 
     best = pick_lambda_best(val_rows)
-    best_ids = set(best.values())
+    wanted, best_ids = wanted_ids(val_rows)
     by_id = {r["config_id"]: r for r in val_rows}
-    wanted = []
-    for r in val_rows:
-        if r["method"] == "baseline":
-            wanted.append(r["config_id"])
-        elif r["method"] in ("product", "worst", "random"):
-            wanted.append(r["config_id"])
-        elif r["method"] == "lambda" and (r["config_id"] in best_ids or float(r["param"]) in (0.0, 1.0)):
-            wanted.append(r["config_id"])
 
     csv_path = sweep_dir / "mixed_test.csv"
     done = {r["config_id"] for r in _read_rows(csv_path)}
@@ -380,3 +385,110 @@ def render_report(val_rows, test_rows, meta, selections) -> str:
                 lines += ["", f"lambda chosen on validation: {v[best[key]]['param']}; 8-bit layers: "
                               f"{', '.join(selections[best[key]]['layers8']) or '(none)'}"]
     return "\n".join(lines) + "\n"
+
+
+# ------------------------------------------------------------------------------------------- churn
+def run_churn(cfg: Config, checkpoint, sweep_dir: Optional[Path] = None,
+              splits: Sequence[str] = ("val", "test")) -> dict:
+    """Prediction churn of every saved selection vs the all-E4M11 model (see ``churn``). Resumable; needs the
+    validation sweep (and, for the test split, only the same configurations ``run_final`` evaluates)."""
+    device = resolve_device(cfg.device)
+    sweep_dir = Path(sweep_dir or cfg.results_dir() / "mixed")
+    val_rows = _read_rows(sweep_dir / "mixed_val.csv")
+    if not val_rows:
+        raise FileNotFoundError(f"run the validation sweep first: {sweep_dir / 'mixed_val.csv'} is missing")
+    selections = json.load(open(sweep_dir / "selections.json"))
+    meta = json.load(open(sweep_dir / "sweep_meta.json"))
+    e4m11_mode, bias = meta["e4m11_mode"], meta["bias"]
+    model, ckpt = load_model(checkpoint)
+    norm = _norm_for(cfg, ckpt)
+    val_size, split_seed = split_params(ckpt, cfg)
+    by_id = {r["config_id"]: r for r in val_rows}
+    best = pick_lambda_best(val_rows)
+    wanted, _ = wanted_ids(val_rows)
+    qcache: dict = {}
+    out: Dict[str, List[dict]] = {}
+    for split in splits:
+        if split == "val":
+            n_val = meta["val_images"]
+            loader = fdata.get_val_loader(cfg.data_path(), norm, cfg.eval_batch_size, val_size, split_seed,
+                                          cfg.num_workers, False, subset=n_val if n_val < val_size else None)
+            ids = [r["config_id"] for r in val_rows]
+        elif split == "test":
+            loader = fdata.get_test_loader(cfg.data_path(), norm, cfg.eval_batch_size, cfg.num_workers,
+                                           cfg.test_subset, False)
+            ids = wanted
+        else:
+            raise ValueError("split must be val or test")
+        X, y = faults.load_tensors(loader, device)
+        qref, _ = mixed.quantize_mixed(model, {}, e4m11_mode, bias, cache=qcache)
+        ref = churn.logits_tensors(qref.to(device), X)
+        path = sweep_dir / f"mixed_churn_{split}.csv"
+        done = {r["config_id"] for r in churn.read_rows(path)}
+        for cid in ids:
+            if cid in done:
+                continue
+            v = by_id[cid]
+            if cid == "baseline|fp32":
+                logits = churn.logits_tensors(model.to(device), X)
+                model.cpu()
+            else:
+                if v["method"] == "baseline":
+                    assignment = {} if v["arm"] == "e4m11" else {n: v["arm"] for n in conv_linear_weights(model)}
+                else:
+                    assignment = {n: v["arm"] for n in selections[cid]["layers8"]}
+                q, _ = mixed.quantize_mixed(model, assignment, e4m11_mode, bias, cache=qcache)
+                logits = churn.logits_tensors(q.to(device), X)
+            m = churn.churn_metrics(ref, logits, y)
+            head = {k: v[k] for k in ("config_id", "arm", "target_avg_bits", "method", "param")}
+            churn._append(path, {**head, **m})
+            log.info("%-46s %s flips %5d  c2w %4d  w2c %4d  KL %.2e", cid, split, m["flips"], m["c2w"],
+                     m["w2c"], m["kl"])
+        out[split] = churn.read_rows(path)
+    md = churn.render_report(meta, val_rows, out, best)
+    (sweep_dir / "mixed_churn_report.md").write_text(md, encoding="utf-8")
+    return {"report": str(sweep_dir / "mixed_churn_report.md")}
+
+
+# --------------------------------------------------------------------------------------- stability
+def run_stability(cfg: Config, checkpoint, sources: Sequence[str] = ("train", "val"), pool: int = 4096,
+                  kind: str = "true", sizes: Sequence[int] = stability.DEFAULT_SIZES,
+                  out_dir: Optional[Path] = None) -> dict:
+    """Per-sample layer traces on a pool of images from each source, saved to ``traces_<source>_<kind>.npz``
+    (reused if present and large enough), then the stability analysis of ``fr.stability``."""
+    device = resolve_device(cfg.device)
+    model, ckpt = load_model(checkpoint)
+    norm = _norm_for(cfg, ckpt)
+    val_size, split_seed = split_params(ckpt, cfg)
+    out_dir = Path(out_dir or cfg.results_dir() / "sensitivity")
+    out_dir.mkdir(parents=True, exist_ok=True)
+    pools = {}
+    for src in sources:
+        path = out_dir / f"traces_{src}_{kind}.npz"
+        data = None
+        if path.exists():
+            z = np.load(path, allow_pickle=False)
+            if z["traces"].shape[0] >= pool:
+                data = {"names": [str(n) for n in z["names"]], "counts": z["counts"], "traces": z["traces"][:pool],
+                        "nll": z["nll"][:pool], "correct": z["correct"][:pool]}
+                log.info("reusing %s (%d images)", path, data["traces"].shape[0])
+        if data is None:
+            if src == "train":
+                loader = fdata.get_calibration_loader(cfg.data_path(), norm, pool, val_size, split_seed,
+                                                      batch_size=64, num_workers=cfg.num_workers)
+            elif src == "val":
+                loader = fdata.get_val_loader(cfg.data_path(), norm, 64, val_size, split_seed,
+                                              cfg.num_workers, False, subset=pool)
+            else:
+                raise ValueError("source must be train or val")
+            data = sensitivity.per_sample_layer_traces(model, loader, device, kind, cfg.seed)
+            np.savez_compressed(path, names=np.array(data["names"]), counts=data["counts"],
+                                traces=data["traces"], nll=data["nll"], correct=data["correct"])
+            log.info("wrote %s (%d images)", path, data["traces"].shape[0])
+        pools[src] = data
+    results = {src: stability.analyze_pool(d, list(sizes)) for src, d in pools.items()}
+    cross = stability.compare_pools(pools["train"], pools["val"]) if {"train", "val"} <= set(pools) else None
+    md = stability.render_markdown(results, cross)
+    (out_dir / "fisher_stability.md").write_text(md, encoding="utf-8")
+    dump_json({"kind": kind, "pool": pool, "results": results, "cross": cross}, out_dir / "fisher_stability.json")
+    return {"report": str(out_dir / "fisher_stability.md")}

@@ -145,3 +145,22 @@ Code: `formats8.py` (codecs), `sensitivity.py` (Fisher), `allocation.py` (scores
 Limitation to keep in mind: Fisher/Hessian sensitivity assumes a small perturbation around a minimum. That is
 reasonable for 8-bit rounding noise, but it is not expected to predict the effect of exponent bit flips (weights
 scaled by up to 2^8), where the loss saturates; that comparison belongs to the fault step.
+
+## 10. Findings from the first mixed-precision run and the two follow-up diagnostics
+
+First run (scratch ResNet-18, FP32 test 95.11 %): every configuration, including all-8-bit, stays within noise of
+FP32 on test accuracy (95.09-95.23 %, standard error about 0.22 pp), so accuracy cannot rank formats or selection
+methods. Only SQNR separates them (Fisher-only / product selections are 2-5 dB above random for INT8 and scaled
+FP8). The lambda sweep is nearly inert (many lambdas give identical layer sets). `true` and `empirical` Fisher are
+identical to four digits because the model is extremely confident (mean NLL 0.0009 on the calibration images).
+
+Two diagnostics were added (no change to the selections or to the accuracy tables):
+
+| # | Item | Definition / reason |
+|---|---|---|
+| S1 | Prediction churn (`churn.py`, `--phase churn`) | Against the all-E4M11 model: images whose predicted class changes (flips), right->wrong (c2w), wrong->right (w2c), mean KL(softmax(E4M11) \|\| softmax(config)) and mean absolute logit difference. Accuracy nets out c2w and w2c, so it hides small perturbations; flips and KL do not. Validation: every configuration; test: only the configurations of the accuracy report. |
+| S2 | Fisher stability (`stability.py`, `scripts/fisher_stability.py`) | Per-sample layer traces on 4,096 training images and 4,096 held-out validation images. Reports (a) rank stability (Spearman of the 21 layer values) between disjoint chunks of n images, (b) concentration (effective sample size, share of the trace from the top 1 % / 10 % of images and from misclassified images), (c) stability of the Fisher-only layer selection (weighted Jaccard), (d) training vs held-out rankings. |
+
+Caveat for S1: churn is measured against the E4M11 model, not against the dataset labels; a flip is not an error.
+Caveat for S2: the stability analysis ranks layers by trace per parameter (the quantity of the lambda sum); it does
+not test whether the per-weight diagonal gives the same damage ranking.

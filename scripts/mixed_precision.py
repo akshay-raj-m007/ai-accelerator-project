@@ -4,7 +4,9 @@
 Phase `sweep` (default): for every 8-bit format (arm), size target and scorer, select the layers with the
 Fisher/error scores (`fr.allocation`), quantize and evaluate on the VALIDATION split only. Resumable.
 Phase `final`: evaluate the saved selections on the TEST split (lambda chosen on validation) and write
-`mixed_report.md`. Run `scripts/fisher_sensitivity.py` first.
+`mixed_report.md`. Phase `churn`: prediction flips / KL of every saved selection vs the all-E4M11 model
+(validation for all configurations, test for the same ones `final` evaluates) -> `mixed_churn_report.md`.
+Run `scripts/fisher_sensitivity.py` first.
 
   python scripts/mixed_precision.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch
   python scripts/mixed_precision.py --checkpoint ... --run-name scratch --phase final
@@ -21,7 +23,7 @@ import _common  # noqa: F401
 from fr import allocation
 from fr.config import add_config_args, config_from_args
 from fr.formats8 import FORMATS8
-from fr.mixed_run import DEFAULT_LAMBDAS, run_final, run_sweep
+from fr.mixed_run import DEFAULT_LAMBDAS, run_churn, run_final, run_sweep
 
 
 def main():
@@ -29,7 +31,7 @@ def main():
                                  formatter_class=argparse.RawDescriptionHelpFormatter)
     add_config_args(ap)
     ap.add_argument("--checkpoint", required=True)
-    ap.add_argument("--phase", choices=["sweep", "final"], default="sweep")
+    ap.add_argument("--phase", choices=["sweep", "final", "churn"], default="sweep")
     ap.add_argument("--fisher-kind", choices=["true", "empirical"], default="true")
     ap.add_argument("--fisher-file", default=None, help="default: results/<run>/sensitivity/fisher_<kind>.pt")
     ap.add_argument("--arms", nargs="+", choices=FORMATS8, default=list(FORMATS8))
@@ -57,6 +59,10 @@ def main():
                         args.random_draws, args.tol, args.score_norm, args.fisher_mode,
                         args.e4m11_mode, args.e4m11_bias, args.val_subset, out_dir)
         print("validation rows:", res["csv"])
+    elif args.phase == "churn":
+        res = run_churn(cfg, args.checkpoint, out_dir)
+        print(Path(res["report"]).read_text(encoding="utf-8"))
+        print("written:", res["report"])
     else:
         res = run_final(cfg, args.checkpoint, out_dir)
         print(Path(res["report"]).read_text(encoding="utf-8"))

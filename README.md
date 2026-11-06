@@ -171,3 +171,15 @@ Outputs under `$FR_ROOT/results/scratch/`: `sensitivity/fisher_{true,empirical}.
 `mixed/mixed_val.csv`, `selections.json`, `layer_table.json`, `sweep_meta.json`, `mixed_test.csv`, `mixed_report.md`.
 Both phases are resumable (re-run the same command). Useful options: `--arms`, `--targets`, `--lambdas`,
 `--random-draws`, `--fisher-kind empirical`, `--fisher-mode total`, `--score-norm zscore`.
+
+### Step 3 diagnostics: prediction churn and Fisher stability
+
+```bash
+# (a) flips / KL vs the all-E4M11 model for every saved selection (needs the validation sweep; resumable)
+python scripts/mixed_precision.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch --phase churn
+#     -> results/scratch/mixed/mixed_churn_{val,test}.csv, mixed_churn_report.md
+
+# (b) how stable are the Fisher layer rankings? 4,096 training + 4,096 held-out images, per-sample traces cached
+python scripts/fisher_stability.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch
+#     -> results/scratch/sensitivity/traces_{train,val}_true.npz, fisher_stability.md / .json
+```
