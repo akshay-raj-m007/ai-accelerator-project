@@ -23,6 +23,9 @@ sensitivity to choose which layers can be stored in 8 bits.
 | 6 | Mixed E4M11 + 8-bit, clean metrics | Can less-sensitive layers use 8 bits at no loss? | Yes: 25-37 % less storage, accuracy 95.09-95.19 % | Accuracy is saturated; need finer metrics (exp. 7) |
 | 7 | Prediction churn + Fisher stability | Does Fisher selection beat random? | KL below random in 12/12 cells; Fisher caveat found | Test under bit flips (exp. 8) |
 | 8 | Bit flips on mixed storage | Does mixed storage hold up under faults? | No measurable loss at k=8; layouts not separable | Heavier fault load needed |
+| 9 | 4-bit formats (INT4 pt/pc, FP4 scaled), held-out Fisher | Is there an accuracy-vs-storage tradeoff, and does layer selection matter? | Uniform 4-bit: int4_pc -0.12 pp, int4_pt -1.2 pp, fp4 -1.3 pp. Any sensitivity-based selection recovers it; random does not | Fisher is not shown to beat plain error; need fault load |
+| 10 | Held-out vs training-image Fisher selections | Does the memorized-training-image problem change the selected layers? | Mean weighted Jaccard 0.985 (8-bit arms) and 0.967 (4-bit arms); most selections identical | Conflicts with the 0.407 of exp. 7b: unexplained |
+| 11 | Fault-load calibration on references | Which k separates E4M11 from low-bit storage? | E4M11 median 94.55 / 88.99 / 22.35 % at k = 256 / 1024 / 4096; all-INT8 and all-INT4 unchanged | k = 1024 chosen for the main comparison (rule L7) |
 
 What the evidence supports today:
 
@@ -280,6 +283,77 @@ Findings (read these together with the caveats):
 **Why this is the end of the current run.** The fault load is too light to separate any of the layouts. k = 8 gives about
 two exponent flips per trial for 16-bit words, and INT8 words have no exponent bits.
 
+## 8b. Lower-bit formats and held-out Fisher (experiments 9, 10)
+
+**Why.** At 8 bits every layout kept 95.1-95.2 %, so there was no accuracy cost to trade against storage. Experiment 9 adds
+4-bit formats; the Fisher is also recomputed from the first 2,048 validation images (the network has memorized the training
+images) and the sweep validates on the remaining 2,952 (standard error about 0.4 pp). Test set untouched until the final
+phase. Design decisions L1-L7 in `docs/CODE_SUMMARY.md` section 12. FP4 (E2M1, all-ones exponent not reserved) is an
+assumption taken from the OCP/MX convention, not from the paper.
+
+**Uniform all-layer results** (`reports/scratch/mixed_heldout/mixed_report.md`, test accuracy; E4M11 = 95.11 %):
+
+| format | bits | test acc % | SQNR dB | prediction flips vs E4M11 (val) |
+|---|---|---|---|---|
+| int8_pc / int8_pt / fp8_scaled | 8 | 95.14 / 95.15 / 95.18 | 39.6 / 32.6 / 31.6 | 5 / 7 / 13 |
+| int4_pc | 4 | 94.99 | 14.4 | 37 |
+| int4_pt | 4 | 93.88 | 7.9 | 94 |
+| fp4_scaled | 4 | 93.78 | 9.8 | 114 |
+
+**Frontier** (test accuracy %, mixed storage at the stated average bits per weight; `random` is mean +/- std of 5 draws):
+
+| arm | budget (avg bits) | Fisher only | product | error only | random | worst | uniform 4-bit |
+|---|---|---|---|---|---|---|---|
+| int4_pt | 10 (9.98) | 95.12 | 95.10 | 94.95 | 94.60 +/- 0.22 | 93.87 | 93.88 |
+| int4_pt | 8 (7.76) | 95.08 | 95.08 | 94.92 | 94.45 +/- 0.17 | 93.96 | 93.88 |
+| int4_pt | 5 (4.91) | 94.81 | 94.86 | 94.78 | 94.41 +/- 0.24 | 93.84 | 93.88 |
+| fp4_scaled | 8 (7.76) | 95.18 | 95.18 | 95.15 | 94.54 +/- 0.28 | 93.60 | 93.78 |
+| fp4_scaled | 5 (4.91) | 95.12 | 95.08 | 95.17 | 94.42 +/- 0.36 | 93.83 | 93.78 |
+
+(The full table covers all arms and budgets 14-5. For int8 arms and int4_pc every row is inside the noise of 95.1 %.)
+
+**Reading.**
+
+* A real accuracy-vs-storage tradeoff now exists for int4_pt and fp4_scaled (about -1.2 pp at 4 bits). int4_pc is almost
+  free at 4 bits, so it is not a useful arm for this question.
+* Choosing layers by a sensitivity score (Fisher, product, or plain quantization error) recovers most of the loss;
+  random choice at the same storage recovers about half, and the worst feasible set recovers none.
+* **Fisher is not shown to be better than plain quantization error ("error only").** Differences are 0-0.2 pp, below the
+  test standard error (0.22 pp). The only consistent but small edge is int4_pt at budgets 10, 8 and 6.
+
+**Experiment 10: selections with training-image Fisher vs held-out Fisher**
+(`selection_compare_8bit.md`, `selection_compare_4bit.md`): mean weighted Jaccard 0.985 over 63 configurations
+(8-bit arms) and 0.967 over 126 (4-bit arms); 58 and 110 selections identical. This conflicts with exp. 7b (Jaccard 0.407 for
+a 12-bit selection). The cause is **not established**; a possible reason is that the budget window leaves few feasible
+layer subsets, but this has not been checked.
+
+## 8c. Fault-load calibration (experiment 11)
+
+**Why.** At k = 8 nothing separated. Rule L7: choose k from the all-E4M11 curve only. Group `any`, sampling `weights`,
+40 trials per cell (`reports/scratch/mixed_faults_load/weights/comparison.md`):
+
+| k | E4M11 mean | E4M11 median | E4M11 p10 | all-INT8 (pc) median | all-INT4 (pc) median |
+|---|---|---|---|---|---|
+| 16 | 95.09 | 95.11 | 95.11 | 95.14 | 94.99 |
+| 64 | 94.99 | 95.12 | 94.74 | 95.15 | 94.98 |
+| 256 | 91.77 | 94.55 | 86.55 | 95.15 | 94.98 |
+| 1024 | 80.27 | 88.99 | 66.69 | 95.14 | 94.97 |
+| 4096 | 27.17 | 22.35 | 11.05 | 95.16 | 94.95 |
+
+**Reading and caveat.** k = 1024 is where the E4M11 median has clearly fallen but not collapsed; it is the load for the main
+comparison. All-INT8 and all-INT4 do not move at all: a flip in a bounded integer code cannot exceed the tensor scale, and
+**scale metadata is assumed fault-free** (not in the paper), so this robustness is partly a consequence of that
+assumption. In a mixed layout the fault exposure is dominated by the share of weights left in E4M11 (about 31 % at 8 bits/weight
+for the 4-bit arms, 4-8 % at the 5-bit budget), so the question for the next experiment is whether *which* layers stay in
+E4M11 matters at equal exposure.
+
+## 8d. Planned: Pareto under faults (experiment 12)
+
+`scripts/run_pareto_faults.sh`: all-E4M11, uniform int4_pt / fp4_scaled, and for budgets 8 and 5 bits per weight the
+Fisher-only, product, error-only and three random selections (held-out Fisher), k = 1024, same struck weights for all
+layouts, 100-trial pilot then 500 trials. Pre-stated analysis: median, p10 and worst accuracy per layout, paired
+differences vs all-E4M11 and vs error-only. Results are not yet available.
+
 ## 9. Limitations and open points
 
 1. **Fault comparison is underpowered.** Exponent-fault accuracy is heavy-tailed (std 3.7 pp at k = 8 in exp. 4); 100
@@ -307,6 +381,9 @@ two exponent flips per trial for 16-bit words, and INT8 words have no exponent b
 | `reports/scratch/sensitivity/` | exp. 5, 7b: per-layer Fisher, per-image traces, stability report |
 | `reports/scratch/mixed/` | exp. 6, 7a: sweep, selections, churn |
 | `reports/scratch/mixed_faults/weights/` | exp. 8: per-layout trials and `comparison.md` |
+| `reports/scratch/sensitivity_heldout/`, `mixed_heldout/`, `mixed_lowbit/` | exp. 9: held-out Fisher, 6-arm sweep, churn |
+| `reports/scratch/selection_compare_{8,4}bit.md` | exp. 10 |
+| `reports/scratch/mixed_faults_load/weights/` | exp. 11: fault-load calibration |
 | `reports/scratch/EXPORT_MANIFEST.md` | what was exported and what was skipped |
 
 Not exported (42.6 MB each): `sensitivity/fisher_true.pt`, `fisher_empirical.pt` (full diagonal Fisher tensors; recomputable

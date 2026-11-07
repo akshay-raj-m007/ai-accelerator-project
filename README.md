@@ -227,3 +227,12 @@ Outputs under `$FR_ROOT/results/<run>/`: `sensitivity_heldout/` (Fisher on valid
 `mixed_report.md` starts with the frontier table), `mixed_lowbit/` (4-bit arms with the original training-image Fisher),
 `mixed_faults_load/weights/comparison.md` (fault-load calibration), `selection_compare_{8,4}bit.md`.
 Then `python scripts/export_results.py --fr-root $FR_ROOT --run-name scratch` and push to share.
+
+## Step 6: Pareto under bit flips (experiment 12)
+
+```bash
+export FR_ROOT=$HOME/fr_runs
+nohup bash scripts/run_pareto_faults.sh pilot > $FR_ROOT/pareto.out 2>&1 &   # 100 trials, about 2 h
+bash scripts/run_pareto_faults.sh full                                        # tops up to 500 trials (resumable)
+```
+Output: `$FR_ROOT/results/scratch/mixed_faults_pareto/weights/comparison.md`.
