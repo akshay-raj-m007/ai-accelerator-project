@@ -427,18 +427,67 @@ trained model, scale metadata fault-free. Numbers: 100-trial pilot (section 8d) 
 
 **Open follow-ups.** `bits` sampling; struck INT scales; second seed or model (exp. 8 of the plan).
 
-### 8f. Planned: faults in the INT scale metadata (experiment 13, plan A)
+### 8f. Faults in the INT scale metadata (experiment 13, plan A)
 
 **Why.** Exp. 11/12 assumed the INT scales cannot be struck, which makes INT storage immune to flips by construction.
 Scales are stored as float32 words (21 per-tensor, 4,810 per-channel: 672 vs 153,920 bit, 0.0008 % vs 0.17 % of the INT8
-weight payload). One flipped scale exponent bit changes a whole tensor or channel, so this can create the fault tradeoff
-that INT8 lacked and makes "per-channel or per-tensor?" a real question. Decisions S1-S5 in `docs/CODE_SUMMARY.md` section 13.
+weight payload, 0.00006 vs 0.0138 bit/weight). One flipped scale exponent or sign bit changes a whole tensor or one channel.
+Decisions S1-S5 in `docs/CODE_SUMMARY.md` section 13.
 
-**Protocol (`scripts/run_scale_faults.sh`, validation images 2048-4999, no test set).** all-INT8 per-channel and per-tensor
-with scales (a) fault-free, (b) sharing the memory (physical view), (c) struck on purpose to measure the damage per scale hit
-by bit group, plus the weight bit-group breakdown at k = 1024; k = 256, 1024, 4096 (rule L7), 100 trials. Pre-stated
-analysis: median, p10, minimum and non-finite counts; paired differences on vs off; per-hit damage separately from hit rate.
-Results are not yet available.
+**Protocol** (`scripts/run_scale_faults.sh`; held-out validation images 2048-4999 = 2,952 images, test set not used; 100 trials
+per cell, 50 for the weight bit-group breakdown; bit-uniform sampling; report `reports/scratch/scale_faults_report.md`).
+
+**Realistic load (scale words share the memory), accuracy % on validation, group `any`:**
+
+| layout | k | scales fault-free: mean / median / p10 | scales struck: mean / median / p10 / min | scale hits per trial | non-finite trials |
+|---|---|---|---|---|---|
+| all-E4M11 | 256 | 92.79 / 94.14 / 87.62 | - | - | 0 |
+| all-E4M11 | 1024 | 82.33 / 86.64 / 60.68 | - | - | 0 |
+| all-E4M11 | 4096 | 27.97 / 24.51 / 11.64 | - | - | 0 |
+| INT8 per-channel | 256 | 95.17 / 95.19 / 95.12 | 94.26 / 95.19 / 95.12 / 12.03 | 0.46 | 0 |
+| INT8 per-channel | 1024 | 95.18 / 95.19 / 95.12 | 90.21 / 95.16 / 94.60 / 9.45 | 1.72 | 3 |
+| INT8 per-channel | 4096 | 95.13 / 95.12 / 95.05 | 71.57 / 94.99 / 10.23 / 6.67 | 6.86 | 12 |
+| INT8 per-tensor | 256 | 95.12 / 95.12 / 95.05 | 95.12 / 95.12 / 95.05 / 94.99 | 0.00 | 0 |
+| INT8 per-tensor | 1024 | 95.11 / 95.11 / 95.02 | 95.11 / 95.11 / 95.02 / 94.78 | 0.03 | 0 |
+| INT8 per-tensor | 4096 | 95.06 / 95.09 / 94.88 | 93.83 / 95.07 / 94.85 / 8.67 | 0.06 | 1 |
+
+Paired mean change from striking the scales (same trial, same kept weight strikes): per-channel -0.9 / -5.0 / -23.6 pp at
+k = 256 / 1024 / 4096 (hit trials 41 / 87 / 100 of 100; s.e. 0.8 / 1.8 / 3.6); per-tensor 0.0 / 0.0 / -1.2 pp (hit trials 0 / 3 / 5).
+
+**Damage per scale hit** (every strike hits a scale word; clean accuracy 95.16 per-channel, 95.12 per-tensor):
+
+| layout | bit group | k | mean | median | min | trials with drop > 10 pp |
+|---|---|---|---|---|---|---|
+| per-channel | any | 1 | 94.20 | 95.16 | 60.50 | 3 % |
+| per-channel | exponent | 1 | 81.32 | 95.16 | 8.74 | 21 % |
+| per-channel | sign | 1 | 95.00 | 95.16 | 92.58 | 0 % |
+| per-channel | mantissa (MSB / LSB) | 1 | 95.16 | 95.16 | 95.16 | 0 % |
+| per-channel | any | 8 | 71.71 | 95.00 | 9.55 | 33 % |
+| per-tensor | any | 1 | 85.40 | 95.12 | 2.95 | 16 % |
+| per-tensor | exponent | 1 | 50.98 | 40.04 | 7.01 | 73 % |
+| per-tensor | sign | 1 | 17.13 | 9.86 | 0.00 | 95 % |
+| per-tensor | mantissa MSB / LSB | 1 | 95.10 / 95.12 | 95.12 | 94.00 / 95.09 | 0-1 % |
+| per-tensor | any | 8 | 34.42 | 10.76 | 0.10 | 76 % |
+
+Weight words only, scales fault-free, k = 1024: INT8 sign / mantissa flips cost at most 0.1 pp on both layouts; E4M11
+exponent flips give a mean of 27.16 % (E4M11 sign / mantissa flips are harmless).
+
+**Reading.**
+
+* **The "INT8 is immune" result was a consequence of the fault-free-scale assumption.** With struck scales, per-channel INT8
+  loses 5 pp (mean) at k = 1024 and 24 pp at k = 4096, with collapsed trials (minimum 6.7 %, 12 non-finite).
+* **Even so, INT8 stays far more robust than E4M11 in the median and the mean at the same k**: at k = 4096 mean 71.6 %
+  (per-channel) and 93.8 % (per-tensor) against 28.0 % for E4M11; medians 95.0 / 95.1 against 24.5 %. The difference is that
+  the INT8 failure mode is rare and concentrated in the few scale hits.
+* **Per-channel vs per-tensor is a real tradeoff, not a ranking.** One per-tensor hit is about ten times as damaging as one
+  per-channel hit (mean accuracy drop at k = 1: 9.7 vs 1.0 pp; a per-tensor sign hit negates a whole layer: 95 % of trials fall
+  by more than 10 pp). But per-channel has 229 times as many scale words (4,810 vs 21), hence 229 times the hit rate, so at an
+  equal number of flips per-tensor has the smaller expected loss (about 20x by this product) with rare, severe events.
+* Clean accuracy does not separate them (validation 95.16-95.19 vs 95.11-95.12, standard error about 0.4 pp), whereas SQNR
+  does (39.55 vs 32.58 dB, section 6).
+* **Limits.** 100 trials: per-tensor scale hits are rare (3 and 5 of 100 trials at k = 1024 and 4096), so its tail risk is
+  estimated from very few events. The `any` group strikes all 32 scale bits uniformly. Non-finite scales are not clamped
+  (S4); no protection (parity, ECC, redundancy) of the 0.17 % metadata was tested.
 
 ## 9. Limitations and open points
 
