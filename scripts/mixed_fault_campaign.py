@@ -3,7 +3,7 @@
 
 A *layout* is one assignment of formats to layers:
   e4m11                          every layer E4M11 (the baseline, 16 bit/weight)
-  all:<arm>                      every layer in an 8-bit format (arm = int8_pt | int8_pc | fp8 | fp8_scaled)
+  all:<arm>                      every layer in an 8-bit format (arm = int8_pt | int8_pc | fp8 | fp8_scaled | int4_pt | int4_pc | fp4_scaled)
   <arm>:T12:product              a saved selection of the validation sweep (results/<run>/mixed/selections.json):
   <arm>:T12:lambda:0             <arm>:T<bits>:<method>[:<param>], method = lambda (param = lambda value),
   <arm>:T12:random:0             product, worst, random (param = draw)
@@ -31,7 +31,7 @@ import torch
 from fr import data as fdata
 from fr import faults, faults_mixed as FM, mixed
 from fr.config import add_config_args, config_from_args
-from fr.formats8 import FORMATS8
+from fr.formats8 import ALL_LOW
 from fr.model import load_model
 from fr.quantize import conv_linear_weights
 from fr.utils import dump_json, env_info, resolve_device
@@ -66,7 +66,7 @@ def main():
     ap.add_argument("--sweep-dir", default=None, help="default: results/<run>/mixed")
     ap.add_argument("--out-dir", default=None, help="default: results/<run>/mixed_faults")
     ap.add_argument("--layouts", nargs="+", default=None, help="explicit layout specs (see above)")
-    ap.add_argument("--arms", nargs="+", choices=FORMATS8, default=DEFAULT_ARMS)
+    ap.add_argument("--arms", nargs="+", choices=ALL_LOW, default=DEFAULT_ARMS)
     ap.add_argument("--targets", type=float, nargs="+", default=[12.0])
     ap.add_argument("--methods", nargs="+", default=DEFAULT_METHODS)
     ap.add_argument("--no-refs", action="store_true", help="skip e4m11 and all-8-bit reference layouts")
@@ -119,7 +119,7 @@ def main():
                 assert inj.clean_weights_unchanged(), "clean decode does not match the model weights"
                 acc = mixed.bit_accounting(buffers)
                 print(f"\n=== {slug} [{label}]  {acc['avg_bits_payload']:.2f} bits/weight, "
-                      f"{sum(1 for b in buffers.values() if b['format'] != 'e4m11')} layers in 8-bit; "
+                      f"{sum(1 for b in buffers.values() if b['format'] != 'e4m11')} layers in low-bit; "
                       f"sampling={sampling}")
                 meta = {"layout": spec, "label": label, "layers8": sorted(k for k, a in assignment.items()),
                         "avg_bits_payload": acc["avg_bits_payload"],

@@ -55,25 +55,37 @@ def _norm_for(cfg: Config, ckpt: dict):
 
 # ------------------------------------------------------------------------------------------- Fisher
 def run_fisher(cfg: Config, checkpoint, kinds: Sequence[str] = ("true", "empirical"),
-               calib_size: int = 1024, out_dir: Optional[Path] = None) -> dict:
+               calib_size: int = 1024, out_dir: Optional[Path] = None, source: str = "train") -> dict:
+    """``source``: ``train`` = the first ``calib_size`` images of the training split (LAMPQ-style calibration,
+    but the network has memorised them); ``val`` = the first ``calib_size`` images of the validation split
+    (held out; the later sweep must then skip them: ``run_sweep(..., val_skip=calib_size)``)."""
+    if source not in ("train", "val"):
+        raise ValueError("source must be train or val")
     device = resolve_device(cfg.device)
     model, ckpt = load_model(checkpoint)
     norm = _norm_for(cfg, ckpt)
     val_size, split_seed = split_params(ckpt, cfg)
     out_dir = Path(out_dir or cfg.results_dir() / "sensitivity")
-    loader = fdata.get_calibration_loader(cfg.data_path(), norm, calib_size, val_size, split_seed,
-                                          batch_size=64, num_workers=cfg.num_workers)
+    if source == "train":
+        loader = fdata.get_calibration_loader(cfg.data_path(), norm, calib_size, val_size, split_seed,
+                                              batch_size=64, num_workers=cfg.num_workers)
+    else:
+        if calib_size >= val_size:
+            raise ValueError("held-out Fisher needs calib_size < val_size so that validation images remain")
+        loader = fdata.get_val_loader(cfg.data_path(), norm, 64, val_size, split_seed, cfg.num_workers,
+                                      False, subset=calib_size)
     out_dir.mkdir(parents=True, exist_ok=True)
-    summary = {"checkpoint": str(checkpoint), "calib_size": calib_size, "val_size": val_size,
+    summary = {"checkpoint": str(checkpoint), "source": source, "calib_size": calib_size, "val_size": val_size,
                "split_seed": split_seed, "fisher_seed": cfg.seed, "device": str(device), "env": env_info(),
                "normalization": fdata.normalization_to_config(norm), "kinds": {}}
     for kind in kinds:
         res = sensitivity.compute_fisher(model, loader, device, kind=kind, seed=cfg.seed)
+        res["source"] = source
         sensitivity.save_fisher(res, out_dir / f"fisher_{kind}.pt")
         layers = sensitivity.layer_summary(res["fisher"])
         summary["kinds"][kind] = {"n_samples": res["n_samples"], "mean_nll_on_calibration": res["mean_nll"],
                                   "layers": layers}
-        dump_json({"checkpoint": str(checkpoint), "kind": kind, "n_samples": res["n_samples"],
+        dump_json({"checkpoint": str(checkpoint), "kind": kind, "source": source, "n_samples": res["n_samples"],
                    "layers": layers}, out_dir / f"fisher_{kind}_layers.json")
         log.info("Fisher[%s]: %d samples, mean NLL %.4f", kind, res["n_samples"], res["mean_nll"])
         for name, s in layers.items():
@@ -140,17 +152,17 @@ def _scorers(lambdas: Sequence[float], random_draws: int):
     return out
 
 
-def _select(method, param, rows, names, sizes, target, norm_how, fisher_mode, tol):
+def _select(method, param, rows, names, sizes, target, norm_how, fisher_mode, tol, lo_bits=8):
     if method == "lambda":
         costs = allocation.combined_score(rows, param, norm_how, fisher_mode)
-        return allocation.select("min_cost", names, sizes, target, costs=costs, tol=tol)
+        return allocation.select("min_cost", names, sizes, target, costs=costs, tol=tol, lo_bits=lo_bits)
     if method == "product":
         return allocation.select("min_cost", names, sizes, target,
-                                 costs=[r["damage"] for r in rows], tol=tol)
+                                 costs=[r["damage"] for r in rows], tol=tol, lo_bits=lo_bits)
     if method == "worst":
         return allocation.select("worst", names, sizes, target,
-                                 damages=[r["damage"] for r in rows], tol=tol)
-    return allocation.select("random", names, sizes, target, tol=tol, seed=int(param))
+                                 damages=[r["damage"] for r in rows], tol=tol, lo_bits=lo_bits)
+    return allocation.select("random", names, sizes, target, tol=tol, seed=int(param), lo_bits=lo_bits)
 
 
 # ------------------------------------------------------------------------------------------- sweep
@@ -158,7 +170,10 @@ def run_sweep(cfg: Config, checkpoint, fisher_path, arms: Sequence[str] = DEFAUL
               targets: Sequence[float] = (14.0, 12.0, 10.0), lambdas: Sequence[float] = DEFAULT_LAMBDAS,
               random_draws: int = 5, tol: float = 0.05, norm_how: str = "rank",
               fisher_mode: str = "per_param", e4m11_mode: str = "subnormal", bias: int = 7,
-              val_subset: Optional[int] = None, out_dir: Optional[Path] = None) -> dict:
+              val_subset: Optional[int] = None, out_dir: Optional[Path] = None, val_skip: int = 0) -> dict:
+    """``val_skip``: number of leading validation images to leave out of the sweep. With a Fisher computed on
+    validation images (``fres['source'] == 'val'``) it must be at least the number of Fisher images, otherwise
+    the selection would be validated on the images it was computed from."""
     device = resolve_device(cfg.device)
     model, ckpt = load_model(checkpoint)
     norm = _norm_for(cfg, ckpt)
@@ -166,11 +181,15 @@ def run_sweep(cfg: Config, checkpoint, fisher_path, arms: Sequence[str] = DEFAUL
     out_dir = Path(out_dir or cfg.results_dir() / "mixed")
     out_dir.mkdir(parents=True, exist_ok=True)
 
+    fres = sensitivity.load_fisher(fisher_path)
+    fsource = fres.get("source", "train")
+    if fsource == "val" and val_skip < int(fres["n_samples"]):
+        raise ValueError(f"the Fisher was computed on the first {fres['n_samples']} validation images; pass "
+                         f"val_skip >= {fres['n_samples']} so the sweep does not validate on them")
     vloader = fdata.get_val_loader(cfg.data_path(), norm, cfg.eval_batch_size, val_size, split_seed,
-                                   cfg.num_workers, False, subset=val_subset)
+                                   cfg.num_workers, False, subset=val_subset, skip=val_skip)
     X, y = faults.load_tensors(vloader, device)
     weights = conv_linear_weights(model)
-    fres = sensitivity.load_fisher(fisher_path)
     fisher = sensitivity.fisher_numpy(fres["fisher"])
     if list(fisher) != list(weights):
         raise ValueError("Fisher file does not match the model's Conv/Linear layers")
@@ -180,7 +199,8 @@ def run_sweep(cfg: Config, checkpoint, fisher_path, arms: Sequence[str] = DEFAUL
     done = {r["config_id"] for r in _read_rows(csv_path)}
     selections = json.load(open(sel_path)) if sel_path.exists() else {}
     meta = {"checkpoint": str(checkpoint), "fisher_file": str(fisher_path), "fisher_kind": fres["kind"],
-            "fisher_samples": fres["n_samples"], "arms": list(arms), "targets": list(targets),
+            "fisher_samples": fres["n_samples"], "fisher_source": fsource, "val_skip": int(val_skip),
+            "arms": list(arms), "targets": list(targets),
             "lambdas": list(lambdas), "random_draws": random_draws, "tol": tol, "norm": norm_how,
             "fisher_mode": fisher_mode, "e4m11_mode": e4m11_mode, "bias": bias,
             "val_images": int(X.shape[0]), "val_size": val_size, "split_seed": split_seed,
@@ -223,12 +243,18 @@ def run_sweep(cfg: Config, checkpoint, fisher_path, arms: Sequence[str] = DEFAUL
 
     for arm in arms:
         rows = allocation.layer_table(weights, fisher, arm, cache={})
+        lo_bits = formats8.FORMAT_BITS[arm]
         for target in targets:
+            if not lo_bits <= float(target) < allocation.HI_BITS:
+                log.info("skipping %s target %g: the budget must lie in [%d, %d)", arm, target, lo_bits,
+                         allocation.HI_BITS)
+                continue
             for method, param in _scorers(lambdas, random_draws):
                 cid = config_id(arm, target, method, param)
                 sel = selections.get(cid)
                 if sel is None:
-                    sel = _select(method, param, rows, names, sizes, float(target), norm_how, fisher_mode, tol)
+                    sel = _select(method, param, rows, names, sizes, float(target), norm_how, fisher_mode, tol,
+                                  lo_bits)
                     sel = {k: v for k, v in sel.items() if k != "mask"}
                     selections[cid] = sel
                     dump_json(selections, sel_path)
@@ -326,13 +352,48 @@ def run_final(cfg: Config, checkpoint, sweep_dir: Optional[Path] = None,
     return {"csv": str(csv_path), "report": str(sweep_dir / "mixed_report.md")}
 
 
+def frontier_section(val_rows, test_rows, meta) -> List[str]:
+    """Compact storage-vs-accuracy table: for every (arm, budget) the accuracy of the Fisher-based selections
+    (Fisher only, product) next to the selections that do not use Fisher (error only, random, worst).
+    Test accuracy when the config was evaluated on the test split, otherwise validation (marked ``v``)."""
+    v = {r["config_id"]: r for r in val_rows}
+    t = {r["config_id"]: r for r in test_rows}
+
+    def cell(cid):
+        if cid in t:
+            return f"{float(t[cid]['acc']):.2f}"
+        return f"{float(v[cid]['acc']):.2f}v" if cid in v else "-"
+    lines = ["", "## Frontier: accuracy % at each storage budget (test; `v` = validation only)", "",
+             "Fisher-based: Fisher only (lambda=0), product. Without Fisher: error only (lambda=1), random "
+             "(mean +/- std of the draws), worst (largest damage). `uniform` = every layer in the low-bit format.", "",
+             "| arm | budget | avg bits | Fisher only | product | error only | random | worst | uniform (all layers) |",
+             "|---|---|---|---|---|---|---|---|---|"]
+    for arm in meta["arms"]:
+        for target in meta["targets"]:
+            ids = [r["config_id"] for r in val_rows if r["arm"] == arm and r["method"] == "random"
+                   and float(r["target_avg_bits"]) == float(target)]
+            c0 = config_id(arm, target, "lambda", 0.0)
+            if c0 not in v:
+                continue
+            rnd = [float(t[c]["acc"]) if c in t else float(v[c]["acc"]) for c in ids]
+            rtxt = f"{np.mean(rnd):.2f} +/- {np.std(rnd):.2f}" if rnd else "-"
+            lines.append(f"| {arm} | {target:g} | {float(v[c0]['avg_bits_payload']):.2f} | {cell(c0)} | "
+                         f"{cell(config_id(arm, target, 'product', None))} | "
+                         f"{cell(config_id(arm, target, 'lambda', 1.0))} | {rtxt} | "
+                         f"{cell(config_id(arm, target, 'worst', None))} | {cell(f'baseline|{arm}_all')} |")
+    return lines
+
+
 def render_report(val_rows, test_rows, meta, selections) -> str:
     t = {r["config_id"]: r for r in test_rows}
     v = {r["config_id"]: r for r in val_rows}
     n_val = meta["val_images"]
     se = 100.0 * (0.95 * 0.05 / n_val) ** 0.5
-    lines = ["# Mixed-precision (E4M11 + 8-bit) results", "",
-             f"* Fisher: `{meta['fisher_kind']}`, {meta['fisher_samples']} calibration images (training split); "
+    src = meta.get("fisher_source", "train")
+    where = ("the training split" if src == "train" else
+             f"the first {meta['fisher_samples']} validation images, which the sweep skips (held out)")
+    lines = ["# Mixed-precision (E4M11 + low-bit) results", "",
+             f"* Fisher: `{meta['fisher_kind']}`, {meta['fisher_samples']} calibration images ({where}); "
              f"score normalization `{meta['norm']}`, Fisher `{meta['fisher_mode']}`; E4M11 baseline "
              f"`{meta['e4m11_mode']}` bias {meta['bias']}.",
              f"* Selection and lambda choice use the validation split ({n_val} images, standard error about "
@@ -348,9 +409,13 @@ def render_report(val_rows, test_rows, meta, selections) -> str:
             lines.append(f"| {cid.split('|')[1]} | {_f(v[cid]['acc'])} | {_f(t[cid]['acc']) if cid in t else '-'} | "
                          f"{_f(v[cid].get('sqnr_db'))} | {_f(v[cid].get('avg_bits_payload'))} |")
     best = pick_lambda_best(val_rows)
+    lines += frontier_section(val_rows, test_rows, meta)
     for arm in meta["arms"]:
         for target in meta["targets"]:
             key = (arm, float(target))
+            if not any(r["arm"] == arm and r["method"] != "baseline" and float(r["target_avg_bits"]) == float(target)
+                       for r in val_rows):
+                continue
             lines += ["", f"## {arm}, target <= {target:g} bits/weight", "",
                       "| method | param | avg bits | +meta | layers8 | val acc % | test acc % | test vs E4M11 (pp) | SQNR dB |",
                       "|---|---|---|---|---|---|---|---|---|"]
@@ -412,7 +477,8 @@ def run_churn(cfg: Config, checkpoint, sweep_dir: Optional[Path] = None,
         if split == "val":
             n_val = meta["val_images"]
             loader = fdata.get_val_loader(cfg.data_path(), norm, cfg.eval_batch_size, val_size, split_seed,
-                                          cfg.num_workers, False, subset=n_val if n_val < val_size else None)
+                                          cfg.num_workers, False, subset=n_val if n_val < val_size else None,
+                                          skip=int(meta.get("val_skip", 0)))
             ids = [r["config_id"] for r in val_rows]
         elif split == "test":
             loader = fdata.get_test_loader(cfg.data_path(), norm, cfg.eval_batch_size, cfg.num_workers,

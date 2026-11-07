@@ -211,3 +211,19 @@ python scripts/mixed_fault_campaign.py --checkpoint ... --run-name scratch \
 python scripts/mixed_fault_campaign.py --checkpoint ... --run-name scratch \
     --layouts e4m11 int8_pc:T10:product int8_pc:T10:random:0 --trials 500
 ```
+
+## Step 5: lower-bit formats, held-out Fisher, heavier fault loads (experiments 1-3)
+
+Details and decisions: docs/CODE_SUMMARY.md section 12. All stages are resumable.
+
+```bash
+export FR_ROOT=$HOME/fr_runs
+nohup bash scripts/run_lowbit_heldout.sh > $FR_ROOT/lowbit.out 2>&1 &     # everything, about 2-3 h
+bash scripts/run_lowbit_heldout.sh load                                    # one stage: fisher | sweeps | load | compare
+```
+
+Outputs under `$FR_ROOT/results/<run>/`: `sensitivity_heldout/` (Fisher on validation images 0-2047),
+`mixed_heldout/` (held-out Fisher; int8_pc, int8_pt, fp8_scaled, int4_pc, int4_pt, fp4_scaled; budgets 14 12 10 8 6 5;
+`mixed_report.md` starts with the frontier table), `mixed_lowbit/` (4-bit arms with the original training-image Fisher),
+`mixed_faults_load/weights/comparison.md` (fault-load calibration), `selection_compare_{8,4}bit.md`.
+Then `python scripts/export_results.py --fr-root $FR_ROOT --run-name scratch` and push to share.

@@ -118,10 +118,16 @@ def split_indices(n: int, val_size: int, seed: int):
 
 
 def get_val_loader(data_dir, norm: Norm, eval_batch_size: int, val_size: int, seed: int,
-                   num_workers: int = 0, pin_memory: bool = False, subset: Optional[int] = None):
-    """The held-out validation split only (no augmentation), same indices as ``get_train_val_loaders``."""
+                   num_workers: int = 0, pin_memory: bool = False, subset: Optional[int] = None,
+                   skip: int = 0):
+    """The held-out validation split only (no augmentation), same indices as ``get_train_val_loaders``.
+
+    ``skip`` drops the first ``skip`` validation images (they were used for something else, e.g. a held-out
+    Fisher estimate); ``subset`` then keeps the first ``subset`` of the remaining ones."""
     plain = _cifar10(data_dir, True, make_transform(norm, train=False))
     _, va_idx = split_indices(len(plain), val_size, seed)
+    if skip:
+        va_idx = va_idx[skip:]
     if subset:
         va_idx = va_idx[:subset]
     return DataLoader(Subset(plain, va_idx), batch_size=eval_batch_size, shuffle=False,

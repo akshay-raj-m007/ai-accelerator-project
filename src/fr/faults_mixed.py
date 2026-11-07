@@ -16,6 +16,8 @@ format         exponent     sign     mantissa_msb    mantissa_lsb
 e4m11          14-11        15       10-6            5-0       (App. B.3, as in ``faults.py``)
 fp8 (E4M3)     6-3          7        2-1             0         (Sec. 4.2: upper ceil(M/2), lower floor(M/2))
 int8           (empty)      7        6-3             2-0       (Sec. 4.2: value field = bits 6-0, upper ceil(7/2))
+int4           (empty)      3        2-1             0         (4-bit words live in the low nibble of a uint8)
+fp4 (E2M1)     2-1          3        0               (empty)
 =============  ===========  =======  ==============  ===============
 
 For INT8 the paper says the exponent group "is empty by construction". Bit 7 of an INT8 word is the two's-complement
@@ -58,15 +60,22 @@ from . import e4m11, formats8
 from .faults import eval_tensors, trial_rng
 
 SAMPLINGS = ("weights", "bits")
-WORD_BITS = {"e4m11": 16, "int8_pt": 8, "int8_pc": 8, "fp8": 8, "fp8_scaled": 8}
+WORD_BITS = {"e4m11": 16, "int8_pt": 8, "int8_pc": 8, "fp8": 8, "fp8_scaled": 8,
+             "int4_pt": 4, "int4_pc": 4, "fp4_scaled": 4}
 PAPER_GROUP_NAMES = ("exponent", "sign", "mantissa_msb", "mantissa_lsb")
 
 _E4M11 = {"exponent": (11, 12, 13, 14), "sign": (15,), "mantissa_msb": (6, 7, 8, 9, 10),
           "mantissa_lsb": (0, 1, 2, 3, 4, 5)}
 _FP8 = {"exponent": (3, 4, 5, 6), "sign": (7,), "mantissa_msb": (1, 2), "mantissa_lsb": (0,)}
 _INT8 = {"exponent": (), "sign": (7,), "mantissa_msb": (3, 4, 5, 6), "mantissa_lsb": (0, 1, 2)}
+# 4-bit words (low nibble of a uint8; the high nibble is not part of the stored word and is never struck).
+# Sec. 4.2 split applied to the value field: INT4 value bits 2-0 -> MSB = upper ceil(3/2) = 2 bits, LSB = 1 bit;
+# FP4 E2M1: exponent 2-1, sign 3, mantissa 0 (M = 1 -> MSB = ceil(1/2) = 1 bit, LSB empty).
+_INT4 = {"exponent": (), "sign": (3,), "mantissa_msb": (1, 2), "mantissa_lsb": (0,)}
+_FP4 = {"exponent": (1, 2), "sign": (3,), "mantissa_msb": (0,), "mantissa_lsb": ()}
 GROUP_BITS: Dict[str, Dict[str, Tuple[int, ...]]] = {
-    "e4m11": _E4M11, "fp8": _FP8, "fp8_scaled": _FP8, "int8_pt": _INT8, "int8_pc": _INT8}
+    "e4m11": _E4M11, "fp8": _FP8, "fp8_scaled": _FP8, "int8_pt": _INT8, "int8_pc": _INT8,
+    "int4_pt": _INT4, "int4_pc": _INT4, "fp4_scaled": _FP4}
 
 CSV_FIELDS = ["group", "k", "trial", "accuracy", "cross_entropy", "correct", "total", "flips_vs_clean",
                "kl_vs_clean", "finite", "n_unique_weights", "flips_in_8bit", "max_abs_faulted_value"]
@@ -168,13 +177,15 @@ class MixedFaultInjector:
         if fmt == "e4m11":
             return e4m11.decode(new_words.astype(np.uint16), self.mode, self.all_ones, self.bias)
         w8 = new_words.astype(np.uint8)
-        if fmt in ("int8_pt", "int8_pc"):
-            q = w8.view(np.int8).astype(np.float32)
+        if fmt.startswith("int"):
+            q = formats8.int_words_to_q(w8, WORD_BITS[fmt])
             scale = np.asarray(self.scales[l], dtype=np.float32)
             if scale.ndim == 0:
                 return (q * scale).astype(np.float32)
             per_channel = int(np.prod(self.shapes[l][1:]))
             return (q * scale[local // per_channel]).astype(np.float32)
+        if fmt == "fp4_scaled":
+            return (formats8.fp4_decode(w8).astype(np.float64) * 2.0 ** int(self.scales[l])).astype(np.float32)
         vals = formats8.fp8_decode(w8, "clamp")
         if fmt == "fp8_scaled":
             return (vals.astype(np.float64) * 2.0 ** int(self.scales[l])).astype(np.float32)
@@ -213,7 +224,7 @@ class MixedFaultInjector:
         finite = vals[np.isfinite(vals)]
         hit_layers = np.searchsorted(self.starts, np.asarray(idx, dtype=np.int64), side="right") - 1
         return {"n_unique_weights": int(uniq.size),
-                "flips_in_8bit": int((self.width[hit_layers] == 8).sum()),
+                "flips_in_8bit": int((self.width[hit_layers] < 16).sum()),      # column name kept; = hits in low-bit layers
                 "max_abs_faulted_value": float(np.abs(finite).max()) if finite.size else float("nan")}
 
     @torch.no_grad()
@@ -450,15 +461,15 @@ def normalize_spec(spec: str) -> Tuple[str, Optional[str]]:
         return "e4m11", None
     if spec.startswith("all:"):
         arm = spec.split(":", 1)[1]
-        if arm not in formats8.FORMATS8:
-            raise ValueError(f"unknown 8-bit format {arm!r}")
+        if arm not in formats8.ALL_LOW:
+            raise ValueError(f"unknown low-bit format {arm!r}")
         return f"all_{arm}", None
     parts = spec.split("|") if "|" in spec else spec.split(":")
     if len(parts) < 3:
         raise ValueError(f"cannot parse layout spec {spec!r}")
     arm, t, method = parts[0], parts[1].lstrip("T"), parts[2]
     param = parts[3] if len(parts) > 3 else ""
-    if arm not in formats8.FORMATS8 or method not in ("lambda", "product", "worst", "random"):
+    if arm not in formats8.ALL_LOW or method not in ("lambda", "product", "worst", "random"):
         raise ValueError(f"cannot parse layout spec {spec!r}")
     tv = float(t)
     cid = f"{arm}|T{tv:g}|{method}|{param}"

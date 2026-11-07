@@ -1,6 +1,6 @@
 """Mixed-format post-training quantization: each Conv2d/Linear weight tensor is stored either as E4M11
-(16-bit words, the fixed baseline: ``subnormal`` mode, bias 7) or as one of the 8-bit formats of
-``formats8`` (8-bit words plus scale metadata).
+(16-bit words, the fixed baseline: ``subnormal`` mode, bias 7) or as one of the low-bit formats of
+``formats8`` (8-bit or 4-bit words plus scale metadata; a 4-bit word lives in the low nibble of a ``uint8``).
 
 ``quantize_mixed`` returns the dequantized model for clean evaluation and, per tensor, the packed buffer a
 later fault-injection step flips bits in:
@@ -25,7 +25,7 @@ from . import e4m11, formats8
 from .quantize import target_parameters
 
 BASE = "e4m11"
-ALL_FORMATS = (BASE,) + formats8.FORMATS8
+ALL_FORMATS = (BASE,) + formats8.ALL_LOW      # low-bit formats: 8-bit and 4-bit
 
 
 def quantize_tensor(w: np.ndarray, fmt: str, e4m11_mode: str = "subnormal", bias: int = e4m11.BIAS,

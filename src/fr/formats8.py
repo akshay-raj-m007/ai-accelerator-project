@@ -1,7 +1,8 @@
-"""8-bit weight formats for the mixed-precision experiments (NOT part of the fault-robustness paper's
+"""Low-bit (8-bit and 4-bit) weight formats for the mixed-precision experiments (NOT part of the fault-robustness paper's
 E4M11 baseline; these are the candidate formats for low-sensitivity layers).
 
-Four formats (``FORMATS8``):
+Seven formats in total: four 8-bit ones (``FORMATS8``) and three 4-bit ones (``FORMATS4``, added for the
+lower-bit experiments; see the end of this docstring). The 8-bit formats:
 
 ``int8_pt``      INT8, per-tensor symmetric. Paper Eq. 3: ``w_q = clip(round(w / s), -2^(b-1), 2^(b-1)-1)``,
                  ``s = max|w| / (2^(b-1) - 1)``; dequantization ``w^ = w_q * s``. The scale is stored as
@@ -20,6 +21,19 @@ magnitudes (``fp_table``): the nearest representable value is chosen (ties to th
 IEEE round-to-nearest-even because the mantissa LSB is the word LSB). Magnitudes above the maximum finite
 value saturate. The all-ones exponent (15) is reserved and never produced by the encoder; the decoder reads
 it as exponent 14 (``clamp``), the same policy as ``e4m11.decode`` (relevant only for fault injection).
+
+4-bit formats (``FORMATS4``; a project extension, the paper has no 4-bit format except through its generic
+integer Eq. 3 with b = 4):
+
+``int4_pt`` / ``int4_pc``  INT4 symmetric, paper Eq. 3 with b = 4: ``s = max|w| / 7``, codes in [-8, 7],
+                 two's complement in the low 4 bits of a ``uint8`` container (the high nibble is always 0 and is
+                 never a fault target). Per-tensor / per-channel (axis 0) float32 scales as for INT8.
+``fp4_scaled``   FP4 E2M1 (1 sign, 2 exponent, 1 mantissa bit, bias 1, subnormal ``m * 0.5``): finite magnitudes
+                 {0, 0.5, 1, 1.5, 2, 3, 4, 6}. ASSUMPTION (not in the paper): unlike the paper's FP8 table, the
+                 all-ones exponent is NOT reserved (the OCP/MX convention for E2M1), since reserving it would leave
+                 only six magnitudes. A per-tensor power-of-two scale ``2^k`` (``k = ceil(log2(max|w| / 6))``,
+                 8 bits of metadata, assumed fault-free) is always used; an unscaled FP4 cannot represent weights
+                 of magnitude ~0.01.
 """
 from __future__ import annotations
 
@@ -29,6 +43,10 @@ from typing import Dict, Tuple
 import numpy as np
 
 FORMATS8 = ("int8_pt", "int8_pc", "fp8", "fp8_scaled")
+FORMATS4 = ("int4_pt", "int4_pc", "fp4_scaled")
+ALL_LOW = FORMATS8 + FORMATS4
+FORMAT_BITS = {"int8_pt": 8, "int8_pc": 8, "fp8": 8, "fp8_scaled": 8,
+               "int4_pt": 4, "int4_pc": 4, "fp4_scaled": 4}
 
 E8, M8, BIAS8 = 4, 3, 7
 
@@ -36,9 +54,10 @@ E8, M8, BIAS8 = 4, 3, 7
 # ----------------------------------------------------------------------------------------------
 # generic small floating-point table codec (also used to cross-check e4m11 in the tests)
 # ----------------------------------------------------------------------------------------------
-def fp_table(e_bits: int, m_bits: int, bias: int) -> np.ndarray:
-    """Finite non-negative magnitudes indexed by word (sign=0), exponent field 0..2^E-2, subnormals on."""
-    n_exp = (1 << e_bits) - 1                      # exponent fields 0 .. 2^E - 2
+def fp_table(e_bits: int, m_bits: int, bias: int, reserve_all_ones: bool = True) -> np.ndarray:
+    """Finite non-negative magnitudes indexed by word (sign=0), subnormals on. Exponent fields are
+    0 .. 2^E-2 when the all-ones exponent is reserved (paper convention), else 0 .. 2^E-1."""
+    n_exp = (1 << e_bits) - (1 if reserve_all_ones else 0)
     es = np.repeat(np.arange(n_exp), 1 << m_bits).astype(np.float64)
     m = np.tile(np.arange(1 << m_bits), n_exp).astype(np.float64)
     sub = es == 0
@@ -87,47 +106,82 @@ def fp8_decode(words: np.ndarray, all_ones: str = "clamp") -> np.ndarray:
     return (np.where(s == 1, -val, val)).astype(np.float32)
 
 
+_T4 = fp_table(2, 1, 1, reserve_all_ones=False)    # FP4 E2M1: 0, .5, 1, 1.5, 2, 3, 4, 6
+FP4_MAX = float(_T4[-1])                           # 6.0
+
+
+def fp4_encode(x: np.ndarray) -> np.ndarray:
+    """float -> uint8 words (low nibble: sign << 3 | es << 1 | m), saturating, subnormal 0.5 kept."""
+    x = np.asarray(x, dtype=np.float64)
+    if not np.isfinite(x).all():
+        raise ValueError("fp4 encoder supports finite values only.")
+    idx = fp_encode_magnitude(x.reshape(-1), _T4)
+    sign = (np.signbit(x.reshape(-1))).astype(np.uint8)
+    return ((sign << 3) | idx.astype(np.uint8)).astype(np.uint8)
+
+
+def fp4_decode(words: np.ndarray) -> np.ndarray:
+    """uint8 words (only the low nibble is read) -> float32."""
+    w = np.asarray(words, dtype=np.uint8).astype(np.int64) & 0xF
+    val = _T4[w & 7]
+    return np.where((w >> 3) == 1, -val, val).astype(np.float32)
+
+
 # ----------------------------------------------------------------------------------------------
-# INT8
+# INTn (n = 8 or 4): symmetric, two's complement in the low n bits of a uint8
 # ----------------------------------------------------------------------------------------------
-def _int8_scale(absmax: np.ndarray) -> np.ndarray:
-    s = (absmax / 127.0).astype(np.float32)
+def _int_scale(absmax: np.ndarray, bits: int) -> np.ndarray:
+    s = (absmax / float((1 << (bits - 1)) - 1)).astype(np.float32)
     return np.where(s == 0, np.float32(1.0), s).astype(np.float32)
 
 
-def int8_encode(w: np.ndarray, per_channel: bool) -> Tuple[np.ndarray, np.ndarray]:
-    """-> (uint8 words in two's complement, float32 scale(s)). Scale shape: () or (out_channels,)."""
+def int_words_to_q(words: np.ndarray, bits: int) -> np.ndarray:
+    """uint8 words -> signed integer codes (float32); only the low ``bits`` bits are read."""
+    u = np.asarray(words, dtype=np.uint8).astype(np.int64) & ((1 << bits) - 1)
+    return np.where(u >= (1 << (bits - 1)), u - (1 << bits), u).astype(np.float32)
+
+
+def int_encode(w: np.ndarray, bits: int, per_channel: bool) -> Tuple[np.ndarray, np.ndarray]:
+    """-> (uint8 words, float32 scale(s)). Scale shape: () or (out_channels,). Paper Eq. 3."""
     w = np.asarray(w, dtype=np.float32)
     if not np.isfinite(w).all():
-        raise ValueError("int8 encoder supports finite values only.")
+        raise ValueError("int encoder supports finite values only.")
     if per_channel:
         flat = w.reshape(w.shape[0], -1)
-        scale = _int8_scale(np.abs(flat).max(axis=1))
+        scale = _int_scale(np.abs(flat).max(axis=1), bits)
         q = np.rint(flat.astype(np.float64) / scale.astype(np.float64)[:, None])
     else:
-        scale = _int8_scale(np.abs(w).max(initial=0.0))
+        scale = _int_scale(np.abs(w).max(initial=0.0), bits)
         q = np.rint(w.reshape(-1).astype(np.float64) / float(scale))
-    q = np.clip(q, -128, 127).astype(np.int8)
-    return q.reshape(-1).view(np.uint8), np.asarray(scale, dtype=np.float32)
+    q = np.clip(q, -(1 << (bits - 1)), (1 << (bits - 1)) - 1).astype(np.int8)
+    return q.reshape(-1).view(np.uint8) & np.uint8((1 << bits) - 1), np.asarray(scale, dtype=np.float32)
 
 
-def int8_decode(words: np.ndarray, scale: np.ndarray, shape) -> np.ndarray:
-    q = np.asarray(words, dtype=np.uint8).view(np.int8).astype(np.float32)
+def int_decode(words: np.ndarray, scale: np.ndarray, shape, bits: int) -> np.ndarray:
+    q = int_words_to_q(words, bits)
     scale = np.asarray(scale, dtype=np.float32)
     if scale.ndim == 0:
         return (q * scale).reshape(shape).astype(np.float32)
     return (q.reshape(shape[0], -1) * scale[:, None]).reshape(shape).astype(np.float32)
 
 
+def int8_encode(w: np.ndarray, per_channel: bool) -> Tuple[np.ndarray, np.ndarray]:
+    return int_encode(w, 8, per_channel)
+
+
+def int8_decode(words: np.ndarray, scale: np.ndarray, shape) -> np.ndarray:
+    return int_decode(words, scale, shape, 8)
+
+
 # ----------------------------------------------------------------------------------------------
 # unified interface
 # ----------------------------------------------------------------------------------------------
-def pow2_exponent(absmax: float) -> int:
-    """Smallest k with absmax / 2^k <= FP8_MAX (0 for an all-zero tensor)."""
+def pow2_exponent(absmax: float, fmax: float = FP8_MAX) -> int:
+    """Smallest k with absmax / 2^k <= fmax (the format's largest finite value; 0 for an all-zero tensor)."""
     if absmax == 0.0:
         return 0
-    k = math.ceil(math.log2(absmax / FP8_MAX))
-    while absmax / 2.0 ** k > FP8_MAX:               # guard against log2 rounding
+    k = math.ceil(math.log2(absmax / fmax))
+    while absmax / 2.0 ** k > fmax:                  # guard against log2 rounding
         k += 1
     return int(k)
 
@@ -135,14 +189,23 @@ def pow2_exponent(absmax: float) -> int:
 def quantize8(w: np.ndarray, fmt: str) -> Dict[str, object]:
     """Quantize one weight tensor. Returns words (uint8, flat), scale metadata, the dequantized tensor
     (float32, ``w``'s shape) and ``metadata_bits``."""
-    if fmt not in FORMATS8:
-        raise ValueError(f"fmt must be one of {FORMATS8}, got {fmt!r}")
+    if fmt not in ALL_LOW:
+        raise ValueError(f"fmt must be one of {ALL_LOW}, got {fmt!r}")
     w = np.asarray(w, dtype=np.float32)
     shape = tuple(w.shape)
-    if fmt in ("int8_pt", "int8_pc"):
-        words, scale = int8_encode(w, per_channel=(fmt == "int8_pc"))
-        deq = int8_decode(words, scale, shape)
+    bits = FORMAT_BITS[fmt]
+    if fmt.startswith("int"):
+        words, scale = int_encode(w, bits, per_channel=fmt.endswith("_pc"))
+        deq = int_decode(words, scale, shape, bits)
         meta = 32 * int(np.size(scale))
+    elif fmt == "fp4_scaled":
+        k = pow2_exponent(float(np.abs(w).max(initial=0.0)), FP4_MAX)
+        if not -127 <= k <= 127:
+            raise ValueError(f"power-of-two scale exponent {k} does not fit 8 bits")
+        words = fp4_encode(w.astype(np.float64).reshape(-1) / 2.0 ** k)
+        scale = np.int8(k)
+        deq = (fp4_decode(words).astype(np.float64) * 2.0 ** k).astype(np.float32).reshape(shape)
+        meta = 8
     elif fmt == "fp8":
         words = fp8_encode(w.reshape(-1))
         scale = None
@@ -156,14 +219,16 @@ def quantize8(w: np.ndarray, fmt: str) -> Dict[str, object]:
         scale = np.int8(k)
         deq = (fp8_decode(words).astype(np.float64) * 2.0 ** k).astype(np.float32).reshape(shape)
         meta = 8
-    return {"format": fmt, "bits": 8, "words": words, "scale": scale, "shape": shape,
+    return {"format": fmt, "bits": bits, "words": words, "scale": scale, "shape": shape,
             "dequantized": deq, "metadata_bits": meta}
 
 
 def dequantize8(words: np.ndarray, scale, shape, fmt: str, all_ones: str = "clamp") -> np.ndarray:
     """Decode stored words (possibly corrupted) back to float32; inverse of ``quantize8``'s storage."""
-    if fmt in ("int8_pt", "int8_pc"):
-        return int8_decode(words, scale, shape)
+    if fmt.startswith("int"):
+        return int_decode(words, scale, shape, FORMAT_BITS[fmt])
+    if fmt == "fp4_scaled":
+        return (fp4_decode(words).astype(np.float64) * 2.0 ** int(scale)).astype(np.float32).reshape(shape)
     deq = fp8_decode(words, all_ones).astype(np.float64)
     if fmt == "fp8_scaled":
         deq = deq * 2.0 ** int(scale)

@@ -184,3 +184,22 @@ campaign of `faults.py` is unchanged and remains the paper-protocol reference.
 Statistical power: in the pure-E4M11 campaign the std of the accuracy at k = 8 exponent flips was 3.7 pp, so 100
 trials give a standard error of about 0.4 pp for the mean. Differences between layouts below that need more trials
 (or the paired differences, medians and KL), and should not be reported as findings from 100 trials alone.
+
+## 12. Lower-bit formats, held-out Fisher, heavier fault loads (experiments 1-3 of the LAMPQ + fault study)
+
+Motivation (docs/EXPERIMENTS.md): at 8 bits per weight every layout keeps 95.1-95.2 % accuracy and k = 8 bit flips
+change nothing measurable, so neither the storage-accuracy tradeoff nor the fault tradeoff existed. These three steps
+create them. Everything here is a project extension; the paper has no 4-bit format, no Fisher and no mixed storage.
+
+| # | Decision | Status |
+|---|---|---|
+| L1 | 4-bit formats in `formats8.py`: `int4_pt`, `int4_pc` (paper Eq. 3 with b = 4: s = max/7, codes -8..7, two's complement in the low nibble of a uint8) and `fp4_scaled` (E2M1, bias 1, subnormal 0.5, values {0, .5, 1, 1.5, 2, 3, 4, 6}, per-tensor power-of-two scale, 8 metadata bits). | INT4: follows Eq. 3. **FP4: assumption, not in the paper.** The all-ones exponent is NOT reserved (OCP/MX E2M1 convention) because reserving it would leave six magnitudes; an unscaled FP4 cannot hold weights of size 0.01, so only the scaled variant exists. Easy to drop: it is an independent arm. |
+| L2 | Budget for a low-bit format of width b: `need = N (16 - T) / (16 - b)` weights must be low-bit (was `/8`). A target below an arm's width (or >= 16) is skipped for that arm, so one `--targets` list serves all arms. | Same exact enumeration over layer subsets; random and worst use the identical feasible set, as before. |
+| L3 | Fault groups for 4-bit words (Sec. 4.2 split of the value field): INT4 sign 3, mantissa MSB 2-1, LSB 0, exponent empty; FP4 exponent 2-1, sign 3, mantissa MSB 0, LSB empty. Only the low nibble is a fault target. Scale metadata is still assumed fault-free. | Extension. Group `any` does not depend on the split. |
+| L4 | Held-out Fisher: `fisher_sensitivity.py --source val --calib-size 2048` uses the first 2,048 validation images; the sweep then skips them (`--val-skip 2048`, 2,952 images left, standard error about 0.4 pp). `run_sweep` raises an error if a validation-source Fisher is combined with a smaller `val_skip`. Test set untouched. | Reason: the network has memorised its training images, so the training-image Fisher is determined by 2-3 images (docs/EXPERIMENTS.md section 7b). LAMPQ itself calibrates on training data (1,024 images). |
+| L5 | `flips_in_8bit` in the fault CSV now counts hits in any layer narrower than 16 bits (column name kept so existing result files and summaries stay compatible). | Identical values for 8-bit-only runs. |
+| L6 | `mixed_report.md` gains a **Frontier** table: per (arm, budget) the accuracy of Fisher only, product, error only, random (mean +- std), worst, and the uniform all-layer model, so "with Fisher" and "without Fisher" are side by side. | Test accuracy where evaluated, otherwise validation (marked `v`). |
+| L7 | Fault-load calibration (exp 3) uses a fixed k grid {16, 64, 256, 1024, 4096} on the *references* (all-E4M11, all-INT8, all-INT4). The k used for the main comparison is chosen from the all-E4M11 curve only (where its median accuracy has clearly fallen but not collapsed), **not** from the layouts being compared, so k cannot be picked to favour a selector. | Rule fixed before the run. |
+
+Files: `scripts/run_lowbit_heldout.sh` (all stages, resumable), `scripts/compare_selections.py` (Jaccard of two
+`selections.json`), tests `tests/test_lowbit_heldout.py`.

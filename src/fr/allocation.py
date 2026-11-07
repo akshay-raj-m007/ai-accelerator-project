@@ -15,8 +15,8 @@ Scorers (higher = more sensitive = keep as E4M11):
     ``random``   uniformly random feasible set (control)
     ``worst``    the feasible set with the *largest* total damage (sanity envelope)
 
-Selection (``select``): a size target (average bits per weight, 16 for E4M11 and 8 for the 8-bit format)
-fixes the number of weights that must be switched, ``need = N (16 - T) / 8``. All 2^L subsets of layers
+Selection (``select``): a size target (average bits per weight, 16 for E4M11 and ``b`` for the low-bit format,
+b = 8 or 4) fixes the number of weights that must be switched, ``need = N (16 - T) / (16 - b)``. All 2^L subsets of layers
 (L = 21, 2M subsets) are enumerated and those switching between ``need`` and ``need (1 + tol)`` weights are
 feasible (``tol`` is doubled until one exists). The chosen set minimises the summed score. This is the
 LAMPQ-style ILP solved exactly; random and worst use the identical feasible set so budgets are matched.
@@ -95,11 +95,12 @@ def combined_score(rows: List[dict], lam: float, norm: str = "rank",
     return lam * err + (1.0 - lam) * fis
 
 
-def required_switched(total: int, target_avg_bits: float) -> int:
-    """Weights that must be 8-bit so that the payload average is <= ``target_avg_bits``."""
-    if not LO_BITS <= target_avg_bits <= HI_BITS:
-        raise ValueError(f"target average bits must be in [{LO_BITS}, {HI_BITS}]")
-    return int(np.ceil(total * (HI_BITS - target_avg_bits) / (HI_BITS - LO_BITS) - 1e-9))
+def required_switched(total: int, target_avg_bits: float, lo_bits: int = LO_BITS) -> int:
+    """Weights that must be stored in the ``lo_bits``-bit format so that the payload average is
+    <= ``target_avg_bits`` (``lo_bits`` = 8 for the 8-bit formats, 4 for the 4-bit ones)."""
+    if not lo_bits <= target_avg_bits <= HI_BITS:
+        raise ValueError(f"target average bits must be in [{lo_bits}, {HI_BITS}]")
+    return int(np.ceil(total * (HI_BITS - target_avg_bits) / (HI_BITS - lo_bits) - 1e-9))
 
 
 def _enumerate(sizes: Sequence[int], costs: Sequence[float]):
@@ -134,8 +135,8 @@ def mask_to_names(mask: int, names: Sequence[str]) -> List[str]:
 
 def select(method: str, names: Sequence[str], sizes: Sequence[int], target_avg_bits: float,
            costs: Sequence[float] | None = None, damages: Sequence[float] | None = None,
-           tol: float = 0.05, seed: int = 0) -> dict:
-    """Choose the layers to switch to 8 bit.
+           tol: float = 0.05, seed: int = 0, lo_bits: int = LO_BITS) -> dict:
+    """Choose the layers to switch from E4M11 to the ``lo_bits``-bit format (default 8).
 
     method: ``min_cost`` (minimise sum of ``costs`` over the feasible sets), ``random`` (uniform over the
     feasible sets, ``seed``), ``worst`` (maximise sum of ``damages``). Returns a dict with ``layers8``,
@@ -143,7 +144,7 @@ def select(method: str, names: Sequence[str], sizes: Sequence[int], target_avg_b
     """
     sizes = [int(x) for x in sizes]
     total = sum(sizes)
-    need = required_switched(total, target_avg_bits)
+    need = required_switched(total, target_avg_bits, lo_bits)
     idx, sums, tol_used = feasible_subsets(sizes, need, tol)
     if idx.size == 0:
         raise ValueError("no feasible layer subset for this target")
@@ -168,4 +169,4 @@ def select(method: str, names: Sequence[str], sizes: Sequence[int], target_avg_b
     n8 = int(sums[pick])
     return {"layers8": mask_to_names(pick, names), "mask": pick, "n_switched": n8, "need": need,
             "tol_used": tol_used, "n_feasible": int(idx.size), "total_cost": cost,
-            "avg_bits": (HI_BITS * (total - n8) + LO_BITS * n8) / total}
+            "avg_bits": (HI_BITS * (total - n8) + lo_bits * n8) / total}

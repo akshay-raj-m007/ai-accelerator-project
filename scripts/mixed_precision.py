@@ -12,8 +12,9 @@ Run `scripts/fisher_sensitivity.py` first.
   python scripts/mixed_precision.py --checkpoint ... --run-name scratch --phase final
 
 Arms: int8_pt (INT8 per-tensor, paper Eq. 3), int8_pc (per-channel ablation), fp8 (E4M3 with subnormals, no
-scale), fp8_scaled (E4M3 + per-tensor power-of-two scale). Targets are average payload bits per weight
-(16 = all E4M11, 8 = all 8-bit).
+scale), fp8_scaled (E4M3 + per-tensor power-of-two scale); 4-bit: int4_pt, int4_pc, fp4_scaled (E2M1 + per-tensor
+power-of-two scale). Targets are average payload bits per weight (16 = all E4M11, 8 or 4 = all layers low-bit);
+a target below an arm's own width is skipped for that arm, so one --targets list can serve all arms.
 """
 import argparse
 import logging
@@ -22,7 +23,7 @@ from pathlib import Path
 import _common  # noqa: F401
 from fr import allocation
 from fr.config import add_config_args, config_from_args
-from fr.formats8 import FORMATS8
+from fr.formats8 import ALL_LOW, FORMATS8
 from fr.mixed_run import DEFAULT_LAMBDAS, run_churn, run_final, run_sweep
 
 
@@ -34,7 +35,14 @@ def main():
     ap.add_argument("--phase", choices=["sweep", "final", "churn"], default="sweep")
     ap.add_argument("--fisher-kind", choices=["true", "empirical"], default="true")
     ap.add_argument("--fisher-file", default=None, help="default: results/<run>/sensitivity/fisher_<kind>.pt")
-    ap.add_argument("--arms", nargs="+", choices=FORMATS8, default=list(FORMATS8))
+    ap.add_argument("--arms", nargs="+", choices=ALL_LOW, default=list(FORMATS8),
+                    help="low-bit formats; default = the four 8-bit ones. 4-bit: int4_pt int4_pc fp4_scaled")
+    ap.add_argument("--fisher-dir", default="sensitivity",
+                    help="results/<run>/<fisher-dir>/fisher_<kind>.pt (use sensitivity_heldout for a held-out Fisher)")
+    ap.add_argument("--out-name", default="mixed", help="results/<run>/<out-name>/ for sweep, final and churn")
+    ap.add_argument("--val-skip", type=int, default=0,
+                    help="leave the first N validation images out of the sweep (required, >= Fisher images, "
+                         "when the Fisher was computed on validation images)")
     ap.add_argument("--targets", type=float, nargs="+", default=[14.0, 12.0, 10.0])
     ap.add_argument("--lambdas", type=float, nargs="+", default=list(DEFAULT_LAMBDAS))
     ap.add_argument("--random-draws", type=int, default=5)
@@ -48,16 +56,16 @@ def main():
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     cfg = config_from_args(args)
-    out_dir = cfg.results_dir() / "mixed"
+    out_dir = cfg.results_dir() / args.out_name
 
     if args.phase == "sweep":
         fisher = Path(args.fisher_file) if args.fisher_file else \
-            cfg.results_dir() / "sensitivity" / f"fisher_{args.fisher_kind}.pt"
+            cfg.results_dir() / args.fisher_dir / f"fisher_{args.fisher_kind}.pt"
         if not fisher.exists():
             raise SystemExit(f"{fisher} not found; run scripts/fisher_sensitivity.py first")
         res = run_sweep(cfg, args.checkpoint, fisher, args.arms, args.targets, args.lambdas,
                         args.random_draws, args.tol, args.score_norm, args.fisher_mode,
-                        args.e4m11_mode, args.e4m11_bias, args.val_subset, out_dir)
+                        args.e4m11_mode, args.e4m11_bias, args.val_subset, out_dir, args.val_skip)
         print("validation rows:", res["csv"])
     elif args.phase == "churn":
         res = run_churn(cfg, args.checkpoint, out_dir)
