@@ -347,12 +347,37 @@ assumption. In a mixed layout the fault exposure is dominated by the share of we
 for the 4-bit arms, 4-8 % at the 5-bit budget), so the question for the next experiment is whether *which* layers stay in
 E4M11 matters at equal exposure.
 
-## 8d. Planned: Pareto under faults (experiment 12)
+## 8d. Pareto under bit flips, pilot (experiment 12)
 
-`scripts/run_pareto_faults.sh`: all-E4M11, uniform int4_pt / fp4_scaled, and for budgets 8 and 5 bits per weight the
-Fisher-only, product, error-only and three random selections (held-out Fisher), k = 1024, same struck weights for all
-layouts, 100-trial pilot then 500 trials. Pre-stated analysis: median, p10 and worst accuracy per layout, paired
-differences vs all-E4M11 and vs error-only. Results are not yet available.
+100 trials per layout, k = 1024 weights struck per trial, group `any`, same struck weights for all layouts, held-out-Fisher
+selections (`reports/scratch/mixed_faults_pareto/weights/comparison.md`). Test accuracy %, `int4_pt` shown (fp4_scaled behaves
+alike). Pilot only: 500-trial top-up not run.
+
+| layout | avg bits | clean | faulty median | faulty p10 | faulty mean |
+|---|---|---|---|---|---|
+| all-E4M11 | 16.00 | 95.11 | 83.68 | 55.95 | 78.43 |
+| uniform int4_pt | 4.00 | 93.88 | 93.84 | 93.77 | 93.84 |
+| T8 Fisher-only = product | 7.76 | 95.08 | 86.92 | 60.16 | 80.06 |
+| T8 error only | 7.76 | 94.92 | 88.97 | 64.28 | 82.32 |
+| T8 random (3 draws) | 7.69-7.91 | 94.47-94.54 | 90.75-91.00 | 74.6-79.8 | 86.5-87.7 |
+| T5 Fisher-only | 4.91 | 94.81 | 94.18 | 68.73 | 87.32 |
+| T5 product | 4.92 | 94.86 | 93.50 | 64.56 | 86.47 |
+| T5 error only | 4.98 | 94.78 | 94.11 | 79.13 | 89.58 |
+| T5 random (3 draws) | 4.45-4.79 | 94.09-94.70 | 92.66-94.11 | 82.1-89.5 | 89.9-90.9 |
+
+**Reading (pilot; wide intervals, mean CIs overlap in most pairs).**
+
+* Every mixed layout is far more fault-robust than all-E4M11 at much lower storage (median +3 to +11 pp, bits down 50-70 %),
+  because most struck weights now sit in bounded integer codes. This relies on the assumption that scale metadata is fault-free.
+* **Uniform 4-bit is the most fault-robust layout, with the smallest tail, and the cheapest.** Selective E4M11 layers buy
+  clean accuracy (+0.9 to +1.3 pp) at the price of a heavy tail (p10 60-80 %).
+* **At equal exposure (T8, about 31 % of weights in E4M11) Fisher-based selection is the least fault-robust mixed choice**
+  (median 86.9 vs 89.0 error-only vs 90.8-91.0 random; p10 60 vs 64 vs 75-80), while being the best on clean accuracy.
+  Hypothesis, not tested: Fisher keeps the most sensitive layers in E4M11, where exponent flips do the most damage.
+* At T5 the medians are within about 1.5 pp of each other and the p10 favours random and error-only over Fisher. T5 random draws
+  differ in E4M11 share (3.8-8.2 % of weights), so part of that gap is exposure, not selection.
+* Not supported: that Fisher selection improves fault robustness. Supported: it gives the best clean accuracy at a given
+  storage among mixed layouts.
 
 ## 9. Limitations and open points
 
