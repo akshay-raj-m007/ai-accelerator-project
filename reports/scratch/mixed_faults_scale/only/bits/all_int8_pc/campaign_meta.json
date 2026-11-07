@@ -1,0 +1,90 @@
+{
+  "split": "val",
+  "val_skip": 2048,
+  "layout": "all:int8_pc",
+  "label": "all int8_pc",
+  "layers8": [
+    "conv1.weight",
+    "fc.weight",
+    "layer1.0.conv1.weight",
+    "layer1.0.conv2.weight",
+    "layer1.1.conv1.weight",
+    "layer1.1.conv2.weight",
+    "layer2.0.conv1.weight",
+    "layer2.0.conv2.weight",
+    "layer2.0.downsample.0.weight",
+    "layer2.1.conv1.weight",
+    "layer2.1.conv2.weight",
+    "layer3.0.conv1.weight",
+    "layer3.0.conv2.weight",
+    "layer3.0.downsample.0.weight",
+    "layer3.1.conv1.weight",
+    "layer3.1.conv2.weight",
+    "layer4.0.conv1.weight",
+    "layer4.0.conv2.weight",
+    "layer4.0.downsample.0.weight",
+    "layer4.1.conv1.weight",
+    "layer4.1.conv2.weight"
+  ],
+  "avg_bits_payload": 8.0,
+  "avg_bits_with_metadata": 8.013786738361528,
+  "weights_by_format": {
+    "int8_pc": 11164352
+  },
+  "checkpoint": "/home/ssl25/fr_runs/checkpoints/scratch/best.pth",
+  "env": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "d1c41ae0678622e29e0ae4d61832c0f8993b15fd",
+      "dirty": true
+    }
+  },
+  "normalization": {
+    "mean": [
+      0.4914,
+      0.4822,
+      0.4465
+    ],
+    "std": [
+      0.247,
+      0.2435,
+      0.2616
+    ]
+  },
+  "seed": 0,
+  "layer": null,
+  "sampling": "bits",
+  "trials": 100,
+  "ks": [
+    8
+  ],
+  "groups": [
+    "any"
+  ],
+  "skipped_groups": [],
+  "buffer_weights": 11164352,
+  "buffer_bits": 89314816,
+  "assignment_hash": "9574c428663a",
+  "mode": "subnormal",
+  "bias": 7,
+  "all_ones": "clamp",
+  "n_eval": 2952,
+  "scale_mode": "only",
+  "scale_metadata_faults": true,
+  "n_scale_words": 4810,
+  "scale_bits": 153920,
+  "clean": {
+    "accuracy_percent": 95.15582655826559,
+    "correct": 2809,
+    "total": 2952,
+    "cross_entropy": 0.1758789382975922
+  }
+}

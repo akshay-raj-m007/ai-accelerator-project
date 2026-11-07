@@ -1,0 +1,70 @@
+{
+  "split": "val",
+  "val_skip": 2048,
+  "layout": "e4m11",
+  "label": "all E4M11",
+  "layers8": [],
+  "avg_bits_payload": 16.0,
+  "avg_bits_with_metadata": 16.0,
+  "weights_by_format": {
+    "e4m11": 11164352
+  },
+  "checkpoint": "/home/ssl25/fr_runs/checkpoints/scratch/best.pth",
+  "env": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "d1c41ae0678622e29e0ae4d61832c0f8993b15fd",
+      "dirty": true
+    }
+  },
+  "normalization": {
+    "mean": [
+      0.4914,
+      0.4822,
+      0.4465
+    ],
+    "std": [
+      0.247,
+      0.2435,
+      0.2616
+    ]
+  },
+  "seed": 0,
+  "layer": null,
+  "sampling": "bits",
+  "trials": 100,
+  "ks": [
+    256,
+    1024,
+    4096
+  ],
+  "groups": [
+    "any"
+  ],
+  "skipped_groups": [],
+  "buffer_weights": 11164352,
+  "buffer_bits": 178629632,
+  "assignment_hash": "83cc8b177fd2",
+  "mode": "subnormal",
+  "bias": 7,
+  "all_ones": "clamp",
+  "n_eval": 2952,
+  "scale_mode": "off",
+  "scale_metadata_faults": false,
+  "n_scale_words": 0,
+  "scale_bits": 0,
+  "clean": {
+    "accuracy_percent": 95.29132791327913,
+    "correct": 2813,
+    "total": 2952,
+    "cross_entropy": 0.17601829363401666
+  }
+}

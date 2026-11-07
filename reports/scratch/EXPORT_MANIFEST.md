@@ -3,7 +3,7 @@
 ## Model
 - `models/scratch/best.pth`  85.4 MB  sha256[:12]=c612da6a4b20
 
-## Reports copied to `reports/scratch/` (153 files, 3.53 MB)
+## Reports copied to `reports/scratch/` (182 files, 3.93 MB)
 
 - `faults_subnormal_b7/campaign_meta.json`  0.001 MB
 - `faults_subnormal_b7/summary.json`  0.011 MB
@@ -124,6 +124,34 @@
 - `mixed_faults_pareto/weights/int4_pt_T8_random_1/trials.csv`  0.010 MB
 - `mixed_faults_pareto/weights/int4_pt_T8_random_2/campaign_meta.json`  0.002 MB
 - `mixed_faults_pareto/weights/int4_pt_T8_random_2/trials.csv`  0.010 MB
+- `mixed_faults_scale/groups/bits/all_int8_pc/campaign_meta.json`  0.002 MB
+- `mixed_faults_scale/groups/bits/all_int8_pc/trials.csv`  0.018 MB
+- `mixed_faults_scale/groups/bits/all_int8_pt/campaign_meta.json`  0.002 MB
+- `mixed_faults_scale/groups/bits/all_int8_pt/trials.csv`  0.018 MB
+- `mixed_faults_scale/groups/bits/comparison.json`  0.006 MB
+- `mixed_faults_scale/groups/bits/comparison.md`  0.003 MB
+- `mixed_faults_scale/groups/bits/e4m11/campaign_meta.json`  0.001 MB
+- `mixed_faults_scale/groups/bits/e4m11/trials.csv`  0.022 MB
+- `mixed_faults_scale/off/bits/all_int8_pc/campaign_meta.json`  0.002 MB
+- `mixed_faults_scale/off/bits/all_int8_pc/trials.csv`  0.033 MB
+- `mixed_faults_scale/off/bits/all_int8_pt/campaign_meta.json`  0.002 MB
+- `mixed_faults_scale/off/bits/all_int8_pt/trials.csv`  0.033 MB
+- `mixed_faults_scale/off/bits/comparison.json`  0.005 MB
+- `mixed_faults_scale/off/bits/comparison.md`  0.002 MB
+- `mixed_faults_scale/off/bits/e4m11/campaign_meta.json`  0.001 MB
+- `mixed_faults_scale/off/bits/e4m11/trials.csv`  0.029 MB
+- `mixed_faults_scale/on/bits/all_int8_pc/campaign_meta.json`  0.002 MB
+- `mixed_faults_scale/on/bits/all_int8_pc/trials.csv`  0.033 MB
+- `mixed_faults_scale/on/bits/all_int8_pt/campaign_meta.json`  0.002 MB
+- `mixed_faults_scale/on/bits/all_int8_pt/trials.csv`  0.034 MB
+- `mixed_faults_scale/on/bits/comparison.json`  0.004 MB
+- `mixed_faults_scale/on/bits/comparison.md`  0.002 MB
+- `mixed_faults_scale/only/bits/all_int8_pc/campaign_meta.json`  0.002 MB
+- `mixed_faults_scale/only/bits/all_int8_pc/trials.csv`  0.063 MB
+- `mixed_faults_scale/only/bits/all_int8_pt/campaign_meta.json`  0.002 MB
+- `mixed_faults_scale/only/bits/all_int8_pt/trials.csv`  0.062 MB
+- `mixed_faults_scale/only/bits/comparison.json`  0.007 MB
+- `mixed_faults_scale/only/bits/comparison.md`  0.003 MB
 - `mixed_heldout/layer_table.json`  0.031 MB
 - `mixed_heldout/mixed_churn_report.md`  0.034 MB
 - `mixed_heldout/mixed_churn_test.csv`  0.031 MB
@@ -143,6 +171,7 @@
 - `mixed_lowbit/selections.json`  0.102 MB
 - `mixed_lowbit/sweep_meta.json`  0.002 MB
 - `run_meta.json`  0.001 MB
+- `scale_faults_report.md`  0.005 MB
 - `selection_compare_4bit.md`  0.031 MB
 - `selection_compare_8bit.md`  0.015 MB
 - `sensitivity/fisher_empirical_layers.json`  0.004 MB
