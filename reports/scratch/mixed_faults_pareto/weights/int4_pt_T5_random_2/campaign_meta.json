@@ -1,0 +1,81 @@
+{
+  "layout": "int4_pt:T5:random:2",
+  "label": "int4_pt|T5|random|2",
+  "layers8": [
+    "conv1.weight",
+    "fc.weight",
+    "layer1.1.conv1.weight",
+    "layer2.0.conv1.weight",
+    "layer2.0.conv2.weight",
+    "layer2.0.downsample.0.weight",
+    "layer2.1.conv1.weight",
+    "layer2.1.conv2.weight",
+    "layer3.0.conv1.weight",
+    "layer3.1.conv1.weight",
+    "layer3.1.conv2.weight",
+    "layer4.0.conv1.weight",
+    "layer4.0.conv2.weight",
+    "layer4.0.downsample.0.weight",
+    "layer4.1.conv1.weight",
+    "layer4.1.conv2.weight"
+  ],
+  "avg_bits_payload": 4.788062576314326,
+  "avg_bits_with_metadata": 4.788108436566672,
+  "weights_by_format": {
+    "int4_pt": 10431168,
+    "e4m11": 733184
+  },
+  "checkpoint": "/home/ssl25/fr_runs/checkpoints/scratch/best.pth",
+  "env": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "da69f811667cc81bf7681337158de7e70b22faa5",
+      "dirty": true
+    }
+  },
+  "normalization": {
+    "mean": [
+      0.4914,
+      0.4822,
+      0.4465
+    ],
+    "std": [
+      0.247,
+      0.2435,
+      0.2616
+    ]
+  },
+  "seed": 0,
+  "layer": null,
+  "sampling": "weights",
+  "trials": 100,
+  "ks": [
+    1024
+  ],
+  "groups": [
+    "any"
+  ],
+  "skipped_groups": [],
+  "buffer_weights": 11164352,
+  "buffer_bits": 53455616,
+  "assignment_hash": "7ed2215e7264",
+  "mode": "subnormal",
+  "bias": 7,
+  "all_ones": "clamp",
+  "n_eval": 10000,
+  "scale_metadata_faults": false,
+  "clean": {
+    "accuracy_percent": 94.7,
+    "correct": 9470,
+    "total": 10000,
+    "cross_entropy": 0.1848333038330078
+  }
+}
