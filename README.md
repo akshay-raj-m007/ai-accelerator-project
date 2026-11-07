@@ -246,3 +246,11 @@ bash scripts/run_scale_faults.sh only                                    # one s
 ```
 Report: `$FR_ROOT/results/scratch/scale_faults_report.md`. Decisions S1-S5: docs/CODE_SUMMARY.md section 13.
 
+
+### Step 8 - per-layer scores on the E4M11 model (Plan B)
+```bash
+bash scripts/run_layer_scores.sh     # held-out only; writes results/<run>/layer_scores/layer_scores.md
+```
+S0 clean Fisher, S1 measured damage when only one layer is struck, S2 Fisher-predicted damage, S2n the same without
+the Fisher, and their Spearman rank correlations (definitions: `src/fr/layer_scores.py`). INT8 here means per-tensor
+symmetric, the paper's Eq. 3 (per-channel stays an extension).
