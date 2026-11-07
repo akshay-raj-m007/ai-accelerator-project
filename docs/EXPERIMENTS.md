@@ -379,6 +379,54 @@ alike). Pilot only: 500-trial top-up not run.
 * Not supported: that Fisher selection improves fault robustness. Supported: it gives the best clean accuracy at a given
   storage among mixed layouts.
 
+### 8e. Evidence and limits of "mixed storage beats E4M11 under faults"
+
+The statement is supported only for the setup below: k = 1024 flips, group `any`, sampling `weights`, test set, one
+trained model, scale metadata fault-free. Numbers: 100-trial pilot (section 8d) and fault-load calibration (section 8c).
+
+**Metrics used.**
+
+| metric | definition |
+|---|---|
+| Accuracy | % of the 10,000 CIFAR-10 test images classified correctly. Clean = no flips. |
+| Faulty accuracy | One trial = k weights struck, one random bit flipped in each; accuracy re-measured. The struck weights are identical for all layouts in a trial. |
+| Median / p10 / mean | Over the trials. Median = typical trial; p10 = accuracy that 90 % of trials exceed (bad tail); mean is pulled down by rare catastrophic trials. |
+| bits/weight | Average stored payload bits per weight (16 for E4M11, 4 for uniform 4-bit); scale metadata not counted. |
+| Paired difference | Per trial, accuracy of layout minus accuracy of all-E4M11 on the same struck weights, averaged, with standard error. Positive = better than E4M11. |
+| worse / equal / better | Number of trials in which the layout is below / equal to / above all-E4M11. |
+| KL | Per image, softmax turns the 10 class scores into probabilities; KL = mean over images of sum p_clean * ln(p_clean / p_faulty), in nats. In the fault tables the reference is the same layout's own clean output; 0 = unchanged predictions. |
+| SQNR (dB) | 10 log10( sum w^2 / sum (w - w_hat)^2 ) over the weights; higher = stored weights closer to the originals (clean metric, not a fault metric). |
+
+**Numbers behind the statement** (k = 1024, 100 trials, E4M11 clean 95.11):
+
+| layout | bits/w | clean | median | p10 | mean | median KL |
+|---|---|---|---|---|---|---|
+| all-E4M11 | 16 | 95.11 | 83.68 | 55.95 | 78.43 | 0.469 |
+| 8-bit budget, Fisher | 7.76 | 95.08 | 86.92 | 60.16 | 80.06 | 0.318 |
+| 8-bit budget, error only | 7.76 | 94.92 | 88.97 | 64.28 | 82.32 | 0.228 |
+| 8-bit budget, random | 7.7-7.9 | about 94.5 | 90.75-91.93 | 74-80 | 86.5-87.8 | 0.13-0.18 |
+| 5-bit budget, all methods | 4.45-4.98 | 94.0-95.2 | 92.7-94.4 | 65-90 | 86.5-90.9 | 0.014-0.07 |
+| uniform 4-bit | 4 | 93.8-93.9 | 93.8 | 93.8 | 93.8 | 0.0003-0.0008 |
+
+* Median gain over E4M11: +3.2 to +10.7 pp; bits 52 % (7.7) to 72 % (4.45) lower. Paired mean differences: +1.6 (Fisher),
+  +3.9 (error only), +8 to +9 pp (random) at the 8-bit budget, standard errors 0.3-1.5.
+* Mechanism: in the paper-protocol campaign (exp. 4) exponent flips cause nearly all the damage; a flip in a bounded
+  integer code moves a weight at most by the tensor range; all-INT8 / all-INT4 stay at 95.1 / 94.95-94.99 % even at k = 4096
+  while E4M11 reaches a median of 22 % (exp. 11). Strikes are uniform over weights, so only about 31 % (8-bit budget) or 4-8 %
+  (5-bit budget) of them land in E4M11 layers.
+
+**Where it fails or is weaker.**
+
+1. At low load (k = 16, 64) E4M11 medians are 95.11 and 95.12, i.e. unaffected; mixed storage is then not better, only less
+   accurate when clean (uniform 8-bit up to 0.1 pp, uniform 4-bit 1.3 pp).
+2. Not every trial: the Fisher 8-bit-budget layout is worse than E4M11 in 31 of 100 trials (paired worse / equal / better 31 / 0 / 69).
+3. Scale metadata of INT / scaled-FP formats is assumed fault-free; a flip in a scale would change a whole tensor. Not measured.
+4. One model, one seed, 100 trials, one k (chosen from the E4M11 curve, rule L7).
+5. Same number of struck weights, not the same bit-error rate. A fixed per-bit rate would strike 16-bit layouts more often
+   (sampling `bits`); not run, likely favours mixed storage further.
+
+**Open follow-ups.** `bits` sampling; struck INT scales; second seed or model (exp. 8 of the plan).
+
 ## 9. Limitations and open points
 
 1. **Fault comparison is underpowered.** Exponent-fault accuracy is heavy-tailed (std 3.7 pp at k = 8 in exp. 4); 100
