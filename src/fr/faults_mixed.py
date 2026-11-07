@@ -80,6 +80,36 @@ GROUP_BITS: Dict[str, Dict[str, Tuple[int, ...]]] = {
 CSV_FIELDS = ["group", "k", "trial", "accuracy", "cross_entropy", "correct", "total", "flips_vs_clean",
                "kl_vs_clean", "finite", "n_unique_weights", "flips_in_8bit", "max_abs_faulted_value"]
 
+# ---- scale metadata faults (extension; INT formats only). The INT scales are stored as IEEE-754 float32 words
+# (one per tensor for *_pt, one per output channel for *_pc; formats8.int_encode returns them as float32) and live in
+# the same memory as the weights. Bit groups of a float32 word, Sec. 4.2 split of the 23-bit mantissa
+# (upper ceil(23/2) = 12 bits, lower 11 bits):
+SCALE_WORD_BITS = 32
+_SCALE_GROUPS = {"exponent": tuple(range(23, 31)), "sign": (31,),
+                 "mantissa_msb": tuple(range(11, 23)), "mantissa_lsb": tuple(range(0, 11))}
+SCALE_MODES = ("off", "on", "only")
+#   off   scales are fault-free (the default and the earlier experiments)
+#   on    physical view: scale words share the memory, so each of the k bit strikes lands in the scale region with
+#         probability S / (B + S) (S = scale bits in the group, B = weight-word bits in the group), else as before.
+#         The weight strikes that are kept are exactly those of mode `off` with the same seed (paired trials).
+#         Requires sampling `bits`.
+#   only  every strike is a scale-bit strike (uniform over the scale bits): measures the damage per scale hit
+#         independent of how rare a hit is. Not a physical load; used to compare per-channel and per-tensor scales.
+INT_SCALE_FORMATS = tuple(f for f in WORD_BITS if f.startswith("int"))
+
+
+def scale_group_bits(group: str) -> Tuple[int, ...]:
+    """Bit positions of ``group`` in a float32 scale word."""
+    if group == "any":
+        return tuple(range(SCALE_WORD_BITS))
+    m = re.fullmatch(r"bit(\d+)", group)
+    if m:
+        b = int(m.group(1))
+        return (b,) if b < SCALE_WORD_BITS else ()
+    if group in _SCALE_GROUPS:
+        return _SCALE_GROUPS[group]
+    raise ValueError(f"unknown fault group {group!r}")
+
 
 def group_bits(fmt: str, group: str) -> Tuple[int, ...]:
     """Bit positions of ``group`` in the word of format ``fmt`` (possibly empty)."""
@@ -101,7 +131,10 @@ class MixedFaultInjector:
     (the second return value of ``mixed.quantize_mixed``)."""
 
     def __init__(self, qmodel: nn.Module, buffers: "OrderedDict[str, dict]", e4m11_mode: str = "subnormal",
-                 bias: int = e4m11.BIAS, all_ones: str = "clamp", device="cpu"):
+                 bias: int = e4m11.BIAS, all_ones: str = "clamp", device="cpu", scale_mode: str = "off"):
+        if scale_mode not in SCALE_MODES:
+            raise ValueError(f"scale_mode must be one of {SCALE_MODES}")
+        self.scale_mode = scale_mode
         self.model = qmodel.to(device).eval()
         self.device = torch.device(device)
         self.mode, self.bias, self.all_ones = e4m11_mode, bias, all_ones
@@ -126,6 +159,38 @@ class MixedFaultInjector:
         self.total = int(self.counts.sum())
         self.total_bits = int((self.counts * self.width).sum())
         self._saved: List[tuple] = []
+        # scale words (float32 bit patterns), only for INT layers
+        self.scale_u32: Dict[int, np.ndarray] = {}
+        for l, f in enumerate(self.fmts):
+            if f in INT_SCALE_FORMATS:
+                s = np.ascontiguousarray(np.atleast_1d(np.asarray(self.scales[l], dtype=np.float32)))
+                self.scale_u32[l] = s.view(np.uint32).copy()
+        if scale_mode != "off":
+            bad = sorted({f for f in self.fmts if f in ("fp8_scaled", "fp4_scaled")})
+            if bad:
+                raise ValueError(f"scale faults are implemented for INT formats only; layout has {bad}")
+        self.n_scale_words = int(sum(v.size for v in self.scale_u32.values()))
+
+    # ---- scale pool
+    def scale_pool(self, group: str, layer: Optional[str] = None):
+        """(bit tuple, number of scale words per layer index {l: n}, total scale bits) for the struck group."""
+        bits = scale_group_bits(group)
+        inc = self._layer_mask(layer)
+        words = {l: int(v.size) for l, v in self.scale_u32.items() if inc[l]}
+        return bits, words, len(bits) * sum(words.values())
+
+    def check_group(self, group: str, sampling: str, layer: Optional[str] = None) -> None:
+        """Raises ValueError if the group has no bit to strike in this buffer under the current scale mode."""
+        if self.scale_mode == "only":
+            if self.scale_pool(group, layer)[2] == 0:
+                raise ValueError(f"group {group!r} has no scale bits in the selected layers")
+            return
+        try:
+            self.eligible(group, sampling, layer)
+        except ValueError:
+            if self.scale_mode == "on" and self.scale_pool(group, layer)[2] > 0:
+                return
+            raise
 
     def assignment_hash(self) -> str:
         return hashlib.sha1("|".join(f"{n}:{f}" for n, f in zip(self.names, self.fmts)).encode()).hexdigest()[:12]
@@ -172,18 +237,19 @@ class MixedFaultInjector:
         return self.starts[li] + local, bit
 
     # ---- inject / restore
-    def _decode(self, l: int, new_words: np.ndarray, local: np.ndarray) -> np.ndarray:
+    def _decode(self, l: int, new_words: np.ndarray, local: np.ndarray, scale=None) -> np.ndarray:
         fmt = self.fmts[l]
         if fmt == "e4m11":
             return e4m11.decode(new_words.astype(np.uint16), self.mode, self.all_ones, self.bias)
         w8 = new_words.astype(np.uint8)
         if fmt.startswith("int"):
             q = formats8.int_words_to_q(w8, WORD_BITS[fmt])
-            scale = np.asarray(self.scales[l], dtype=np.float32)
-            if scale.ndim == 0:
-                return (q * scale).astype(np.float32)
-            per_channel = int(np.prod(self.shapes[l][1:]))
-            return (q * scale[local // per_channel]).astype(np.float32)
+            scale = np.asarray(self.scales[l] if scale is None else scale, dtype=np.float32)
+            with np.errstate(invalid="ignore", over="ignore"):             # a struck scale may be inf / NaN
+                if scale.ndim == 0:
+                    return (q * scale).astype(np.float32)
+                per_channel = int(np.prod(self.shapes[l][1:]))
+                return (q * scale[local // per_channel]).astype(np.float32)
         if fmt == "fp4_scaled":
             return (formats8.fp4_decode(w8).astype(np.float64) * 2.0 ** int(self.scales[l])).astype(np.float32)
         vals = formats8.fp8_decode(w8, "clamp")
@@ -191,7 +257,7 @@ class MixedFaultInjector:
             return (vals.astype(np.float64) * 2.0 ** int(self.scales[l])).astype(np.float32)
         return vals
 
-    def faulted(self, idx: np.ndarray, bit: np.ndarray):
+    def faulted(self, idx: np.ndarray, bit: np.ndarray, scale_over: Optional[dict] = None):
         """(unique weight indices, layer index, local index, new words, new values) for a set of flips."""
         idx, bit = np.asarray(idx, dtype=np.int64), np.asarray(bit, dtype=np.int64)
         uniq, inv = np.unique(idx, return_inverse=True)
@@ -207,30 +273,94 @@ class MixedFaultInjector:
             sel = li == l
             nw = (self.words[l][local[sel]] ^ mask[sel].astype(self.words[l].dtype))
             out_words[sel] = nw
-            vals[sel] = self._decode(int(l), nw, local[sel])
+            vals[sel] = self._decode(int(l), nw, local[sel], (scale_over or {}).get(int(l)))
         return uniq, li, local, out_words, vals
 
+    def draw_with_scales(self, rng: np.random.Generator, group: str, k: int, sampling: str = "bits",
+                         layer: Optional[str] = None):
+        """k strikes -> (weight idx, weight bit, scale layer, scale word, scale bit); the last three are empty
+        unless ``scale_mode`` is on/only (see SCALE_MODES). In mode ``on`` the weight strikes kept are those of
+        ``draw`` with the same rng, so trials are paired with mode ``off``."""
+        empty = np.empty(0, dtype=np.int64)
+        if self.scale_mode == "off":
+            idx, bit = self.draw(rng, group, k, sampling, layer)
+            return idx, bit, empty, empty, empty
+        sbits, swords, sbit_total = self.scale_pool(group, layer)
+        if self.scale_mode == "on" and sampling != "bits":
+            raise ValueError("scale mode 'on' needs sampling 'bits' (scale words are bits of the same memory)")
+        if self.scale_mode == "only":
+            n_scale = k
+            idx, bit = empty, empty
+        else:
+            try:
+                idx, bit = self.draw(rng, group, k, sampling, layer)
+                bits_w = int(self.eligible(group, sampling, layer)[2].sum())
+            except ValueError:                                     # no weight bits in this group at all
+                idx, bit, bits_w = empty, empty, 0
+            p = sbit_total / (bits_w + sbit_total) if sbit_total else 0.0
+            if bits_w == 0:
+                rep = np.ones(k, dtype=bool)
+            else:
+                rep = rng.random(k) < p
+            n_scale = int(rep.sum())
+            keep = ~rep[:idx.size] if idx.size else np.empty(0, dtype=bool)
+            idx, bit = idx[keep], bit[keep]
+        if n_scale == 0:
+            return idx, bit, empty, empty, empty
+        layers = np.array(sorted(swords), dtype=np.int64)
+        units = np.array([swords[int(l)] * len(sbits) for l in layers], dtype=np.int64)
+        cum = np.cumsum(units)
+        u = rng.integers(0, int(cum[-1]), size=n_scale, dtype=np.int64)
+        j = np.searchsorted(cum, u, side="right")
+        off = u - (cum[j] - units[j])
+        word = off // len(sbits)
+        bitpos = np.array([sbits[int(b)] for b in off % len(sbits)], dtype=np.int64)
+        return idx, bit, layers[j], word, bitpos
+
     @torch.no_grad()
-    def inject(self, idx: np.ndarray, bit: np.ndarray) -> dict:
+    def inject(self, idx: np.ndarray, bit: np.ndarray, sstrikes=None) -> dict:
+        """Apply weight-word flips (idx, bit) and, optionally, scale-word flips ``sstrikes`` = (layer, word, bit)."""
         if self._saved:
             raise RuntimeError("restore() must be called before the next inject()")
-        uniq, li, local, _, vals = self.faulted(idx, bit)
+        scale_over, n_scale_hits, scaled_vals = {}, 0, []
+        if sstrikes is not None and len(sstrikes[0]):
+            sl, sw, sb = (np.asarray(a, dtype=np.int64) for a in sstrikes)
+            n_scale_hits = int(sl.size)
+            for l in np.unique(sl):
+                sel = sl == l
+                words = self.scale_u32[int(l)].copy()
+                np.bitwise_xor.at(words, sw[sel], (np.uint32(1) << sb[sel].astype(np.uint32)).astype(np.uint32))
+                scale_over[int(l)] = words.view(np.float32).reshape(np.shape(self.scales[int(l)]))
+        for l, new_scale in scale_over.items():                    # whole tensor re-decoded with the struck scale
+            flat = self.flat[l]
+            self._saved.append((flat, None, flat.clone()))
+            full = self._decode(l, self.words[l], np.arange(self.counts[l]), new_scale)
+            flat.copy_(torch.from_numpy(full).to(self.device, flat.dtype))
+            scaled_vals.append(full)
+        uniq, li, local, _, vals = self.faulted(idx, bit, scale_over)
         for l in np.unique(li):
             sel = li == l
             flat = self.flat[l]
             loc = torch.from_numpy(local[sel]).to(self.device)
             self._saved.append((flat, loc, flat[loc].clone()))
             flat[loc] = torch.from_numpy(vals[sel]).to(self.device, flat.dtype)
-        finite = vals[np.isfinite(vals)]
+        allv = np.concatenate([vals] + [v.reshape(-1) for v in scaled_vals]) if scaled_vals else vals
+        finite = allv[np.isfinite(allv)]
         hit_layers = np.searchsorted(self.starts, np.asarray(idx, dtype=np.int64), side="right") - 1
-        return {"n_unique_weights": int(uniq.size),
-                "flips_in_8bit": int((self.width[hit_layers] < 16).sum()),      # column name kept; = hits in low-bit layers
+        info = {"n_unique_weights": int(uniq.size),
+                "flips_in_8bit": int((self.width[hit_layers] < 16).sum()) + n_scale_hits,   # hits in low-bit layers
                 "max_abs_faulted_value": float(np.abs(finite).max()) if finite.size else float("nan")}
+        if self.scale_mode != "off":
+            info["scale_hits"] = n_scale_hits
+        return info
 
     @torch.no_grad()
     def restore(self) -> None:
         for flat, loc, old in reversed(self._saved):
-            flat[loc] = old
+            if loc is None:
+                flat.copy_(old)
+            else:
+                flat[loc] = old
         self._saved = []
 
     def decode_all(self) -> "OrderedDict[str, np.ndarray]":
@@ -290,18 +420,23 @@ def run_mixed_campaign(injector: MixedFaultInjector, X, y, out_dir: Path, groups
         if not any(group_bits(f, g) for f in WORD_BITS):          # typo: no format has such a group
             raise ValueError(f"unknown fault group {g!r}; use {list(PAPER_GROUP_NAMES)}, 'any' or 'bitN'")
         try:
-            injector.eligible(g, sampling, layer)
+            injector.check_group(g, sampling, layer)
         except ValueError:                                         # e.g. 'exponent' in an all-INT8 buffer
             groups.remove(g)
             skipped.append(g)
             log(f"[{g}/{sampling}] skipped: this layout has no {g} bits (paper: empty by construction)")
-    meta = dict(meta or {}, seed=seed, layer=layer, sampling=sampling, trials=trials, ks=list(ks),
+    meta = dict({"split": "test", "val_skip": 0}, **(meta or {}), seed=seed, layer=layer, sampling=sampling, trials=trials, ks=list(ks),
                 groups=groups, skipped_groups=skipped, buffer_weights=injector.total, buffer_bits=injector.total_bits,
                 assignment_hash=injector.assignment_hash(), mode=injector.mode, bias=injector.bias,
-                all_ones=injector.all_ones, n_eval=int(X.shape[0]), scale_metadata_faults=False)
+                all_ones=injector.all_ones, n_eval=int(X.shape[0]), scale_mode=injector.scale_mode,
+                scale_metadata_faults=injector.scale_mode != "off", n_scale_words=injector.n_scale_words,
+                scale_bits=SCALE_WORD_BITS * injector.n_scale_words)
     if meta_path.exists():
         old = json.load(open(meta_path))
-        for key in ("seed", "layer", "sampling", "mode", "bias", "all_ones", "n_eval", "assignment_hash"):
+        old.setdefault("scale_mode", "off")
+        old.setdefault("split", "test")
+        old.setdefault("val_skip", 0)
+        for key in ("seed", "layer", "sampling", "mode", "bias", "all_ones", "n_eval", "assignment_hash", "scale_mode", "split", "val_skip"):
             if old.get(key) != meta.get(key):
                 raise RuntimeError(f"cannot resume: {key} differs ({old.get(key)!r} vs {meta.get(key)!r}); "
                                    f"use a new output directory")
@@ -312,7 +447,8 @@ def run_mixed_campaign(injector: MixedFaultInjector, X, y, out_dir: Path, groups
     new_file = not csv_path.exists()
     t0, n_run = time.time(), 0
     with open(csv_path, "a", newline="") as fh:
-        w = csv.DictWriter(fh, fieldnames=CSV_FIELDS)
+        fields = CSV_FIELDS + (["scale_hits"] if injector.scale_mode != "off" else [])
+        w = csv.DictWriter(fh, fieldnames=fields)
         if new_file:
             w.writeheader()
         for g in groups:
@@ -320,8 +456,13 @@ def run_mixed_campaign(injector: MixedFaultInjector, X, y, out_dir: Path, groups
                 for t in range(trials):
                     if (g, k, t) in done:
                         continue
-                    idx, b = injector.draw(trial_rng(seed, f"{g}|{sampling}", k, t), g, k, sampling, layer)
-                    info = injector.inject(idx, b)
+                    rng = trial_rng(seed, f"{g}|{sampling}", k, t)
+                    if injector.scale_mode == "off":
+                        idx, b = injector.draw(rng, g, k, sampling, layer)
+                        info = injector.inject(idx, b)
+                    else:
+                        idx, b, sl, sw, sb = injector.draw_with_scales(rng, g, k, sampling, layer)
+                        info = injector.inject(idx, b, (sl, sw, sb))
                     try:
                         m = trial_metrics(logits_of(injector.model, X), clean_logits, y)
                     finally:
@@ -343,6 +484,8 @@ def load_trials(csv_path: Path) -> List[dict]:
             r[key] = int(r[key])
         for key in ("accuracy", "cross_entropy", "kl_vs_clean", "max_abs_faulted_value"):
             r[key] = float(r[key])
+        if "scale_hits" in r and r["scale_hits"] not in (None, ""):
+            r["scale_hits"] = int(r["scale_hits"])
     return rows
 
 
@@ -371,7 +514,8 @@ def summarize_trials(rows: List[dict], clean_acc: float, ref_clean_acc: float) -
             "mean_kl": float(np.nanmean(kl)) if np.isfinite(kl).any() else float("nan"),
             "median_kl": float(np.nanmedian(kl)) if np.isfinite(kl).any() else float("nan"),
             "n_nonfinite": int(sum(1 for r in rs if not r["finite"])),
-            "mean_flips_in_8bit": float(np.mean([r["flips_in_8bit"] for r in rs]))})
+            "mean_flips_in_8bit": float(np.mean([r["flips_in_8bit"] for r in rs])),
+            "mean_scale_hits": (float(np.mean([r["scale_hits"] for r in rs])) if "scale_hits" in rs[0] else 0.0)})
     return out
 
 
@@ -396,8 +540,12 @@ def render_comparison(camps: List[dict], reference: str = "e4m11", ref_clean_acc
         (ref["meta"]["clean"]["accuracy_percent"] if ref else camps[0]["meta"]["clean"]["accuracy_percent"])
     L = ["# Fault robustness of mixed E4M11 / 8-bit storage", "",
          f"* reference layout: `{reference}` (clean accuracy {ref_clean:.2f}%); 'drop vs E4M11' always uses that value",
-         "* scale metadata of INT8 / scaled-FP8 layers is assumed fault-free; bit groups per format and the two "
-         "sampling models are defined in `fr/faults_mixed.py` (project extension, not the paper)",
+         ("* scale metadata of INT layers is struck as well (float32 words; modes: "
+          + ", ".join(sorted({c['meta'].get('scale_mode', 'off') for c in camps})) + ")"
+          if any(c["meta"].get("scale_metadata_faults", False) for c in camps) else
+          "* scale metadata of INT8 / scaled-FP8 layers is assumed fault-free")
+         + "; bit groups per format and the two sampling models are defined in `fr/faults_mixed.py` "
+         "(project extension, not the paper)",
          "* mean accuracy of faulty runs is heavy-tailed (rare catastrophic trials): read the median, p10 and "
          "bootstrap interval next to the mean", ""]
     keys = sorted({(r["group"], c["meta"]["sampling"], r["k"]) for c in camps for r in c["rows"]})

@@ -203,3 +203,20 @@ create them. Everything here is a project extension; the paper has no 4-bit form
 
 Files: `scripts/run_lowbit_heldout.sh` (all stages, resumable), `scripts/compare_selections.py` (Jaccard of two
 `selections.json`), tests `tests/test_lowbit_heldout.py`.
+
+## 13. Faults in the INT scale metadata (Plan A)
+
+The earlier fault experiments assumed that the INT scales cannot be struck. This step removes that assumption for INT8
+(and INT4). Project extension, nothing here is in the paper.
+
+| # | Decision | Status |
+|---|---|---|
+| S1 | A scale is one IEEE-754 float32 word (`formats8.int_encode` already returns float32): one per tensor for `*_pt` (21 for ResNet-18), one per output channel for `*_pc` (4,810). Storage: 21 x 32 = 672 bit (0.0008 % of the 89.3 Mbit INT8 weight payload, 0.00006 bit/weight) vs 4,810 x 32 = 153,920 bit (0.17 %, 0.0138 bit/weight). | Per the user: scale kept as FP32; count and storage are printed by `mixed_fault_campaign.py` and tabulated in the report. |
+| S2 | `--scale-faults off | on | only`. `on` (physical): scale words share the memory, so each of the k bit strikes lands in the scale region with probability S/(B+S) (S, B = scale / weight-word bits of the struck group), else as in `off`; the weight strikes kept are those `off` would draw with the same seed (paired). Needs sampling `bits`. `only`: every strike hits a uniformly chosen scale bit (damage per hit, independent of how rare hits are; not a physical load). | `off` reproduces all earlier results exactly. |
+| S3 | Bit groups of the float32 scale: exponent 30-23, sign 31, mantissa MSB 22-11 (upper ceil(23/2) = 12 bits), mantissa LSB 10-0 (Sec. 4.2 split). | Extension. |
+| S4 | A struck scale re-decodes the whole tensor (per-tensor) or one output channel (per-channel) as q * s'. No clamping: inf / NaN scales give non-finite weights and are counted in the `non-finite` column; accuracy of such trials is whatever `argmax` of the non-finite logits returns, so read `non-finite` beside it. A weight strike and a scale strike in the same channel combine. | Assumption: no saturation hardware on the scale register. |
+| S5 | `--split val --val-skip 2048` evaluates the faulty model on held-out validation images (2,952) so that choices such as per-channel vs per-tensor are not made on the test set. | Test-set numbers only for final reporting. |
+
+FP8-scaled / FP4-scaled scales (8-bit exponents) are not supported by scale faults (the injector raises). Files:
+`scripts/run_scale_faults.sh`, `scripts/compare_scale_faults.py`, `tests/test_scale_faults.py` (14 tests).
+

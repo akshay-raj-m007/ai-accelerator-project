@@ -236,3 +236,13 @@ nohup bash scripts/run_pareto_faults.sh pilot > $FR_ROOT/pareto.out 2>&1 &   # 1
 bash scripts/run_pareto_faults.sh full                                        # tops up to 500 trials (resumable)
 ```
 Output: `$FR_ROOT/results/scratch/mixed_faults_pareto/weights/comparison.md`.
+
+## Step 7: faults in the INT scale metadata (plan A)
+
+```bash
+export FR_ROOT=$HOME/fr_runs
+nohup bash scripts/run_scale_faults.sh > $FR_ROOT/scale.out 2>&1 &     # about 1-1.5 h on validation images
+bash scripts/run_scale_faults.sh only                                    # one stage: base | scale | only | groups | compare
+```
+Report: `$FR_ROOT/results/scratch/scale_faults_report.md`. Decisions S1-S5: docs/CODE_SUMMARY.md section 13.
+

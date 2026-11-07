@@ -427,6 +427,19 @@ trained model, scale metadata fault-free. Numbers: 100-trial pilot (section 8d) 
 
 **Open follow-ups.** `bits` sampling; struck INT scales; second seed or model (exp. 8 of the plan).
 
+### 8f. Planned: faults in the INT scale metadata (experiment 13, plan A)
+
+**Why.** Exp. 11/12 assumed the INT scales cannot be struck, which makes INT storage immune to flips by construction.
+Scales are stored as float32 words (21 per-tensor, 4,810 per-channel: 672 vs 153,920 bit, 0.0008 % vs 0.17 % of the INT8
+weight payload). One flipped scale exponent bit changes a whole tensor or channel, so this can create the fault tradeoff
+that INT8 lacked and makes "per-channel or per-tensor?" a real question. Decisions S1-S5 in `docs/CODE_SUMMARY.md` section 13.
+
+**Protocol (`scripts/run_scale_faults.sh`, validation images 2048-4999, no test set).** all-INT8 per-channel and per-tensor
+with scales (a) fault-free, (b) sharing the memory (physical view), (c) struck on purpose to measure the damage per scale hit
+by bit group, plus the weight bit-group breakdown at k = 1024; k = 256, 1024, 4096 (rule L7), 100 trials. Pre-stated
+analysis: median, p10, minimum and non-finite counts; paired differences on vs off; per-hit damage separately from hit rate.
+Results are not yet available.
+
 ## 9. Limitations and open points
 
 1. **Fault comparison is underpowered.** Exponent-fault accuracy is heavy-tailed (std 3.7 pp at k = 8 in exp. 4); 100

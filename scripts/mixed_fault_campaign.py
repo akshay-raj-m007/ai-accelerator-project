@@ -76,6 +76,14 @@ def main():
     ap.add_argument("--trials", type=int, default=100)
     ap.add_argument("--samplings", nargs="+", choices=FM.SAMPLINGS, default=["weights"])
     ap.add_argument("--layer", default=None, help="restrict faults to one layer")
+    ap.add_argument("--split", choices=["test", "val"], default="test",
+                    help="images the faulty model is evaluated on. val = held-out validation images (use it for any "
+                         "decision, e.g. per-channel vs per-tensor); test = the paper's test set (final numbers)")
+    ap.add_argument("--val-skip", type=int, default=2048,
+                    help="with --split val: skip the first N validation images (those used for the held-out Fisher)")
+    ap.add_argument("--scale-faults", choices=FM.SCALE_MODES, default="off",
+                    help="INT scale metadata (float32 words): off = fault-free (default); on = scale bits share the "
+                         "memory with the weights (needs --samplings bits); only = every strike hits a scale word")
     ap.add_argument("--e4m11-mode", choices=["paper", "legacy", "subnormal"], default=None,
                     help="default: the mode of the sweep that produced the selections")
     ap.add_argument("--e4m11-bias", type=int, default=None)
@@ -106,8 +114,14 @@ def main():
     if not args.summarize_only:
         model, ckpt = load_model(args.checkpoint)
         norm = fdata.resolve_normalization(cfg.normalize, "checkpoint", ckpt.get("config"))
-        loader = fdata.get_test_loader(cfg.data_path(), norm, cfg.eval_batch_size, cfg.num_workers,
-                                       cfg.test_subset, False)
+        if args.split == "test":
+            loader = fdata.get_test_loader(cfg.data_path(), norm, cfg.eval_batch_size, cfg.num_workers,
+                                           cfg.test_subset, False)
+        else:
+            from fr.mixed_run import split_params
+            val_size, split_seed = split_params(ckpt, cfg)
+            loader = fdata.get_val_loader(cfg.data_path(), norm, cfg.eval_batch_size, val_size, split_seed,
+                                          cfg.num_workers, False, subset=None, skip=args.val_skip)
         X, y = faults.load_tensors(loader, device)
         names = list(conv_linear_weights(model))
         qcache = {}
@@ -115,13 +129,18 @@ def main():
             for spec in specs:
                 slug, assignment, label = FM.resolve_assignment(spec, selections, names)
                 qmodel, buffers = mixed.quantize_mixed(model, assignment, mode, bias, cache=qcache)
-                inj = FM.MixedFaultInjector(qmodel, buffers, mode, bias, "clamp", device)
+                inj = FM.MixedFaultInjector(qmodel, buffers, mode, bias, "clamp", device, args.scale_faults)
                 assert inj.clean_weights_unchanged(), "clean decode does not match the model weights"
                 acc = mixed.bit_accounting(buffers)
+                if args.scale_faults != "off":
+                    sb = 32 * inj.n_scale_words
+                    print(f"    scale words: {inj.n_scale_words} x 32 bit = {sb} bit "
+                          f"({sb / acc['n_weights']:.5f} bit/weight; {100 * sb / acc['payload_bits']:.3f} % of the "
+                          f"weight payload); scale mode {args.scale_faults}")
                 print(f"\n=== {slug} [{label}]  {acc['avg_bits_payload']:.2f} bits/weight, "
                       f"{sum(1 for b in buffers.values() if b['format'] != 'e4m11')} layers in low-bit; "
                       f"sampling={sampling}")
-                meta = {"layout": spec, "label": label, "layers8": sorted(k for k, a in assignment.items()),
+                meta = {"split": args.split, "val_skip": args.val_skip if args.split == "val" else 0, "layout": spec, "label": label, "layers8": sorted(k for k, a in assignment.items()),
                         "avg_bits_payload": acc["avg_bits_payload"],
                         "avg_bits_with_metadata": acc["avg_bits_with_metadata"],
                         "weights_by_format": acc["weights_by_format"], "checkpoint": str(args.checkpoint),
