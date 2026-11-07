@@ -1,0 +1,70 @@
+{
+  "checkpoint": "/home/ssl25/fr_runs/checkpoints/scratch/best.pth",
+  "fp32": {
+    "accuracy_percent": 95.11,
+    "correct": 9511,
+    "total": 10000,
+    "cross_entropy": 0.1855314292907715
+  },
+  "env": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "eb3b59355c46477a4729cf6f89f25a7301b18607",
+      "dirty": true
+    }
+  },
+  "normalization": {
+    "mean": [
+      0.4914,
+      0.4822,
+      0.4465
+    ],
+    "std": [
+      0.247,
+      0.2435,
+      0.2616
+    ]
+  },
+  "seed": 0,
+  "layer": null,
+  "trials": 100,
+  "ks": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6,
+    7,
+    8
+  ],
+  "groups": [
+    "exponent",
+    "sign",
+    "mantissa_msb",
+    "mantissa_lsb"
+  ],
+  "buffer_words": 11164352,
+  "index_range": [
+    0,
+    11164352
+  ],
+  "mode": "subnormal",
+  "bias": 7,
+  "all_ones": "clamp",
+  "n_eval": 10000,
+  "clean": {
+    "accuracy_percent": 95.11,
+    "correct": 9511,
+    "total": 10000,
+    "cross_entropy": 0.18552543258666992
+  }
+}

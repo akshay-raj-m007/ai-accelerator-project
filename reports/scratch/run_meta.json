@@ -1,0 +1,58 @@
+{
+  "config": {
+    "root": null,
+    "data_dir": null,
+    "run_name": "scratch",
+    "init_checkpoint": null,
+    "init": "scratch",
+    "normalize": "auto",
+    "epochs": 200,
+    "lr": 0.1,
+    "batch_size": 128,
+    "momentum": 0.9,
+    "nesterov": true,
+    "weight_decay": 0.0005,
+    "warmup_epochs": 5,
+    "label_smoothing": 0.0,
+    "amp": true,
+    "val_size": 5000,
+    "train_subset": null,
+    "test_subset": null,
+    "num_workers": 4,
+    "eval_batch_size": 500,
+    "seed": 0,
+    "device": "auto",
+    "deterministic": false,
+    "resume": false,
+    "normalization": {
+      "mean": [
+        0.4914,
+        0.4822,
+        0.4465
+      ],
+      "std": [
+        0.247,
+        0.2435,
+        0.2616
+      ]
+    },
+    "arch": "resnet18_cifar",
+    "warmup_iters": 1755,
+    "iters_per_epoch": 351
+  },
+  "env": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "239c2850161e51be4311e63e142d49e93254ba6e",
+      "dirty": true
+    }
+  }
+}

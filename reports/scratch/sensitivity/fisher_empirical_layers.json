@@ -1,0 +1,133 @@
+{
+  "checkpoint": "/home/ssl25/fr_runs/checkpoints/scratch/best.pth",
+  "kind": "empirical",
+  "n_samples": 1024,
+  "layers": {
+    "conv1.weight": {
+      "count": 1728,
+      "trace": 0.002841362977816342,
+      "trace_per_param": 1.6443072788289016e-06,
+      "max": 3.5707071219803765e-05
+    },
+    "layer1.0.conv1.weight": {
+      "count": 36864,
+      "trace": 0.007331847997110958,
+      "trace_per_param": 1.988891058244075e-07,
+      "max": 3.913648470188491e-05
+    },
+    "layer1.0.conv2.weight": {
+      "count": 36864,
+      "trace": 0.006668934442168581,
+      "trace_per_param": 1.8090642475500707e-07,
+      "max": 1.783618063200265e-05
+    },
+    "layer1.1.conv1.weight": {
+      "count": 36864,
+      "trace": 0.0054369707949738465,
+      "trace_per_param": 1.4748727199907351e-07,
+      "max": 2.933073483291082e-05
+    },
+    "layer1.1.conv2.weight": {
+      "count": 36864,
+      "trace": 0.0041199617552426255,
+      "trace_per_param": 1.1176111532233685e-07,
+      "max": 6.03540092924959e-06
+    },
+    "layer2.0.conv1.weight": {
+      "count": 73728,
+      "trace": 0.007590067847428494,
+      "trace_per_param": 1.0294688378131096e-07,
+      "max": 4.479652488953434e-06
+    },
+    "layer2.0.conv2.weight": {
+      "count": 147456,
+      "trace": 0.008482252562927145,
+      "trace_per_param": 5.752395672558014e-08,
+      "max": 4.045411060360493e-06
+    },
+    "layer2.0.downsample.0.weight": {
+      "count": 8192,
+      "trace": 0.002505400549151604,
+      "trace_per_param": 3.058350279726079e-07,
+      "max": 1.4667339200968854e-05
+    },
+    "layer2.1.conv1.weight": {
+      "count": 147456,
+      "trace": 0.006892629013201538,
+      "trace_per_param": 4.6743632088226575e-08,
+      "max": 9.46050749917049e-06
+    },
+    "layer2.1.conv2.weight": {
+      "count": 147456,
+      "trace": 0.0045549690272870666,
+      "trace_per_param": 3.089036069937518e-08,
+      "max": 5.395836069510551e-06
+    },
+    "layer3.0.conv1.weight": {
+      "count": 294912,
+      "trace": 0.012421961562964101,
+      "trace_per_param": 4.2120909162611563e-08,
+      "max": 5.066696303401841e-06
+    },
+    "layer3.0.conv2.weight": {
+      "count": 589824,
+      "trace": 0.021701756827365207,
+      "trace_per_param": 3.679361441271499e-08,
+      "max": 1.3754354768025223e-05
+    },
+    "layer3.0.downsample.0.weight": {
+      "count": 32768,
+      "trace": 0.0020506460811382217,
+      "trace_per_param": 6.258075198786077e-08,
+      "max": 7.633343557245098e-06
+    },
+    "layer3.1.conv1.weight": {
+      "count": 589824,
+      "trace": 0.019790521586565097,
+      "trace_per_param": 3.355326603624996e-08,
+      "max": 1.2754487215715926e-05
+    },
+    "layer3.1.conv2.weight": {
+      "count": 589824,
+      "trace": 0.012462307636537412,
+      "trace_per_param": 2.11288581619897e-08,
+      "max": 4.1641182178864256e-05
+    },
+    "layer4.0.conv1.weight": {
+      "count": 1179648,
+      "trace": 0.010971195758951006,
+      "trace_per_param": 9.300397880512667e-09,
+      "max": 4.266380528861191e-06
+    },
+    "layer4.0.conv2.weight": {
+      "count": 2359296,
+      "trace": 0.01046685965513032,
+      "trace_per_param": 4.436433434011807e-09,
+      "max": 3.475034191069426e-06
+    },
+    "layer4.0.downsample.0.weight": {
+      "count": 131072,
+      "trace": 0.0011456243141381968,
+      "trace_per_param": 8.740419877152991e-09,
+      "max": 2.0476797999435803e-06
+    },
+    "layer4.1.conv1.weight": {
+      "count": 2359296,
+      "trace": 0.007786184080468409,
+      "trace_per_param": 3.300215013490638e-09,
+      "max": 7.069384651003929e-07
+    },
+    "layer4.1.conv2.weight": {
+      "count": 2359296,
+      "trace": 0.002565711804896407,
+      "trace_per_param": 1.0874904229466785e-09,
+      "max": 2.1500898128579138e-07
+    },
+    "fc.weight": {
+      "count": 5120,
+      "trace": 0.00011039583257798843,
+      "trace_per_param": 2.1561686050388366e-08,
+      "max": 1.290658019570401e-06
+    }
+  }
+}
