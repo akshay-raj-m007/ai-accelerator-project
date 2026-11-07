@@ -1,0 +1,4123 @@
+{
+  "int4_pc|T14|lambda|0": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 0.6,
+    "avg_bits": 13.95720091949806
+  },
+  "int4_pc|T14|lambda|0.25": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 0.875,
+    "avg_bits": 13.95720091949806
+  },
+  "int4_pc|T14|lambda|0.5": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 1.15,
+    "avg_bits": 13.95720091949806
+  },
+  "int4_pc|T14|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 1.4000000000000001,
+    "avg_bits": 13.95720091949806
+  },
+  "int4_pc|T14|lambda|1": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 1.5999999999999999,
+    "avg_bits": 13.95720091949806
+  },
+  "int4_pc|T14|product|": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 6.33522198656187e-08,
+    "avg_bits": 13.95720091949806
+  },
+  "int4_pc|T14|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1891008,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 1.5501594498344841e-06,
+    "avg_bits": 13.967450685897399
+  },
+  "int4_pc|T14|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1944256,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.910217090969542
+  },
+  "int4_pc|T14|random|1": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1904640,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.95279833527284
+  },
+  "int4_pc|T14|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1948352,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.905814506744324
+  },
+  "int4_pc|T14|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1866432,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.993866191248717
+  },
+  "int4_pc|T14|random|4": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1952448,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.901411922519104
+  },
+  "int4_pc|T12|lambda|0": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3833856,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 0.7,
+    "avg_bits": 11.879181165194362
+  },
+  "int4_pc|T12|lambda|0.25": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3833856,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.0875000000000001,
+    "avg_bits": 11.879181165194362
+  },
+  "int4_pc|T12|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3833856,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.4749999999999999,
+    "avg_bits": 11.879181165194362
+  },
+  "int4_pc|T12|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3833856,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.8625000000000003,
+    "avg_bits": 11.879181165194362
+  },
+  "int4_pc|T12|lambda|1": {
+    "layers8": [
+      "layer2.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3743744,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 2.2,
+    "avg_bits": 11.976038018149195
+  },
+  "int4_pc|T12|product|": {
+    "layers8": [
+      "layer2.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3817472,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 4.383277179868848e-08,
+    "avg_bits": 11.89679150209524
+  },
+  "int4_pc|T12|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3807936,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.6449581608736613e-06,
+    "avg_bits": 11.90704126849458
+  },
+  "int4_pc|T12|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3812032,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.90263868426936
+  },
+  "int4_pc|T12|random|1": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3749568,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.96977809370396
+  },
+  "int4_pc|T12|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3820224,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.89383351581892
+  },
+  "int4_pc|T12|random|3": {
+    "layers8": [
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3830784,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.882483103363276
+  },
+  "int4_pc|T12|random|4": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3881664,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.827794752440626
+  },
+  "int4_pc|T10|lambda|0": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 0.8,
+    "avg_bits": 9.977264779899452
+  },
+  "int4_pc|T10|lambda|0.25": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 1.3875000000000002,
+    "avg_bits": 9.977264779899452
+  },
+  "int4_pc|T10|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 1.9749999999999999,
+    "avg_bits": 9.977264779899452
+  },
+  "int4_pc|T10|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 2.5125,
+    "avg_bits": 9.977264779899452
+  },
+  "int4_pc|T10|lambda|1": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 2.9999999999999996,
+    "avg_bits": 9.977264779899452
+  },
+  "int4_pc|T10|product|": {
+    "layers8": [
+      "layer2.1.conv2.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5586944,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 7.56177235120166e-08,
+    "avg_bits": 9.99487511680033
+  },
+  "int4_pc|T10|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5855936,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 1.6374187083507291e-06,
+    "avg_bits": 9.70574915588473
+  },
+  "int4_pc|T10|random|0": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5850112,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.712009080329965
+  },
+  "int4_pc|T10|random|1": {
+    "layers8": [
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5849088,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.71310972638627
+  },
+  "int4_pc|T10|random|2": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5735424,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.835281438636116
+  },
+  "int4_pc|T10|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5630656,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.947891288271814
+  },
+  "int4_pc|T10|random|4": {
+    "layers8": [
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5846016,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.716411664555185
+  },
+  "int4_pc|T8|lambda|0": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 0.39999999999999997,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pc|T8|lambda|0.25": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 1.1875,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pc|T8|lambda|0.5": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 1.9749999999999999,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pc|T8|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 2.7375,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pc|T8|lambda|1": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 3.4499999999999997,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pc|T8|product|": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 5.9382932722615866e-08,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pc|T8|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7625408,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 1.6692036600640573e-06,
+    "avg_bits": 7.80383277058982
+  },
+  "int4_pc|T8|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7609024,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.821443107490699
+  },
+  "int4_pc|T8|random|1": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7730880,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.690466226790413
+  },
+  "int4_pc|T8|random|2": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7529472,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.906949547989888
+  },
+  "int4_pc|T8|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7449280,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.993143892274267
+  },
+  "int4_pc|T8|random|4": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7445184,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.997546476499487
+  },
+  "int4_pc|T6|lambda|0": {
+    "layers8": [
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 1.0,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pc|T6|lambda|0.25": {
+    "layers8": [
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 2.0,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pc|T6|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 3.0,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pc|T6|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 3.9749999999999996,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pc|T6|lambda|1": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 4.9,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pc|T6|product|": {
+    "layers8": [
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9306112,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 1.4856575369206606e-07,
+    "avg_bits": 5.997328640300843
+  },
+  "int4_pc|T6|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9706176,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 1.6427546661573042e-06,
+    "avg_bits": 5.567319984178213
+  },
+  "int4_pc|T6|random|0": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9606144,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.6748393458035
+  },
+  "int4_pc|T6|random|1": {
+    "layers8": [
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9388032,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.909276955796449
+  },
+  "int4_pc|T6|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9321152,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.981162901348864
+  },
+  "int4_pc|T6|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9620160,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.659774252907827
+  },
+  "int4_pc|T6|random|4": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.1.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9700352,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.573579908623447
+  },
+  "int4_pc|T5|lambda|0": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 1.9500000000000002,
+    "avg_bits": 4.905487752446358
+  },
+  "int4_pc|T5|lambda|0.25": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 3.0,
+    "avg_bits": 4.905487752446358
+  },
+  "int4_pc|T5|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 4.05,
+    "avg_bits": 4.905487752446358
+  },
+  "int4_pc|T5|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 5.1,
+    "avg_bits": 4.905487752446358
+  },
+  "int4_pc|T5|lambda|1": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 6.15,
+    "avg_bits": 4.905487752446358
+  },
+  "int4_pc|T5|product|": {
+    "layers8": [
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10305536,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 3.019722668778191e-07,
+    "avg_bits": 4.923098089347237
+  },
+  "int4_pc|T5|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10574528,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 1.6413181999684817e-06,
+    "avg_bits": 4.633972128431637
+  },
+  "int4_pc|T5|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10504896,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.7088160602603715
+  },
+  "int4_pc|T5|random|1": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10745536,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.450164237028714
+  },
+  "int4_pc|T5|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10431168,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.788062576314326
+  },
+  "int4_pc|T5|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10427072,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.792465160539546
+  },
+  "int4_pc|T5|random|4": {
+    "layers8": [
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10245120,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.988036206669227
+  },
+  "int4_pt|T14|lambda|0": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 0.6,
+    "avg_bits": 13.95720091949806
+  },
+  "int4_pt|T14|lambda|0.25": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 0.95,
+    "avg_bits": 13.95720091949806
+  },
+  "int4_pt|T14|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 1.225,
+    "avg_bits": 13.95720091949806
+  },
+  "int4_pt|T14|lambda|0.75": {
+    "layers8": [
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.0.conv1.weight"
+    ],
+    "n_switched": 1916928,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 1.3125,
+    "avg_bits": 13.93959058259718
+  },
+  "int4_pt|T14|lambda|1": {
+    "layers8": [
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight"
+    ],
+    "n_switched": 1916928,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 1.35,
+    "avg_bits": 13.93959058259718
+  },
+  "int4_pt|T14|product|": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 2.65747289211396e-07,
+    "avg_bits": 13.95720091949806
+  },
+  "int4_pt|T14|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1891008,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 4.9811063662643455e-06,
+    "avg_bits": 13.967450685897399
+  },
+  "int4_pt|T14|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1944256,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.910217090969542
+  },
+  "int4_pt|T14|random|1": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1904640,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.95279833527284
+  },
+  "int4_pt|T14|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1948352,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.905814506744324
+  },
+  "int4_pt|T14|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1866432,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.993866191248717
+  },
+  "int4_pt|T14|random|4": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1952448,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.901411922519104
+  },
+  "int4_pt|T12|lambda|0": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3833856,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 0.7,
+    "avg_bits": 11.879181165194362
+  },
+  "int4_pt|T12|lambda|0.25": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3833856,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.1375,
+    "avg_bits": 11.879181165194362
+  },
+  "int4_pt|T12|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3833856,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.575,
+    "avg_bits": 11.879181165194362
+  },
+  "int4_pt|T12|lambda|0.75": {
+    "layers8": [
+      "layer1.1.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3723264,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.8125,
+    "avg_bits": 11.998050939275293
+  },
+  "int4_pt|T12|lambda|1": {
+    "layers8": [
+      "layer1.1.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3723264,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.7000000000000002,
+    "avg_bits": 11.998050939275293
+  },
+  "int4_pt|T12|product|": {
+    "layers8": [
+      "layer2.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3817472,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 2.0413716850936342e-07,
+    "avg_bits": 11.89679150209524
+  },
+  "int4_pt|T12|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3807936,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 5.3238296113756165e-06,
+    "avg_bits": 11.90704126849458
+  },
+  "int4_pt|T12|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3812032,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.90263868426936
+  },
+  "int4_pt|T12|random|1": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3749568,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.96977809370396
+  },
+  "int4_pt|T12|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3820224,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.89383351581892
+  },
+  "int4_pt|T12|random|3": {
+    "layers8": [
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3830784,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.882483103363276
+  },
+  "int4_pt|T12|random|4": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3881664,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.827794752440626
+  },
+  "int4_pt|T10|lambda|0": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 0.8,
+    "avg_bits": 9.977264779899452
+  },
+  "int4_pt|T10|lambda|0.25": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 1.375,
+    "avg_bits": 9.977264779899452
+  },
+  "int4_pt|T10|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 1.875,
+    "avg_bits": 9.977264779899452
+  },
+  "int4_pt|T10|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 2.3125,
+    "avg_bits": 9.977264779899452
+  },
+  "int4_pt|T10|lambda|1": {
+    "layers8": [
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 2.6,
+    "avg_bits": 9.977264779899452
+  },
+  "int4_pt|T10|product|": {
+    "layers8": [
+      "layer2.1.conv2.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5586944,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 2.567915963206217e-07,
+    "avg_bits": 9.99487511680033
+  },
+  "int4_pt|T10|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5855936,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 5.321985488014524e-06,
+    "avg_bits": 9.70574915588473
+  },
+  "int4_pt|T10|random|0": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5850112,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.712009080329965
+  },
+  "int4_pt|T10|random|1": {
+    "layers8": [
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5849088,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.71310972638627
+  },
+  "int4_pt|T10|random|2": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5735424,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.835281438636116
+  },
+  "int4_pt|T10|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5630656,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.947891288271814
+  },
+  "int4_pt|T10|random|4": {
+    "layers8": [
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5846016,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.716411664555185
+  },
+  "int4_pt|T8|lambda|0": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 0.39999999999999997,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pt|T8|lambda|0.25": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 1.1500000000000001,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pt|T8|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 1.825,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pt|T8|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 2.4375,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pt|T8|lambda|1": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 3.0500000000000003,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pt|T8|product|": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 2.203997896307066e-07,
+    "avg_bits": 7.758362330388723
+  },
+  "int4_pt|T8|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7625408,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 5.374639915825783e-06,
+    "avg_bits": 7.80383277058982
+  },
+  "int4_pt|T8|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7609024,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.821443107490699
+  },
+  "int4_pt|T8|random|1": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7730880,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.690466226790413
+  },
+  "int4_pt|T8|random|2": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7529472,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.906949547989888
+  },
+  "int4_pt|T8|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7449280,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.993143892274267
+  },
+  "int4_pt|T8|random|4": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7445184,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.997546476499487
+  },
+  "int4_pt|T6|lambda|0": {
+    "layers8": [
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 1.0,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pt|T6|lambda|0.25": {
+    "layers8": [
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 1.9,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pt|T6|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 2.7249999999999996,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pt|T6|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 3.4875,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pt|T6|lambda|1": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 4.25,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pt|T6|product|": {
+    "layers8": [
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 5.684774687384602e-07,
+    "avg_bits": 5.856445945093813
+  },
+  "int4_pt|T6|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9706176,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 5.285917943901019e-06,
+    "avg_bits": 5.567319984178213
+  },
+  "int4_pt|T6|random|0": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9606144,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.6748393458035
+  },
+  "int4_pt|T6|random|1": {
+    "layers8": [
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9388032,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.909276955796449
+  },
+  "int4_pt|T6|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9321152,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.981162901348864
+  },
+  "int4_pt|T6|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9620160,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.659774252907827
+  },
+  "int4_pt|T6|random|4": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.1.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9700352,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.573579908623447
+  },
+  "int4_pt|T5|lambda|0": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 1.9500000000000002,
+    "avg_bits": 4.905487752446358
+  },
+  "int4_pt|T5|lambda|0.25": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 2.85,
+    "avg_bits": 4.905487752446358
+  },
+  "int4_pt|T5|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 3.75,
+    "avg_bits": 4.905487752446358
+  },
+  "int4_pt|T5|lambda|0.75": {
+    "layers8": [
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10248192,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 4.575,
+    "avg_bits": 4.984734268500312
+  },
+  "int4_pt|T5|lambda|1": {
+    "layers8": [
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10248192,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 5.199999999999999,
+    "avg_bits": 4.984734268500312
+  },
+  "int4_pt|T5|product|": {
+    "layers8": [
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10305536,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 9.446997369552634e-07,
+    "avg_bits": 4.923098089347237
+  },
+  "int4_pt|T5|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10574528,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 5.342166574821871e-06,
+    "avg_bits": 4.633972128431637
+  },
+  "int4_pt|T5|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10504896,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.7088160602603715
+  },
+  "int4_pt|T5|random|1": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10745536,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.450164237028714
+  },
+  "int4_pt|T5|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10431168,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.788062576314326
+  },
+  "int4_pt|T5|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10427072,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.792465160539546
+  },
+  "int4_pt|T5|random|4": {
+    "layers8": [
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10245120,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.988036206669227
+  },
+  "fp4_scaled|T14|lambda|0": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 0.6,
+    "avg_bits": 13.95720091949806
+  },
+  "fp4_scaled|T14|lambda|0.25": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 0.8875,
+    "avg_bits": 13.95720091949806
+  },
+  "fp4_scaled|T14|lambda|0.5": {
+    "layers8": [
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.0.conv1.weight"
+    ],
+    "n_switched": 1916928,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 1.125,
+    "avg_bits": 13.93959058259718
+  },
+  "fp4_scaled|T14|lambda|0.75": {
+    "layers8": [
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight"
+    ],
+    "n_switched": 1916928,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 1.0125,
+    "avg_bits": 13.93959058259718
+  },
+  "fp4_scaled|T14|lambda|1": {
+    "layers8": [
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight"
+    ],
+    "n_switched": 1916928,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 0.8,
+    "avg_bits": 13.93959058259718
+  },
+  "fp4_scaled|T14|product|": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1900544,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 1.269817307499149e-07,
+    "avg_bits": 13.95720091949806
+  },
+  "fp4_scaled|T14|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1891008,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": 3.624995581253377e-06,
+    "avg_bits": 13.967450685897399
+  },
+  "fp4_scaled|T14|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1944256,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.910217090969542
+  },
+  "fp4_scaled|T14|random|1": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight"
+    ],
+    "n_switched": 1904640,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.95279833527284
+  },
+  "fp4_scaled|T14|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1948352,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.905814506744324
+  },
+  "fp4_scaled|T14|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1866432,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.993866191248717
+  },
+  "fp4_scaled|T14|random|4": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 1952448,
+    "need": 1860726,
+    "tol_used": 0.05,
+    "n_feasible": 10368,
+    "total_cost": null,
+    "avg_bits": 13.901411922519104
+  },
+  "fp4_scaled|T12|lambda|0": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3833856,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 0.7,
+    "avg_bits": 11.879181165194362
+  },
+  "fp4_scaled|T12|lambda|0.25": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3833856,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.0875000000000001,
+    "avg_bits": 11.879181165194362
+  },
+  "fp4_scaled|T12|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3833856,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.475,
+    "avg_bits": 11.879181165194362
+  },
+  "fp4_scaled|T12|lambda|0.75": {
+    "layers8": [
+      "layer1.1.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3723264,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.6375000000000002,
+    "avg_bits": 11.998050939275293
+  },
+  "fp4_scaled|T12|lambda|1": {
+    "layers8": [
+      "layer1.1.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3723264,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.45,
+    "avg_bits": 11.998050939275293
+  },
+  "fp4_scaled|T12|product|": {
+    "layers8": [
+      "layer2.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3817472,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 1.0185308451926122e-07,
+    "avg_bits": 11.89679150209524
+  },
+  "fp4_scaled|T12|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3807936,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": 3.83957887273353e-06,
+    "avg_bits": 11.90704126849458
+  },
+  "fp4_scaled|T12|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3812032,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.90263868426936
+  },
+  "fp4_scaled|T12|random|1": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 3749568,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.96977809370396
+  },
+  "fp4_scaled|T12|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3820224,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.89383351581892
+  },
+  "fp4_scaled|T12|random|3": {
+    "layers8": [
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3830784,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.882483103363276
+  },
+  "fp4_scaled|T12|random|4": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 3881664,
+    "need": 3721451,
+    "tol_used": 0.05,
+    "n_feasible": 56720,
+    "total_cost": null,
+    "avg_bits": 11.827794752440626
+  },
+  "fp4_scaled|T10|lambda|0": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 0.8,
+    "avg_bits": 9.977264779899452
+  },
+  "fp4_scaled|T10|lambda|0.25": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 1.2875,
+    "avg_bits": 9.977264779899452
+  },
+  "fp4_scaled|T10|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 1.775,
+    "avg_bits": 9.977264779899452
+  },
+  "fp4_scaled|T10|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 2.1624999999999996,
+    "avg_bits": 9.977264779899452
+  },
+  "fp4_scaled|T10|lambda|1": {
+    "layers8": [
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5603328,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 2.45,
+    "avg_bits": 9.977264779899452
+  },
+  "fp4_scaled|T10|product|": {
+    "layers8": [
+      "layer2.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5586944,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 1.2074743789232905e-07,
+    "avg_bits": 9.99487511680033
+  },
+  "fp4_scaled|T10|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5855936,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": 3.86777526660361e-06,
+    "avg_bits": 9.70574915588473
+  },
+  "fp4_scaled|T10|random|0": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5850112,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.712009080329965
+  },
+  "fp4_scaled|T10|random|1": {
+    "layers8": [
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 5849088,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.71310972638627
+  },
+  "fp4_scaled|T10|random|2": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5735424,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.835281438636116
+  },
+  "fp4_scaled|T10|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5630656,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.947891288271814
+  },
+  "fp4_scaled|T10|random|4": {
+    "layers8": [
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 5846016,
+    "need": 5582176,
+    "tol_used": 0.05,
+    "n_feasible": 92928,
+    "total_cost": null,
+    "avg_bits": 9.716411664555185
+  },
+  "fp4_scaled|T8|lambda|0": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 0.39999999999999997,
+    "avg_bits": 7.758362330388723
+  },
+  "fp4_scaled|T8|lambda|0.25": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 1.0625,
+    "avg_bits": 7.758362330388723
+  },
+  "fp4_scaled|T8|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 1.725,
+    "avg_bits": 7.758362330388723
+  },
+  "fp4_scaled|T8|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 2.2874999999999996,
+    "avg_bits": 7.758362330388723
+  },
+  "fp4_scaled|T8|lambda|1": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 2.8499999999999996,
+    "avg_bits": 7.758362330388723
+  },
+  "fp4_scaled|T8|product|": {
+    "layers8": [
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7667712,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 1.239052170616876e-07,
+    "avg_bits": 7.758362330388723
+  },
+  "fp4_scaled|T8|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7625408,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": 3.8866696199766785e-06,
+    "avg_bits": 7.80383277058982
+  },
+  "fp4_scaled|T8|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7609024,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.821443107490699
+  },
+  "fp4_scaled|T8|random|1": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 7730880,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.690466226790413
+  },
+  "fp4_scaled|T8|random|2": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7529472,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.906949547989888
+  },
+  "fp4_scaled|T8|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7449280,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.993143892274267
+  },
+  "fp4_scaled|T8|random|4": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 7445184,
+    "need": 7442902,
+    "tol_used": 0.05,
+    "n_feasible": 103168,
+    "total_cost": null,
+    "avg_bits": 7.997546476499487
+  },
+  "fp4_scaled|T6|lambda|0": {
+    "layers8": [
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 1.0,
+    "avg_bits": 5.856445945093813
+  },
+  "fp4_scaled|T6|lambda|0.25": {
+    "layers8": [
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 1.7625000000000002,
+    "avg_bits": 5.856445945093813
+  },
+  "fp4_scaled|T6|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 2.5250000000000004,
+    "avg_bits": 5.856445945093813
+  },
+  "fp4_scaled|T6|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 3.1875,
+    "avg_bits": 5.856445945093813
+  },
+  "fp4_scaled|T6|lambda|1": {
+    "layers8": [
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 3.8499999999999996,
+    "avg_bits": 5.856445945093813
+  },
+  "fp4_scaled|T6|product|": {
+    "layers8": [
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9437184,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 2.864789137837375e-07,
+    "avg_bits": 5.856445945093813
+  },
+  "fp4_scaled|T6|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9706176,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": 3.8423647250320616e-06,
+    "avg_bits": 5.567319984178213
+  },
+  "fp4_scaled|T6|random|0": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9606144,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.6748393458035
+  },
+  "fp4_scaled|T6|random|1": {
+    "layers8": [
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 9388032,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.909276955796449
+  },
+  "fp4_scaled|T6|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9321152,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.981162901348864
+  },
+  "fp4_scaled|T6|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9620160,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.659774252907827
+  },
+  "fp4_scaled|T6|random|4": {
+    "layers8": [
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.1.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 9700352,
+    "need": 9303627,
+    "tol_used": 0.05,
+    "n_feasible": 49254,
+    "total_cost": null,
+    "avg_bits": 5.573579908623447
+  },
+  "fp4_scaled|T5|lambda|0": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 1.9500000000000002,
+    "avg_bits": 4.905487752446358
+  },
+  "fp4_scaled|T5|lambda|0.25": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 2.6875000000000004,
+    "avg_bits": 4.905487752446358
+  },
+  "fp4_scaled|T5|lambda|0.5": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 3.425,
+    "avg_bits": 4.905487752446358
+  },
+  "fp4_scaled|T5|lambda|0.75": {
+    "layers8": [
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10321920,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 4.1625,
+    "avg_bits": 4.905487752446358
+  },
+  "fp4_scaled|T5|lambda|1": {
+    "layers8": [
+      "layer2.0.conv1.weight",
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10248192,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 4.75,
+    "avg_bits": 4.984734268500312
+  },
+  "fp4_scaled|T5|product|": {
+    "layers8": [
+      "layer2.1.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10305536,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 4.4835694717743897e-07,
+    "avg_bits": 4.923098089347237
+  },
+  "fp4_scaled|T5|worst|": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10574528,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": 3.8782080981640406e-06,
+    "avg_bits": 4.633972128431637
+  },
+  "fp4_scaled|T5|random|0": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10504896,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.7088160602603715
+  },
+  "fp4_scaled|T5|random|1": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv2.weight",
+      "layer1.1.conv1.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.conv2.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight"
+    ],
+    "n_switched": 10745536,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.450164237028714
+  },
+  "fp4_scaled|T5|random|2": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.1.conv1.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10431168,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.788062576314326
+  },
+  "fp4_scaled|T5|random|3": {
+    "layers8": [
+      "conv1.weight",
+      "layer1.0.conv1.weight",
+      "layer1.1.conv1.weight",
+      "layer2.0.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.0.downsample.0.weight",
+      "layer3.1.conv2.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10427072,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.792465160539546
+  },
+  "fp4_scaled|T5|random|4": {
+    "layers8": [
+      "layer1.0.conv2.weight",
+      "layer1.1.conv2.weight",
+      "layer2.0.downsample.0.weight",
+      "layer2.1.conv1.weight",
+      "layer2.1.conv2.weight",
+      "layer3.0.conv1.weight",
+      "layer3.0.conv2.weight",
+      "layer3.1.conv1.weight",
+      "layer4.0.conv1.weight",
+      "layer4.0.conv2.weight",
+      "layer4.0.downsample.0.weight",
+      "layer4.1.conv1.weight",
+      "layer4.1.conv2.weight",
+      "fc.weight"
+    ],
+    "n_switched": 10245120,
+    "need": 10233990,
+    "tol_used": 0.05,
+    "n_feasible": 19124,
+    "total_cost": null,
+    "avg_bits": 4.988036206669227
+  }
+}

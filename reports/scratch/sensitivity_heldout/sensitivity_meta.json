@@ -1,0 +1,170 @@
+{
+  "checkpoint": "/home/ssl25/fr_runs/checkpoints/scratch/best.pth",
+  "source": "val",
+  "calib_size": 2048,
+  "val_size": 5000,
+  "split_seed": 0,
+  "fisher_seed": 0,
+  "device": "cuda",
+  "env": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "ff02d34fb1a16c5161c8132a25c1f30a61801b65",
+      "dirty": true
+    }
+  },
+  "normalization": {
+    "mean": [
+      0.4914,
+      0.4822,
+      0.4465
+    ],
+    "std": [
+      0.247,
+      0.2435,
+      0.2616
+    ]
+  },
+  "kinds": {
+    "true": {
+      "n_samples": 2048,
+      "mean_nll_on_calibration": 0.16227821320329028,
+      "layers": {
+        "conv1.weight": {
+          "count": 1728,
+          "trace": 57.72106365998843,
+          "trace_per_param": 0.033403393321752566,
+          "max": 0.3708200454711914
+        },
+        "layer1.0.conv1.weight": {
+          "count": 36864,
+          "trace": 140.4103458739727,
+          "trace_per_param": 0.003808874399793096,
+          "max": 0.26628899574279785
+        },
+        "layer1.0.conv2.weight": {
+          "count": 36864,
+          "trace": 127.02593617382037,
+          "trace_per_param": 0.003445799049854068,
+          "max": 0.2083331197500229
+        },
+        "layer1.1.conv1.weight": {
+          "count": 36864,
+          "trace": 131.00303192963804,
+          "trace_per_param": 0.003553684676910754,
+          "max": 0.29140782356262207
+        },
+        "layer1.1.conv2.weight": {
+          "count": 36864,
+          "trace": 86.55445678847957,
+          "trace_per_param": 0.002347939908541655,
+          "max": 0.050038307905197144
+        },
+        "layer2.0.conv1.weight": {
+          "count": 73728,
+          "trace": 170.36421575079748,
+          "trace_per_param": 0.002310712561724141,
+          "max": 0.05826067179441452
+        },
+        "layer2.0.conv2.weight": {
+          "count": 147456,
+          "trace": 212.95375742239202,
+          "trace_per_param": 0.0014441850953666993,
+          "max": 0.10549596697092056
+        },
+        "layer2.0.downsample.0.weight": {
+          "count": 8192,
+          "trace": 69.89545833735428,
+          "trace_per_param": 0.008532160441571568,
+          "max": 1.3686270713806152
+        },
+        "layer2.1.conv1.weight": {
+          "count": 147456,
+          "trace": 150.00482171796227,
+          "trace_per_param": 0.001017285303534358,
+          "max": 0.05513467267155647
+        },
+        "layer2.1.conv2.weight": {
+          "count": 147456,
+          "trace": 94.60003890272073,
+          "trace_per_param": 0.0006415475728537376,
+          "max": 0.03349729999899864
+        },
+        "layer3.0.conv1.weight": {
+          "count": 294912,
+          "trace": 272.16379120701185,
+          "trace_per_param": 0.0009228644178840192,
+          "max": 0.027195312082767487
+        },
+        "layer3.0.conv2.weight": {
+          "count": 589824,
+          "trace": 415.12496704853106,
+          "trace_per_param": 0.0007038115896411998,
+          "max": 0.05144675821065903
+        },
+        "layer3.0.downsample.0.weight": {
+          "count": 32768,
+          "trace": 43.267273838959625,
+          "trace_per_param": 0.001320412409636219,
+          "max": 0.051807601004838943
+        },
+        "layer3.1.conv1.weight": {
+          "count": 589824,
+          "trace": 365.06700277578364,
+          "trace_per_param": 0.0006189422654483094,
+          "max": 0.06482328474521637
+        },
+        "layer3.1.conv2.weight": {
+          "count": 589824,
+          "trace": 177.61300748785527,
+          "trace_per_param": 0.00030112882400149075,
+          "max": 0.0361618772149086
+        },
+        "layer4.0.conv1.weight": {
+          "count": 1179648,
+          "trace": 136.33770586036934,
+          "trace_per_param": 0.00011557490527714143,
+          "max": 0.009418888948857784
+        },
+        "layer4.0.conv2.weight": {
+          "count": 2359296,
+          "trace": 91.14211946357446,
+          "trace_per_param": 3.863106598899606e-05,
+          "max": 0.005621372722089291
+        },
+        "layer4.0.downsample.0.weight": {
+          "count": 131072,
+          "trace": 11.985888908550137,
+          "trace_per_param": 9.144507529106245e-05,
+          "max": 0.0048250965774059296
+        },
+        "layer4.1.conv1.weight": {
+          "count": 2359296,
+          "trace": 67.15489854532105,
+          "trace_per_param": 2.8463956428240055e-05,
+          "max": 0.007107473444193602
+        },
+        "layer4.1.conv2.weight": {
+          "count": 2359296,
+          "trace": 20.797051719928813,
+          "trace_per_param": 8.81493959211935e-06,
+          "max": 0.0010966998524963856
+        },
+        "fc.weight": {
+          "count": 5120,
+          "trace": 0.7528678057919649,
+          "trace_per_param": 0.00014704449331874315,
+          "max": 0.005335890222340822
+        }
+      }
+    }
+  }
+}

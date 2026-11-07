@@ -3,7 +3,7 @@
 ## Model
 - `models/scratch/best.pth`  85.4 MB  sha256[:12]=c612da6a4b20
 
-## Reports copied to `reports/scratch/` (67 files, 2.11 MB)
+## Reports copied to `reports/scratch/` (97 files, 3.19 MB)
 
 - `faults_subnormal_b7/campaign_meta.json`  0.001 MB
 - `faults_subnormal_b7/summary.json`  0.011 MB
@@ -60,7 +60,35 @@
 - `mixed_faults/weights/int8_pt_T12_random_1/trials.csv`  0.010 MB
 - `mixed_faults/weights/int8_pt_T12_worst/campaign_meta.json`  0.002 MB
 - `mixed_faults/weights/int8_pt_T12_worst/trials.csv`  0.010 MB
+- `mixed_faults_load/weights/all_int4_pc/campaign_meta.json`  0.002 MB
+- `mixed_faults_load/weights/all_int4_pc/trials.csv`  0.022 MB
+- `mixed_faults_load/weights/all_int8_pc/campaign_meta.json`  0.002 MB
+- `mixed_faults_load/weights/all_int8_pc/trials.csv`  0.022 MB
+- `mixed_faults_load/weights/comparison.json`  0.008 MB
+- `mixed_faults_load/weights/comparison.md`  0.005 MB
+- `mixed_faults_load/weights/e4m11/campaign_meta.json`  0.001 MB
+- `mixed_faults_load/weights/e4m11/trials.csv`  0.020 MB
+- `mixed_heldout/layer_table.json`  0.031 MB
+- `mixed_heldout/mixed_churn_report.md`  0.034 MB
+- `mixed_heldout/mixed_churn_test.csv`  0.031 MB
+- `mixed_heldout/mixed_churn_val.csv`  0.040 MB
+- `mixed_heldout/mixed_report.md`  0.028 MB
+- `mixed_heldout/mixed_test.csv`  0.120 MB
+- `mixed_heldout/mixed_val.csv`  0.136 MB
+- `mixed_heldout/selections.json`  0.180 MB
+- `mixed_heldout/sweep_meta.json`  0.002 MB
+- `mixed_lowbit/layer_table.json`  0.016 MB
+- `mixed_lowbit/mixed_churn_report.md`  0.020 MB
+- `mixed_lowbit/mixed_churn_test.csv`  0.018 MB
+- `mixed_lowbit/mixed_churn_val.csv`  0.024 MB
+- `mixed_lowbit/mixed_report.md`  0.017 MB
+- `mixed_lowbit/mixed_test.csv`  0.067 MB
+- `mixed_lowbit/mixed_val.csv`  0.075 MB
+- `mixed_lowbit/selections.json`  0.102 MB
+- `mixed_lowbit/sweep_meta.json`  0.002 MB
 - `run_meta.json`  0.001 MB
+- `selection_compare_4bit.md`  0.031 MB
+- `selection_compare_8bit.md`  0.015 MB
 - `sensitivity/fisher_empirical_layers.json`  0.004 MB
 - `sensitivity/fisher_stability.json`  0.013 MB
 - `sensitivity/fisher_stability.md`  0.003 MB
@@ -68,12 +96,15 @@
 - `sensitivity/sensitivity_meta.json`  0.009 MB
 - `sensitivity/traces_train_true.npz`  0.646 MB
 - `sensitivity/traces_val_true.npz`  0.650 MB
+- `sensitivity_heldout/fisher_true_layers.json`  0.004 MB
+- `sensitivity_heldout/sensitivity_meta.json`  0.005 MB
 - `step1_report.json`  0.033 MB
 - `step1_report.md`  0.008 MB
 - `train.log`  0.017 MB
 - `train_log.csv`  0.020 MB
 
-## Skipped (2)
+## Skipped (3)
 
 - `sensitivity/fisher_empirical.pt`  42.6 MB  (larger than --max-report-mb)
 - `sensitivity/fisher_true.pt`  42.6 MB  (larger than --max-report-mb)
+- `sensitivity_heldout/fisher_true.pt`  42.6 MB  (larger than --max-report-mb)

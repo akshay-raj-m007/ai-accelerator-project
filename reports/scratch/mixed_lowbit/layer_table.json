@@ -1,0 +1,514 @@
+{
+  "layer_table": {
+    "int4_pc": [
+      {
+        "name": "conv1.weight",
+        "count": 1728,
+        "error": 0.010216235759082185,
+        "fisher_total": 0.002841363173349626,
+        "fisher_per_param": 1.644307391984737e-06,
+        "damage": 6.132938909940698e-07
+      },
+      {
+        "name": "layer1.0.conv1.weight",
+        "count": 36864,
+        "error": 0.03513633915915573,
+        "fisher_total": 0.0073318102700894346,
+        "fisher_per_param": 1.9888808241345037e-07,
+        "damage": 1.9234911474392208e-07
+      },
+      {
+        "name": "layer1.0.conv2.weight",
+        "count": 36864,
+        "error": 0.047233631592127,
+        "fisher_total": 0.00666895070758034,
+        "fisher_per_param": 1.809068659825396e-07,
+        "damage": 1.3430045746949736e-07
+      },
+      {
+        "name": "layer1.1.conv1.weight",
+        "count": 36864,
+        "error": 0.04182378914819681,
+        "fisher_total": 0.005436981583604204,
+        "fisher_per_param": 1.4748756465940222e-07,
+        "damage": 1.0294676131635742e-07
+      },
+      {
+        "name": "layer1.1.conv2.weight",
+        "count": 36864,
+        "error": 0.025095612473303608,
+        "fisher_total": 0.004119968277686185,
+        "fisher_per_param": 1.1176129225494207e-07,
+        "damage": 3.916058131778703e-08
+      },
+      {
+        "name": "layer2.0.conv1.weight",
+        "count": 73728,
+        "error": 0.027144042944572698,
+        "fisher_total": 0.007590030168739853,
+        "fisher_per_param": 1.0294637273138906e-07,
+        "damage": 5.0041601981775965e-08
+      },
+      {
+        "name": "layer2.0.conv2.weight",
+        "count": 147456,
+        "error": 0.03082839244172954,
+        "fisher_total": 0.008482249763566065,
+        "fisher_per_param": 5.752393774119782e-08,
+        "damage": 5.12367218776068e-08
+      },
+      {
+        "name": "layer2.0.downsample.0.weight",
+        "count": 8192,
+        "error": 0.02034086674938882,
+        "fisher_total": 0.002505400929266266,
+        "fisher_per_param": 3.058350743733235e-07,
+        "damage": 7.123808483551847e-08
+      },
+      {
+        "name": "layer2.1.conv1.weight",
+        "count": 147456,
+        "error": 0.03094013279409937,
+        "fisher_total": 0.006892629682751696,
+        "fisher_per_param": 4.674363662890419e-08,
+        "damage": 3.3212283600204364e-08
+      },
+      {
+        "name": "layer2.1.conv2.weight",
+        "count": 147456,
+        "error": 0.0337264373805367,
+        "fisher_total": 0.004554969055301755,
+        "fisher_per_param": 3.0890360889361946e-08,
+        "damage": 2.503873096026517e-08
+      },
+      {
+        "name": "layer3.0.conv1.weight",
+        "count": 294912,
+        "error": 0.035951823083694316,
+        "fisher_total": 0.01242196171354569,
+        "fisher_per_param": 4.212090967320994e-08,
+        "damage": 7.007188404764027e-08
+      },
+      {
+        "name": "layer3.0.conv2.weight",
+        "count": 589824,
+        "error": 0.03707863075486623,
+        "fisher_total": 0.02170175685917293,
+        "fisher_per_param": 3.6793614466642476e-08,
+        "damage": 1.0637044000641563e-07
+      },
+      {
+        "name": "layer3.0.downsample.0.weight",
+        "count": 32768,
+        "error": 0.018962841777100895,
+        "fisher_total": 0.002050646087328316,
+        "fisher_per_param": 6.258075217676746e-08,
+        "damage": 1.2493295050715215e-08
+      },
+      {
+        "name": "layer3.1.conv1.weight",
+        "count": 589824,
+        "error": 0.04048729428715825,
+        "fisher_total": 0.019790521637904186,
+        "fisher_per_param": 3.355326612329133e-08,
+        "damage": 9.274165183025705e-08
+      },
+      {
+        "name": "layer3.1.conv2.weight",
+        "count": 589824,
+        "error": 0.04129378832536759,
+        "fisher_total": 0.012462307636537412,
+        "fisher_per_param": 2.11288581619897e-08,
+        "damage": 4.491370850735327e-08
+      },
+      {
+        "name": "layer4.0.conv1.weight",
+        "count": 1179648,
+        "error": 0.04255745407632979,
+        "fisher_total": 0.010971195758951006,
+        "fisher_per_param": 9.300397880512667e-09,
+        "damage": 1.6672718931619784e-08
+      },
+      {
+        "name": "layer4.0.conv2.weight",
+        "count": 2359296,
+        "error": 0.05240185378980459,
+        "fisher_total": 0.01046685965513032,
+        "fisher_per_param": 4.436433434011807e-09,
+        "damage": 1.0569732597510081e-08
+      },
+      {
+        "name": "layer4.0.downsample.0.weight",
+        "count": 131072,
+        "error": 0.02475096993217781,
+        "fisher_total": 0.0011456243141381968,
+        "fisher_per_param": 8.740419877152991e-09,
+        "damage": 1.7657924266456571e-09
+      },
+      {
+        "name": "layer4.1.conv1.weight",
+        "count": 2359296,
+        "error": 0.06844175444515815,
+        "fisher_total": 0.0077861840804684095,
+        "fisher_per_param": 3.3002150134906384e-09,
+        "damage": 3.5439621375946513e-09
+      },
+      {
+        "name": "layer4.1.conv2.weight",
+        "count": 2359296,
+        "error": 0.05221265025619713,
+        "fisher_total": 0.002565711804896407,
+        "fisher_per_param": 1.0874904229466785e-09,
+        "damage": 3.555294801578672e-10
+      },
+      {
+        "name": "fc.weight",
+        "count": 5120,
+        "error": 0.019287562951991046,
+        "fisher_total": 0.00011039583257798843,
+        "fisher_per_param": 2.1561686050388366e-08,
+        "damage": 1.3914964362920896e-08
+      }
+    ],
+    "int4_pt": [
+      {
+        "name": "conv1.weight",
+        "count": 1728,
+        "error": 0.04679463718526552,
+        "fisher_total": 0.002841363173349626,
+        "fisher_per_param": 1.644307391984737e-06,
+        "damage": 1.4440406872536696e-06
+      },
+      {
+        "name": "layer1.0.conv1.weight",
+        "count": 36864,
+        "error": 0.21728436707078647,
+        "fisher_total": 0.0073318102700894346,
+        "fisher_per_param": 1.9888808241345037e-07,
+        "damage": 1.1115104857006278e-06
+      },
+      {
+        "name": "layer1.0.conv2.weight",
+        "count": 36864,
+        "error": 0.1983051847694578,
+        "fisher_total": 0.00666895070758034,
+        "fisher_per_param": 1.809068659825396e-07,
+        "damage": 4.784387466362635e-07
+      },
+      {
+        "name": "layer1.1.conv1.weight",
+        "count": 36864,
+        "error": 0.12812075614560137,
+        "fisher_total": 0.005436981583604204,
+        "fisher_per_param": 1.4748756465940222e-07,
+        "damage": 2.213028919658266e-07
+      },
+      {
+        "name": "layer1.1.conv2.weight",
+        "count": 36864,
+        "error": 0.06590122491698888,
+        "fisher_total": 0.004119968277686185,
+        "fisher_per_param": 1.1176129225494207e-07,
+        "damage": 7.139888431466289e-08
+      },
+      {
+        "name": "layer2.0.conv1.weight",
+        "count": 73728,
+        "error": 0.08908957340614038,
+        "fisher_total": 0.007590030168739853,
+        "fisher_per_param": 1.0294637273138906e-07,
+        "damage": 1.5263586891607864e-07
+      },
+      {
+        "name": "layer2.0.conv2.weight",
+        "count": 147456,
+        "error": 0.12104307123246431,
+        "fisher_total": 0.008482249763566065,
+        "fisher_per_param": 5.752393774119782e-08,
+        "damage": 1.902399626096618e-07
+      },
+      {
+        "name": "layer2.0.downsample.0.weight",
+        "count": 8192,
+        "error": 0.19097926315682548,
+        "fisher_total": 0.002505400929266266,
+        "fisher_per_param": 3.058350743733235e-07,
+        "damage": 3.3681010156316617e-07
+      },
+      {
+        "name": "layer2.1.conv1.weight",
+        "count": 147456,
+        "error": 0.09062798536540471,
+        "fisher_total": 0.006892629682751696,
+        "fisher_per_param": 4.674363662890419e-08,
+        "damage": 8.441178800596609e-08
+      },
+      {
+        "name": "layer2.1.conv2.weight",
+        "count": 147456,
+        "error": 0.16399767159683393,
+        "fisher_total": 0.004554969055301755,
+        "fisher_per_param": 3.0890360889361946e-08,
+        "damage": 8.295023217460817e-08
+      },
+      {
+        "name": "layer3.0.conv1.weight",
+        "count": 294912,
+        "error": 0.19755139931204754,
+        "fisher_total": 0.01242196171354569,
+        "fisher_per_param": 4.212090967320994e-08,
+        "damage": 3.6588056703006796e-07
+      },
+      {
+        "name": "layer3.0.conv2.weight",
+        "count": 589824,
+        "error": 0.10493473394531076,
+        "fisher_total": 0.02170175685917293,
+        "fisher_per_param": 3.6793614466642476e-08,
+        "damage": 2.8583620393610366e-07
+      },
+      {
+        "name": "layer3.0.downsample.0.weight",
+        "count": 32768,
+        "error": 0.14254013277760064,
+        "fisher_total": 0.002050646087328316,
+        "fisher_per_param": 6.258075217676746e-08,
+        "damage": 6.946281522370868e-08
+      },
+      {
+        "name": "layer3.1.conv1.weight",
+        "count": 589824,
+        "error": 0.10886661956835968,
+        "fisher_total": 0.019790521637904186,
+        "fisher_per_param": 3.355326612329133e-08,
+        "damage": 2.3599066723502437e-07
+      },
+      {
+        "name": "layer3.1.conv2.weight",
+        "count": 589824,
+        "error": 0.18763917990660003,
+        "fisher_total": 0.012462307636537412,
+        "fisher_per_param": 2.11288581619897e-08,
+        "damage": 1.4622444523257563e-07
+      },
+      {
+        "name": "layer4.0.conv1.weight",
+        "count": 1179648,
+        "error": 0.3232478614639005,
+        "fisher_total": 0.010971195758951006,
+        "fisher_per_param": 9.300397880512667e-09,
+        "damage": 1.1208701187272922e-07
+      },
+      {
+        "name": "layer4.0.conv2.weight",
+        "count": 2359296,
+        "error": 0.4985842981506954,
+        "fisher_total": 0.01046685965513032,
+        "fisher_per_param": 4.436433434011807e-09,
+        "damage": 5.399425759078425e-08
+      },
+      {
+        "name": "layer4.0.downsample.0.weight",
+        "count": 131072,
+        "error": 0.15883566175406127,
+        "fisher_total": 0.0011456243141381968,
+        "fisher_per_param": 8.740419877152991e-09,
+        "damage": 7.435832106091129e-09
+      },
+      {
+        "name": "layer4.1.conv1.weight",
+        "count": 2359296,
+        "error": 0.3934934481771535,
+        "fisher_total": 0.0077861840804684095,
+        "fisher_per_param": 3.3002150134906384e-09,
+        "damage": 1.8516994451411804e-08
+      },
+      {
+        "name": "layer4.1.conv2.weight",
+        "count": 2359296,
+        "error": 0.2978275636211843,
+        "fisher_total": 0.002565711804896407,
+        "fisher_per_param": 1.0874904229466785e-09,
+        "damage": 1.6640923559349205e-09
+      },
+      {
+        "name": "fc.weight",
+        "count": 5120,
+        "error": 0.02338605708382678,
+        "fisher_total": 0.00011039583257798843,
+        "fisher_per_param": 2.1561686050388366e-08,
+        "damage": 1.755848387948377e-08
+      }
+    ],
+    "fp4_scaled": [
+      {
+        "name": "conv1.weight",
+        "count": 1728,
+        "error": 0.03044841572569005,
+        "fisher_total": 0.002841363173349626,
+        "fisher_per_param": 1.644307391984737e-06,
+        "damage": 1.124379883987735e-06
+      },
+      {
+        "name": "layer1.0.conv1.weight",
+        "count": 36864,
+        "error": 0.13028848075616872,
+        "fisher_total": 0.0073318102700894346,
+        "fisher_per_param": 1.9888808241345037e-07,
+        "damage": 6.271086815477563e-07
+      },
+      {
+        "name": "layer1.0.conv2.weight",
+        "count": 36864,
+        "error": 0.21701843215390443,
+        "fisher_total": 0.00666895070758034,
+        "fisher_per_param": 1.809068659825396e-07,
+        "damage": 5.42109984159669e-07
+      },
+      {
+        "name": "layer1.1.conv1.weight",
+        "count": 36864,
+        "error": 0.07057263278103434,
+        "fisher_total": 0.005436981583604204,
+        "fisher_per_param": 1.4748756465940222e-07,
+        "damage": 1.4748036790721255e-07
+      },
+      {
+        "name": "layer1.1.conv2.weight",
+        "count": 36864,
+        "error": 0.07573130345677694,
+        "fisher_total": 0.004119968277686185,
+        "fisher_per_param": 1.1176129225494207e-07,
+        "damage": 8.371640325946831e-08
+      },
+      {
+        "name": "layer2.0.conv1.weight",
+        "count": 73728,
+        "error": 0.08930852258273693,
+        "fisher_total": 0.007590030168739853,
+        "fisher_per_param": 1.0294637273138906e-07,
+        "damage": 1.539421992277759e-07
+      },
+      {
+        "name": "layer2.0.conv2.weight",
+        "count": 147456,
+        "error": 0.10887976585482921,
+        "fisher_total": 0.008482249763566065,
+        "fisher_per_param": 5.752393774119782e-08,
+        "damage": 1.7198949015682883e-07
+      },
+      {
+        "name": "layer2.0.downsample.0.weight",
+        "count": 8192,
+        "error": 0.11438283372945475,
+        "fisher_total": 0.002505400929266266,
+        "fisher_per_param": 3.058350743733235e-07,
+        "damage": 2.299665771542329e-07
+      },
+      {
+        "name": "layer2.1.conv1.weight",
+        "count": 147456,
+        "error": 0.03916357982935537,
+        "fisher_total": 0.006892629682751696,
+        "fisher_per_param": 4.674363662890419e-08,
+        "damage": 3.925537435744793e-08
+      },
+      {
+        "name": "layer2.1.conv2.weight",
+        "count": 147456,
+        "error": 0.1836509686884819,
+        "fisher_total": 0.004554969055301755,
+        "fisher_per_param": 3.0890360889361946e-08,
+        "damage": 9.346392671699667e-08
+      },
+      {
+        "name": "layer3.0.conv1.weight",
+        "count": 294912,
+        "error": 0.136953052802685,
+        "fisher_total": 0.01242196171354569,
+        "fisher_per_param": 4.212090967320994e-08,
+        "damage": 2.5348481248800263e-07
+      },
+      {
+        "name": "layer3.0.conv2.weight",
+        "count": 589824,
+        "error": 0.04146235651110357,
+        "fisher_total": 0.02170175685917293,
+        "fisher_per_param": 3.6793614466642476e-08,
+        "damage": 1.1676029304949432e-07
+      },
+      {
+        "name": "layer3.0.downsample.0.weight",
+        "count": 32768,
+        "error": 0.08524569329300442,
+        "fisher_total": 0.002050646087328316,
+        "fisher_per_param": 6.258075217676746e-08,
+        "damage": 4.274642378086529e-08
+      },
+      {
+        "name": "layer3.1.conv1.weight",
+        "count": 589824,
+        "error": 0.04708884761720853,
+        "fisher_total": 0.019790521637904186,
+        "fisher_per_param": 3.355326612329133e-08,
+        "damage": 1.0665119794658624e-07
+      },
+      {
+        "name": "layer3.1.conv2.weight",
+        "count": 589824,
+        "error": 0.08359521153601476,
+        "fisher_total": 0.012462307636537412,
+        "fisher_per_param": 2.11288581619897e-08,
+        "damage": 6.519686598769204e-08
+      },
+      {
+        "name": "layer4.0.conv1.weight",
+        "count": 1179648,
+        "error": 0.1633182759230121,
+        "fisher_total": 0.010971195758951006,
+        "fisher_per_param": 9.300397880512667e-09,
+        "damage": 5.5922498775463655e-08
+      },
+      {
+        "name": "layer4.0.conv2.weight",
+        "count": 2359296,
+        "error": 0.45718984408987523,
+        "fisher_total": 0.01046685965513032,
+        "fisher_per_param": 4.436433434011807e-09,
+        "damage": 4.827551951356566e-08
+      },
+      {
+        "name": "layer4.0.downsample.0.weight",
+        "count": 131072,
+        "error": 0.12386415103624145,
+        "fisher_total": 0.0011456243141381968,
+        "fisher_per_param": 8.740419877152991e-09,
+        "damage": 5.862365986759198e-09
+      },
+      {
+        "name": "layer4.1.conv1.weight",
+        "count": 2359296,
+        "error": 0.22969512716401885,
+        "fisher_total": 0.0077861840804684095,
+        "fisher_per_param": 3.3002150134906384e-09,
+        "damage": 9.619986160839465e-09
+      },
+      {
+        "name": "layer4.1.conv2.weight",
+        "count": 2359296,
+        "error": 0.1584386234710183,
+        "fisher_total": 0.002565711804896407,
+        "fisher_per_param": 1.0874904229466785e-09,
+        "damage": 8.128453995904303e-10
+      },
+      {
+        "name": "fc.weight",
+        "count": 5120,
+        "error": 0.016201747006806128,
+        "fisher_total": 0.00011039583257798843,
+        "fisher_per_param": 2.1561686050388366e-08,
+        "damage": 2.4659266587750552e-08
+      }
+    ]
+  }
+}
