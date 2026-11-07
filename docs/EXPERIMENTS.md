@@ -489,6 +489,23 @@ exponent flips give a mean of 27.16 % (E4M11 sign / mantissa flips are harmless)
   estimated from very few events. The `any` group strikes all 32 scale bits uniformly. Non-finite scales are not clamped
   (S4); no protection (parity, ECC, redundancy) of the 0.17 % metadata was tested.
 
+## 8g. Per-layer scores on the E4M11 model (Plan B, experiment 14)
+
+Script `scripts/run_layer_scores.sh`, code `src/fr/layer_scores.py`, results `reports/scratch/layer_scores/`. Held-out only: Fisher on the first 2,048 validation images, damage measured on the other 2,952 (clean E4M11 accuracy 95.29 %). Scores: **S0** clean Fisher trace (total and per parameter); **S1** measured damage when k = 16 random bits are flipped in ONE layer only (100 trials per layer, bit-uniform sampling; cross-entropy increase dCE, KL, accuracy drop); **S2** Fisher-predicted damage per flip, 1/2 * mean_j F_jj * mean_b (dw_jb)^2 with the exact E4M11 values after each flip; **S2n** the same without F. Spearman = rank correlation over the 21 layers. Nothing was tuned.
+
+Findings (full tables in the report):
+
+| finding | numbers |
+|---|---|
+| E4M11 Fisher = FP32 Fisher | Spearman +1.0000, per-layer trace ratio 0.996-1.001: the Fisher of the quantised model adds nothing new |
+| Per-flip damage is concentrated in small early layers | conv1 (1,728 weights) dCE +0.97, acc -16.8 pp per 16 flips (group `any`); layer4 convolutions about 0.00 (accuracy change <= 0.09 pp) |
+| Heavy tail | for most layers the median dCE is ~0 while the mean is large: damage comes from rare exponent hits (e.g. conv1 `any`: median +0.004, mean +0.97) |
+| Fisher-predicted damage S2 tracks measured damage | Spearman 0.95-0.96 (`any`), 0.95-0.96 (`exponent`) |
+| **Fisher adds nothing over S2n** | S2n (no Fisher) gives 0.95-0.97, equal to S2 within 0.01 in all 12 comparisons |
+| Total Fisher trace does not predict it | S0 sum: -0.05 to -0.08; S0 per parameter 0.83-0.87 |
+
+Reading and limits. (1) The model-wide damage under a bit-uniform load is per-flip damage times layer size. Using the measured dCE (group `any`, positive means only; my arithmetic from `layer_scores.json`): layer3 carries about 50 % of the expected damage (18.8 % of weights), layer2 28 % (4.7 %), layer1 19 % (1.3 %), **layer4 about 0.5 % (75.1 % of weights)**, conv1 and fc together about 3 %. Exponent group: the same picture (layer4 0.9 %). So layer4 can leave E4M11 almost for free, and that alone moves about 75 % of the weights. (2) The Fisher-based prediction works, but a plain "how big is the weight perturbation of a flip" score works equally well (S2n), so on this model the Fisher is not shown to be necessary for ranking layers by fault exposure. (3) 21 layers ordered mostly by depth and size: all scores share that trend, so a high rank correlation is partly a depth effect; I did not separate it. (4) k = 16 per layer is a per-flip damage estimate with heavy tails (100 trials); small negative dCE means are noise. (5) This concerns the cost of KEEPING a layer in E4M11; the cost of moving it to INT8 (quantisation error, scale exposure) is the other half and is what Plan C evaluates. (6) One model, one seed.
+
 ## 9. Limitations and open points
 
 1. **Fault comparison is underpowered.** Exponent-fault accuracy is heavy-tailed (std 3.7 pp at k = 8 in exp. 4); 100
