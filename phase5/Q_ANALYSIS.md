@@ -39,3 +39,17 @@ run shows the same (INT8 dL = -8.3e-4 with g.d = -8.6e-4 versus 1/2 dFd = +9.5e-
 - Multiplying Q by a constant (or any positive affine map) changes nothing: min-max and rank normalisation are invariant to it, and lambda already weights Q against R.
 - Rank normalisation is invariant to any monotone transform of Q (log, power); min-max is not.
 - A different Fisher source changes the layer profile of Q, but across datatypes Q is dominated by d^2 (INT4 >> FP8 >> INT8 >> FP16 > E4M11); after min-max normalisation only INT4 (and slightly FP8) carry a non-negligible Q.
+
+## Result of the primary (validation exact-Fisher) Q on the GPU run
+Files: `reports/scratch/jfamp/optimization/` (`q_validation.json`, `q_layerwise_validation.json/.csv`, `fisher_exact_val_*`). Fisher: 2,048 validation images (indices 0..2047), 20,480 backward passes,
+128 s, neglected probability mass <= 1e-8 per image. Layer-wise check on validation images 2,048..4,999 (2,952 images, disjoint from the Fisher images).
+- Scale fixed: INT4 sum 1/2 Q = 0.0589 vs measured all-layers change +0.0158 (3.7 x over; before: 2.7e-6, 5,000 x under). The sum of the 21 single-layer measurements is +0.0199, so the
+  clean change is close to additive (all-layers / sum = 0.79).
+- INT4 ranking over the 21 layers: Spearman +0.713 (training-Fisher Q: +0.708). The layers with the largest predicted change agree in magnitude (conv1 0.0149 predicted / 0.0099 measured; layer1.0.conv1
+  0.0116 / 0.0100; layer2.0.downsample 0.0048 / 0.0041; layer1.0.conv2 0.0049 / 0.0031).
+- The two Q columns are almost the same ranking: Spearman 0.993 over the 105 candidates, 0.94 - 0.98 per datatype, constant ratio of about 20,600. Because the optimiser normalises Q, the change of Fisher source
+  alters the optimisation very little (251 distinct assignments, 188 shared with the training-Q run, same provisional assignment). The gain is the absolute scale (loss units), not a different decision.
+- Cross-entropy is confounded by calibration: several late layers show a clearly NEGATIVE single-layer change under INT4 (layer4.0.conv2 -0.018, layer4.1.conv2 -0.005), i.e. quantization shrinks the
+  over-confident logits and lowers the validation cross-entropy. The first-order term g.d is sign-indefinite and no positive-semidefinite score can predict it; the clean constraint is therefore on accuracy,
+  measured end to end. Per-layer measured/predicted ratios are only meaningful where the predicted change is above about 1e-3.
+- FP8, INT8, FP16, E4M11-SN: measured changes are within noise (|dCE| <= 1e-3); Spearman over layers 0.04 (FP8), -0.11 (INT8), 0.36 (FP16), 0.18 (E4M11-SN), no information.
