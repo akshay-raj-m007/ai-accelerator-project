@@ -60,10 +60,10 @@ Observations (what the numbers show; causes beyond that are not tested here):
 | INT4 | fraction | 0.12 | 0.76 | 0 / 0 |
 | INT4 | all | 23.29 | 61.54 | 2 / 6 |
 
-The scale word is by far the most fragile part of the INT formats: one scale sign flip negates a whole layer (about 79-87 pp), one scale
-exponent flip rescales it by a power of two (up to non-finite activations). The integer payload that looked immune above is not the weak point; the
-float32 scale is. Layer-wise, a scale sign flip in layer4 costs almost nothing (e.g. INT8 layer4.1.conv1 drops 96.3 -> ~0 here means fault
-accuracy of 96.3 is retained? see CSV: the values listed there are fault accuracy-based columns; use `drop_pp_mean`) - read per-layer scale results from `fault_summary.csv` before using them.
+The scale word is by far the most fragile part of the INT formats. A scale sign flip negates a whole layer: 79-87 pp mean drop in the global scope, and in the
+layer-wise scope (k=1, sign) the late layers are worst: mean drop 96.3 pp for INT8 layer4.1.conv1 and fc, 96.2 for layer4.1.conv2 (accuracy falls to about chance),
+and 95.4 / 95.3 for INT4 layer4.1.conv2, fc, layer4.1.conv1. A scale exponent flip rescales a layer by a power of two and can give non-finite activations.
+The integer payload that looked immune above is not the weak point; the float32 scale is. Full per-layer values are in `fault_summary.csv`.
 Whether per-channel scales or protecting the 21 scale words (84 bytes) is worthwhile is a Stage 5 question.
 
 ## Issues found (honest)

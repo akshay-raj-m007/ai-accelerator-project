@@ -2,7 +2,7 @@
 
 Reference: `JFAMP_ResNet18_CIFAR10_Experimental_Flow.pdf` Section 6. Previous phases: [phase1](../phase1/README.md),
 [phase2](../phase2/README.md), [phase3](../phase3/README.md).
-Status: code written, unit-tested and dry-run locally (2 formats, 1 trial, 16 images); **GPU run and results pending**.
+Status: **done** - GPU run complete (19,520 / 19,520 trials, 2026-11-11). Results and analysis: [RESULTS.md](RESULTS.md).
 
 ## Aim
 Identify, for each candidate format, which layers and which encoded bit fields cause the greatest degradation under random bit
