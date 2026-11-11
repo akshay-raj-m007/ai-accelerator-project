@@ -86,31 +86,31 @@
       "clean_accuracy": 96.30000591278076,
       "clean_loss": 0.14729256927967072,
       "sample_count": 1000,
-      "seconds_this_session": 1429.085090637207
+      "seconds_this_session": 0.0007336139678955078
     },
     "fp16": {
       "clean_accuracy": 96.30000591278076,
       "clean_loss": 0.14722849428653717,
       "sample_count": 1000,
-      "seconds_this_session": 1428.8958694934845
+      "seconds_this_session": 0.0008466243743896484
     },
     "fp8_e4m3fn": {
       "clean_accuracy": 96.00000381469727,
       "clean_loss": 0.14882314205169678,
       "sample_count": 1000,
-      "seconds_this_session": 1364.7938318252563
+      "seconds_this_session": 0.0009233951568603516
     },
     "int8_pt": {
       "clean_accuracy": 96.30000591278076,
       "clean_loss": 0.14621169865131378,
       "sample_count": 1000,
-      "seconds_this_session": 1743.294668674469
+      "seconds_this_session": 0.0012280941009521484
     },
     "int4_pt": {
       "clean_accuracy": 95.40000557899475,
       "clean_loss": 0.1490386575460434,
       "sample_count": 1000,
-      "seconds_this_session": 1709.6264193058014
+      "seconds_this_session": 0.3854348659515381
     }
   },
   "per_format": {
@@ -124,7 +124,7 @@
       "clean_accuracy": 96.30000591278076,
       "clean_loss": 0.14729256927967072,
       "sample_count": 1000,
-      "seconds_this_session": 1429.085090637207
+      "seconds_this_session": 0.0007336139678955078
     },
     "fp16": {
       "configurations": 176,
@@ -136,7 +136,7 @@
       "clean_accuracy": 96.30000591278076,
       "clean_loss": 0.14722849428653717,
       "sample_count": 1000,
-      "seconds_this_session": 1428.8958694934845
+      "seconds_this_session": 0.0008466243743896484
     },
     "fp8_e4m3fn": {
       "configurations": 176,
@@ -148,7 +148,7 @@
       "clean_accuracy": 96.00000381469727,
       "clean_loss": 0.14882314205169678,
       "sample_count": 1000,
-      "seconds_this_session": 1364.7938318252563
+      "seconds_this_session": 0.0009233951568603516
     },
     "int8_pt": {
       "configurations": 224,
@@ -160,7 +160,7 @@
       "clean_accuracy": 96.30000591278076,
       "clean_loss": 0.14621169865131378,
       "sample_count": 1000,
-      "seconds_this_session": 1743.294668674469
+      "seconds_this_session": 0.0012280941009521484
     },
     "int4_pt": {
       "configurations": 224,
@@ -172,7 +172,7 @@
       "clean_accuracy": 95.40000557899475,
       "clean_loss": 0.1490386575460434,
       "sample_count": 1000,
-      "seconds_this_session": 1709.6264193058014
+      "seconds_this_session": 0.3854348659515381
     }
   },
   "configurations": {
@@ -273,10 +273,10 @@
     "weights_nonfinite": 0,
     "activations_nonfinite": 187,
     "logits_nonfinite": 187,
-    "loss_nonfinite": 187
+    "loss_nonfinite": 188
   },
   "trials_recorded": 19520,
-  "mean_seconds_per_trial": 0.39375390776845276,
+  "mean_seconds_per_trial": 0.3942689971841754,
   "sessions": [
     {
       "started_utc": "2026-11-11T08:35:15+00:00",
@@ -289,6 +289,18 @@
       "summarize_only": false,
       "seconds": 7686.076279640198,
       "finished_utc": "2026-11-11T10:43:21+00:00"
+    },
+    {
+      "started_utc": "2026-11-11T15:25:58+00:00",
+      "new_trials": 1,
+      "skipped_already_done": 19519,
+      "git": {
+        "commit": "3e671d23ba608e4ba6f19b25f77679422c3ef097",
+        "dirty": true
+      },
+      "summarize_only": false,
+      "seconds": 10.448814392089844,
+      "finished_utc": "2026-11-11T15:26:08+00:00"
     }
   ],
   "environment": {
@@ -302,12 +314,12 @@
     "cudnn_version": 90100,
     "gpu": "NVIDIA GeForce RTX 3050 OEM",
     "git": {
-      "commit": "ba3a3d8586275b29e560a0b6612f8ac3f169a449",
+      "commit": "3e671d23ba608e4ba6f19b25f77679422c3ef097",
       "dirty": true
     }
   },
   "git": {
-    "commit": "ba3a3d8586275b29e560a0b6612f8ac3f169a449",
+    "commit": "3e671d23ba608e4ba6f19b25f77679422c3ef097",
     "dirty": true
   },
   "injector_version": "stage3-injector-v1",
