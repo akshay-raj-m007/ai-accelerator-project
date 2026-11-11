@@ -66,12 +66,37 @@ and 95.4 / 95.3 for INT4 layer4.1.conv2, fc, layer4.1.conv1. A scale exponent fl
 The integer payload that looked immune above is not the weak point; the float32 scale is. Full per-layer values are in `fault_summary.csv`.
 Whether per-channel scales or protecting the 21 scale words (84 bytes) is worthwhile is a Stage 5 question.
 
+## Figures (`reports/scratch/jfamp/fault_screening/figures/`)
+Global screening (from the raw trial records, `scripts/plot_stage4_global.py`; bar = mean of 20 trials, dots = trials, tick = p90):
+`global_screening_weights.png` (k = 1 and 8), `global_screening_weights_zoom_no_fp16.png`, `global_screening_int_scales.png`.
+FP16 exponent faults are the only visible weight bars: most trials sit at 0 and a few reach 70-86 pp, so the mean (8.1 pp at k=1) is far below p90 (32 pp).
+
+### Weight and activation distributions, FP16 vs E4M11-SN, clean vs faulted
+`fault_distributions_fp16_vs_e4m11_sn.png` and `.json` (`scripts/plot_fault_distributions.py`, run on the GPU machine). Formats chosen: FP16 (largest
+global damage) and E4M11-SN (the proposed format). Each format shows the worst RECORDED trial of the same configuration, exponent group, k = 8, layer conv1
+(the layer with the largest summed mean drop of the two formats), replayed with the same encoded elements and bits. Both replays reproduce the recorded fault
+accuracy exactly. 1,000 validation images; activations are conv1 outputs.
+
+| | FP16 (trial t11) | E4M11-SN (trial t19) |
+|---|---|---|
+| accuracy | 96.3 -> 9.6 % (-86.7 pp) | 96.3 -> 12.0 % (-84.3 pp) |
+| largest flipped weight | 0.124 -> 8120 | 0.321 -> 82.2 |
+| largest conv1 output (clean 4.64) | 17,300 | 170 |
+| largest logit magnitude (clean 10.9) | 811 | 9.1 |
+| non-finite values | none | none |
+
+Reading: only 8 of 1,728 conv1 weights change, but the exponent flips create outliers (bit 14 changes the exponent by 16 steps in FP16, 8 in E4M11), which
+propagate: FP16's largest activation stays in the hundreds-thousands in nearly every layer, E4M11-SN's falls from about 20-50 early to about 1 by layer4. FP16 logits are
+displaced to about -1000..+900 (clean about +-10); E4M11-SN logits stay in the clean range but are scrambled. E4M11-SN's advantage is in outlier magnitude, not in avoiding
+failure: eight exponent flips in conv1 destroy accuracy in both formats (layer-wise means 31.2 pp E4M11-SN, 38.7 pp FP16). These are the worst of 20 trials chosen for illustration;
+use the layer-wise means for decisions. The conv1 weakness of E4M11-SN suggests protecting or constraining the first layer in Stage 5 (not tested here).
+
 ## Issues found (honest)
 1. **One non-finite loss is not flagged.** In INT4 global scales, exponent, k=8, one trial has finite logits but `fault_loss = inf` (float32 overflow in the loss).
    The code counts it as a finite loss (n_loss_finite = 7 not 6), so `loss_increase_mean/p90/worst` of that row are `inf`, and it triggered the
    NumPy `invalid value in subtract` warning (inf - mean in the std). The trial is kept; the accuracy and drop columns of that row are unaffected, and no other
    row has NaN/inf. The failure count (13) misses this one trial. Not fixed yet because it needs a decision (see below); it affects loss columns of one row only.
-2. Clean accuracy differs per format on the same images (see above).
+2. Clean accuracy differs per format on the same images (see above). The manifest's `git dirty: true` came from untracked files only (`.venv312/`, `stage4.log`); `git diff` on the GPU machine was empty, so the code run equals commit ba3a3d8.
 3. 20 trials give coarse p90/worst values; rows with k=1 and a rare catastrophic outcome (e.g. FP16 exponent) have large std.
 
 ## Status
