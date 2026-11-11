@@ -1,0 +1,36 @@
+{
+  "note": "uniform assignments; Q is a second-order estimate from training-split Fisher, measured values are on 5,000 validation images",
+  "rows": [
+    {
+      "datatype": "e4m11_sn",
+      "predicted_dCE_sum_half_Q": 8.136816216214868e-13,
+      "measured_val_delta_ce_5000": 2.3529052734366784e-05,
+      "measured_val_drop_pp_5000": 0.0
+    },
+    {
+      "datatype": "fp16",
+      "predicted_dCE_sum_half_Q": 2.4124311669886903e-12,
+      "measured_val_delta_ce_5000": -1.5142822265640232e-05,
+      "measured_val_drop_pp_5000": 0.0
+    },
+    {
+      "datatype": "fp8_e4m3fn",
+      "predicted_dCE_sum_half_Q": 5.6745241258797335e-08,
+      "measured_val_delta_ce_5000": -0.0008740478515625039,
+      "measured_val_drop_pp_5000": 0.18000000000000682
+    },
+    {
+      "datatype": "int8_pt",
+      "predicted_dCE_sum_half_Q": 8.459501334064655e-09,
+      "measured_val_delta_ce_5000": -3.0702209472655007e-05,
+      "measured_val_drop_pp_5000": 0.12000000000000455
+    },
+    {
+      "datatype": "int4_pt",
+      "predicted_dCE_sum_half_Q": 2.744195510027223e-06,
+      "measured_val_delta_ce_5000": 0.014374715423583984,
+      "measured_val_drop_pp_5000": 1.1800000000000068
+    }
+  ],
+  "spearman_predicted_vs_measured_dCE": 0.0
+}
