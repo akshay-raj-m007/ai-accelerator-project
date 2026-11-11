@@ -77,6 +77,7 @@ def main():
     ap.add_argument("--norm", default="minmax")
     ap.add_argument("--risk", default="weights")
     ap.add_argument("--delta-clean", type=float, nargs="+", default=[0.25, 0.5, 1.0], help="grid, percentage points below A_FP32")
+    ap.add_argument("--fault-dist", choices=list(E2.DISTRIBUTIONS), default="weights_k8", help="end-to-end distribution that defines R_fault(x) in the constraint check (scales_k1 counts 0 for assignments without INT layers)")
     ap.add_argument("--tau-fault", type=float, nargs="+", default=[0.25, 0.5, 1.0, 2.0, 5.0], help="grid, measured mean accuracy drop (pp) under weights_k8")
     ap.add_argument("--avg-bits", type=float, nargs="+", default=[5, 6, 8, 10, 12, 16], help="grid of storage budgets B (average bits per quantized weight)")
     ap.add_argument("--finalize", action="store_true", help="freeze one assignment under --final-* constraints, write assignment.json, evaluate it on the TEST set")
@@ -188,15 +189,22 @@ def main():
         write_csv(clean_path, [clean_rows[a] for a in asg])
         print(f"A. clean measurements: {len(asg)} assignments ({n_new} new)")
 
-        # ---- B. shortlist for fault trials
+        # ---- B. shortlist for fault trials: one non-dominated front per risk definition (weights-only R, and R + INT scale-word risk), then the uniform references
         if not shortlist:
             ids = [a for a in asg if not a.startswith("U_")]
-            pts = [[float(clean_rows[a]["storage_bytes"]), float(clean_rows[a]["pred_mean_layer_risk_pp"]), float(clean_rows[a]["clean_drop_pp_vs_fp32"])] for a in ids]
-            front = [ids[i] for i in E2.pareto_front(pts)]
-            front.sort(key=lambda a: float(clean_rows[a]["storage_bytes"]))
-            if len(front) > args.max_fault_assignments:
-                sel = np.unique(np.round(np.linspace(0, len(front) - 1, args.max_fault_assignments)).astype(int))
-                front = [front[i] for i in sel]
+
+            def front_for(risk_col):
+                pts = [[float(clean_rows[a]["storage_bytes"]), float(clean_rows[a][risk_col]), float(clean_rows[a]["clean_drop_pp_vs_fp32"])] for a in ids]
+                fr = [ids[i] for i in E2.pareto_front(pts)]
+                fr.sort(key=lambda a: float(clean_rows[a]["storage_bytes"]))
+                half = max(1, args.max_fault_assignments // 2)
+                if len(fr) > half:
+                    sel = np.unique(np.round(np.linspace(0, len(fr) - 1, half)).astype(int))
+                    fr = [fr[i] for i in sel]
+                return fr
+
+            front = front_for("pred_mean_layer_risk_pp")
+            front += [a for a in front_for("pred_mean_layer_risk_plus_scale_pp") if a not in front]
             shortlist = front + [a for a in args.include if a in asg and a not in front] + [a for a in asg if a.startswith("U_")]
         print(f"B. fault shortlist ({len(shortlist)}): {shortlist}")
 
@@ -272,7 +280,7 @@ def main():
     write_csv(odir / "end_to_end_assignments.csv", flat)
 
     # ---- predicted vs measured
-    meas = [it for it in items if "weights_k8" in it["fault_end_to_end"]]
+    meas = [it for it in items if "weights_k8" in it["fault_end_to_end"]]       # assignments with end-to-end fault trials
     comp = {"note": "layer-additive estimates vs end-to-end measurements of the assembled models", "n_assignments_clean": len(items), "n_assignments_fault": len(meas)}
     if len(items) > 2:
         comp["spearman_predicted_dCE_vs_measured_dCE"] = spearman([i["predicted_layer_additive"]["dCE"] for i in items], [i["clean_validation"]["delta_ce_vs_fp32"] for i in items])
@@ -286,10 +294,14 @@ def main():
                                    "measured_weights_k8_drop_pp_p90": i["fault_end_to_end"]["weights_k8"]["drop_pp_p90"]} for i in meas]
 
     # ---- constraint grid: best MEASURED-feasible assignment per (delta_clean, tau_fault, B)
+    def rfault(it):
+        s = it["fault_end_to_end"].get(args.fault_dist)
+        return float(s["drop_pp_mean"]) if s else 0.0          # scales_k1 is undefined without INT layers: no scale words, no exposure
+
     def feasible(delta, tau, bits):
         out = []
         for it in meas:
-            ok = (it["clean_validation"]["drop_pp_vs_fp32"] <= delta + 1e-9 and it["fault_end_to_end"]["weights_k8"]["drop_pp_mean"] <= tau + 1e-9
+            ok = (it["clean_validation"]["drop_pp_vs_fp32"] <= delta + 1e-9 and rfault(it) <= tau + 1e-9
                   and it["storage"]["avg_bits_per_weight"] <= bits + 1e-9)
             if ok:
                 out.append(it)
@@ -308,12 +320,12 @@ def main():
                              "selected_assignment": b["assignment_id"] if b else "none feasible",
                              "objective": "" if not b else b["objective_value"], "avg_bits": "" if not b else b["storage"]["avg_bits_per_weight"],
                              "clean_drop_pp": "" if not b else b["clean_validation"]["drop_pp_vs_fp32"],
-                             "weights_k8_drop_pp_mean": "" if not b else b["fault_end_to_end"]["weights_k8"]["drop_pp_mean"]})
+                             "R_fault_pp_mean_" + args.fault_dist: "" if not b else rfault(b)})
     write_csv(odir / "constraint_grid_selection.csv", grid)
     dump_json({"label": "DATATYPE-ONLY (protection p = none). Measured end to end on assembled models; validation data only unless final_test_evaluation.json exists.",
                "fp32_reference": fp32, "protocol": {"clean": "all 5,000 validation images", "fault": f"first {prev['settings']['n_fault_images']} validation images, {trials_expected} trials per distribution",
                                                     "distributions": "weights_k8: 8 distinct weights over the whole assembled model, bit uniform over the weight's own encoding; scales_k1: 1 INT scale word, 1 of 32 bits (extension)"},
-               "fault_shortlist_rule": "non-dominated in (actual storage, predicted mean layer risk, measured clean drop) among the optimiser's distinct assignments, evenly thinned to the size limit, plus the five uniform references",
+               "fault_shortlist_rule": "union of two fronts among the optimiser's distinct assignments, each non-dominated in (actual storage, predicted mean layer risk, measured clean drop) - one with weights-only risk, one with risk plus INT scale-word risk - each evenly thinned to half the size limit, plus the five uniform references",
                "shortlist": shortlist, "incomplete_cells": problems, "predicted_vs_measured": comp, "assignments": items}, odir / "end_to_end_assignment_metrics.json")
     print(f"summaries written to {odir}  (incomplete trial cells: {len(problems)})")
 
@@ -354,7 +366,7 @@ def main():
         dump_json(test_eval, odir / "final_test_evaluation.json")
         dump_json({"label": "DATATYPE-ONLY (protection p = none). Frozen from MEASURED end-to-end validation results under the stated constraints.",
                    "selected": [{"layer_id": l, "layer_name": p.layers[l], "num_weights": int(nw[l]), "datatype": asg[aid]["formats"][l], "protection": "none",
-                                 "Q": float(p.Q[l, choice_of[aid][l]]), "R_any_k8_mean_drop_pp": float(p.R[l, choice_of[aid][l]]),
+                                 "Q": float(p.Q[l, choice_of[aid][l]]), "R_any_k8_mean_drop_pp": float(p.R[l, choice_of[aid][l]]), "R_scale_any_k1_mean_drop_pp": float(p.Rscale[l, choice_of[aid][l]]),
                                  "S_bytes": float(p.S[l, choice_of[aid][l]])} for l in range(L)],
                    "assignment_id": aid,
                    "constraints": {"B_avg_bits_per_weight": args.final_avg_bits, "delta_clean_pp": args.final_delta_clean, "tau_fault_weights_k8_mean_drop_pp": args.final_tau_fault,

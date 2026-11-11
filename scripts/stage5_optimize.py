@@ -72,7 +72,7 @@ def main():
     ap.add_argument("--lambdas", type=float, nargs="+", default=[0, 0.1, 0.25, 0.5, 1, 2, 4, 10])
     ap.add_argument("--avg-bits", type=float, nargs="+", default=[4.5, 5, 6, 7, 8, 10, 12, 16], help="storage budget B as average stored bits per weight")
     ap.add_argument("--tau", type=float, nargs="*", default=[5, 2, 1, 0.5], help="max mean layer risk in pp (a run without this constraint is always added)")
-    ap.add_argument("--eps-ce", type=float, nargs="*", default=[0.002, 0.005, 0.01], help="max predicted clean CE increase (a run without it is always added)")
+    ap.add_argument("--eps-ce", type=float, nargs="*", default=[], help="max predicted clean CE increase (a run without it is always added). Off by default: with the Fisher Q scale (see q_validation.json) every solution predicts <= 1.4e-6, so any realistic limit is vacuous")
     ap.add_argument("--norms", nargs="+", default=["minmax", "rank"])
     ap.add_argument("--risks", nargs="+", default=["weights", "plus_scale"])
     ap.add_argument("--select-norm", default="minmax")

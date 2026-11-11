@@ -24,7 +24,7 @@ a mean-layer-risk limit `tau`, a predicted-clean-CE limit `eps` and the storage 
 
 ## Normalisation and lambda sweep
 Global over all 105 candidates: `minmax` -> `(v - min)/(max - min)`, and `rank` -> average rank / (n - 1). Both are swept. lambda in {0, 0.1, 0.25, 0.5, 1, 2, 4, 10},
-B in average bits/weight {4.5, 5, 6, 7, 8, 10, 12, 16}, tau in {none, 5, 2, 1, 0.5} pp, eps in {none, 0.002, 0.005, 0.01}, risk variant `weights` (R as defined) and
+B in average bits/weight {4.5, 5, 6, 7, 8, 10, 12, 16}, tau in {none, 5, 2, 1, 0.5} pp, eps (predicted clean CE limit; the first sweep used {none, 0.002, 0.005, 0.01} - all vacuous, see RESULTS; off by default now), risk variant `weights` (R as defined) and
 `plus_scale` (R plus the Stage 4 INT scale-word k = 1 risk, a sensitivity check that unions two different fault processes). Solver: `scipy.optimize.milp` (HiGHS), exact; checked
 against brute force on small problems in `tests/test_stage5.py`.
 
@@ -38,6 +38,7 @@ Flips go into the stored bytes (Stage 3 rules): decode only affected elements, b
 | step | script | outputs |
 |---|---|---|
 | 1 candidate table (GPU machine: needs Fisher + frozen encodings) | `scripts/stage5_candidate_table.py` | `jfamp_candidate_table.csv` (105 rows), `candidate_table_meta.json` (definitions, input hashes), `q_validation.json` (does sum 0.5 Q predict the measured clean CE change of the uniform formats?) |
+| 1b layer-wise Q validation (GPU, minutes) | `scripts/stage5_q_validation.py` | `q_layerwise_validation.csv/.json`: only layer l quantized, measured clean CE / accuracy change vs predicted 0.5 Q; Spearman over the 21 layers per datatype; additivity check (sum of single-layer changes vs all-layers measurement) |
 | 2 optimiser (CPU) | `scripts/stage5_optimize.py` | `normalization_lambda_sweep.csv`, `distinct_assignments.csv`, provisional `assignment.json`, `optimization_report.md` |
 | 3 end-to-end (GPU) | `scripts/stage5_end_to_end.py` | `end_to_end_clean.csv`, `end_to_end_fault_trials.jsonl` (raw, resumable), `end_to_end_assignments.csv`, `end_to_end_assignment_metrics.json` (predicted vs measured, Spearman), `constraint_grid_selection.csv`, `end_to_end_manifest.json` |
 | 4 freeze (only when the constraints are agreed) | `stage5_end_to_end.py --finalize --final-delta-clean .. --final-tau-fault .. --final-avg-bits ..` | final `assignment.json` (measured metrics), `final_test_evaluation.json` (official test set, ONE frozen assignment) |
@@ -47,6 +48,6 @@ The test set is not read until step 4. The refinement loop of runbook 7.2 is: pr
 
 ## Limits (to state in any report)
 Datatype-only; layer-additive estimates are approximations; Fisher from 1,024 training images; R from 20 trials per layer cell (screening); end-to-end fault trials limited in number
-(`--trials`, default 50) and measured only for a shortlist; INT scale-word risk is not part of the primary R; clean accuracy per layer was not measured (format-level and end-to-end only).
+(`--trials`, default 50) and measured only for a shortlist (union of two non-dominated fronts, one per risk definition); INT scale-word risk is not part of the primary R; clean accuracy per layer was not measured (format-level and end-to-end only).
 
 Code: `src/fr/stage5.py`, `src/fr/stage5_e2e.py`; tests `tests/test_stage5.py`, `tests/test_stage5_e2e.py`.
