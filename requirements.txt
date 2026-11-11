@@ -4,3 +4,4 @@ PyYAML>=6.0
 pillow>=9.0
 pytest>=7.0
 matplotlib>=3.7   # only for scripts/plot_distributions.py
+scipy>=1.9      # scripts/stage5_optimize.py (scipy.optimize.milp)
