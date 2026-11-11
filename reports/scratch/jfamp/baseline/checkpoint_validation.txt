@@ -1,0 +1,25 @@
+Checkpoint validation (J-FAMP runbook Stage 0)
+file: /home/ssl25/fr_runs/checkpoints/scratch/best.pth
+sha256: c612da6a4b20c34fd864f236a3bd5564cb3ce253c162e479bcbfa56d80aafb3f
+evaluated (UTC): 2026-11-11T06:06:45+00:00
+
+strict load of the state dict: PASS
+  missing keys: []  unexpected keys: []  shape mismatches: []
+output dimension 10 (must be 10): PASS
+stem kernel (3, 3) stride (1, 1), no max-pooling: PASS
+NaN/Inf parameters: none
+NaN/Inf logits on validation / test: False / False
+model.eval(): True; gradients disabled during evaluation (requires_grad False, inference_mode)
+
+Comparison with the runbook reference values:
+  n_quantizable_layers: expected 21, got 21 -> match
+  n_quantizable_weights: expected 11164352, got 11164352 -> match
+  n_parameters_total: expected 11173962, got 11173962 -> match
+  test accuracy: reference 95.11 %, got 95.11 % (9511/10000), difference +0.000 pp (tolerance 0.05 pp)
+  validation accuracy (5,000 held-out images): 95.48 % (4774/5000); best-epoch value recorded during training: 95.48
+
+Deviations from the runbook's starting assumption:
+  - the checkpoint was trained in this project, not supplied by a teammate (see supplied_by in the manifest)
+  - training ran with deterministic=False; training git state: {'commit': '239c2850161e51be4311e63e142d49e93254ba6e', 'dirty': True}
+
+GATE 0: PASS  {"checkpoint_loads_strictly": true, "output_dim_is_10": true, "stem_3x3_stride1_no_maxpool": true, "parameters_finite": true, "logits_finite": true, "test_matches_reference_within_tolerance": true, "preprocessing_known": true, "PASS": true}

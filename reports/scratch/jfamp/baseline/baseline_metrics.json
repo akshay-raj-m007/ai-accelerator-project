@@ -1,0 +1,178 @@
+{
+  "timestamp_utc": "2026-11-11T06:06:45+00:00",
+  "checkpoint_sha256": "c612da6a4b20c34fd864f236a3bd5564cb3ce253c162e479bcbfa56d80aafb3f",
+  "validation": {
+    "accuracy_percent": 95.48,
+    "correct": 4774,
+    "total": 5000,
+    "cross_entropy": 0.170370369720459,
+    "per_class": [
+      {
+        "class_id": 0,
+        "support": 496,
+        "correct": 475,
+        "accuracy_percent": 95.76612903225806,
+        "class_name": "airplane"
+      },
+      {
+        "class_id": 1,
+        "support": 507,
+        "correct": 501,
+        "accuracy_percent": 98.81656804733728,
+        "class_name": "automobile"
+      },
+      {
+        "class_id": 2,
+        "support": 489,
+        "correct": 456,
+        "accuracy_percent": 93.25153374233129,
+        "class_name": "bird"
+      },
+      {
+        "class_id": 3,
+        "support": 491,
+        "correct": 440,
+        "accuracy_percent": 89.61303462321793,
+        "class_name": "cat"
+      },
+      {
+        "class_id": 4,
+        "support": 482,
+        "correct": 456,
+        "accuracy_percent": 94.60580912863071,
+        "class_name": "deer"
+      },
+      {
+        "class_id": 5,
+        "support": 507,
+        "correct": 469,
+        "accuracy_percent": 92.50493096646943,
+        "class_name": "dog"
+      },
+      {
+        "class_id": 6,
+        "support": 514,
+        "correct": 504,
+        "accuracy_percent": 98.05447470817121,
+        "class_name": "frog"
+      },
+      {
+        "class_id": 7,
+        "support": 486,
+        "correct": 471,
+        "accuracy_percent": 96.91358024691358,
+        "class_name": "horse"
+      },
+      {
+        "class_id": 8,
+        "support": 515,
+        "correct": 498,
+        "accuracy_percent": 96.69902912621359,
+        "class_name": "ship"
+      },
+      {
+        "class_id": 9,
+        "support": 513,
+        "correct": 504,
+        "accuracy_percent": 98.24561403508773,
+        "class_name": "truck"
+      }
+    ]
+  },
+  "test": {
+    "accuracy_percent": 95.11,
+    "correct": 9511,
+    "total": 10000,
+    "cross_entropy": 0.18552966423034667,
+    "per_class": [
+      {
+        "class_id": 0,
+        "support": 1000,
+        "correct": 962,
+        "accuracy_percent": 96.2,
+        "class_name": "airplane"
+      },
+      {
+        "class_id": 1,
+        "support": 1000,
+        "correct": 977,
+        "accuracy_percent": 97.7,
+        "class_name": "automobile"
+      },
+      {
+        "class_id": 2,
+        "support": 1000,
+        "correct": 935,
+        "accuracy_percent": 93.5,
+        "class_name": "bird"
+      },
+      {
+        "class_id": 3,
+        "support": 1000,
+        "correct": 884,
+        "accuracy_percent": 88.4,
+        "class_name": "cat"
+      },
+      {
+        "class_id": 4,
+        "support": 1000,
+        "correct": 966,
+        "accuracy_percent": 96.6,
+        "class_name": "deer"
+      },
+      {
+        "class_id": 5,
+        "support": 1000,
+        "correct": 919,
+        "accuracy_percent": 91.9,
+        "class_name": "dog"
+      },
+      {
+        "class_id": 6,
+        "support": 1000,
+        "correct": 974,
+        "accuracy_percent": 97.4,
+        "class_name": "frog"
+      },
+      {
+        "class_id": 7,
+        "support": 1000,
+        "correct": 967,
+        "accuracy_percent": 96.7,
+        "class_name": "horse"
+      },
+      {
+        "class_id": 8,
+        "support": 1000,
+        "correct": 967,
+        "accuracy_percent": 96.7,
+        "class_name": "ship"
+      },
+      {
+        "class_id": 9,
+        "support": 1000,
+        "correct": 960,
+        "accuracy_percent": 96.0,
+        "class_name": "truck"
+      }
+    ]
+  },
+  "test_vs_runbook_reference": {
+    "reference_percent": 95.11,
+    "reference_correct": 9511,
+    "difference_pp": 0.0,
+    "within_tolerance_pp": 0.05
+  },
+  "class_names": [
+    "airplane",
+    "automobile",
+    "bird",
+    "cat",
+    "deer",
+    "dog",
+    "frog",
+    "horse",
+    "ship",
+    "truck"
+  ]
+}

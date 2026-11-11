@@ -1,0 +1,816 @@
+{
+  "total_parameters": 11173962,
+  "quantizable_weights": 11164352,
+  "non_quantized_parameters": 9610,
+  "quantizable_plus_nonquantized_equals_total": true,
+  "fp32_quantizable_bytes": 44657408,
+  "fp32_quantizable_bytes_equals_4x_weights": true,
+  "module_counts": {
+    "ResNet": 1,
+    "Conv2d": 20,
+    "BatchNorm2d": 20,
+    "ReLU": 9,
+    "Identity": 1,
+    "Sequential": 7,
+    "BasicBlock": 8,
+    "AdaptiveAvgPool2d": 1,
+    "Linear": 1
+  },
+  "non_quantized_tensors": {
+    "bn1.weight": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "bn1.bias": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "layer1.0.bn1.weight": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "layer1.0.bn1.bias": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "layer1.0.bn2.weight": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "layer1.0.bn2.bias": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "layer1.1.bn1.weight": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "layer1.1.bn1.bias": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "layer1.1.bn2.weight": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "layer1.1.bn2.bias": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "layer2.0.bn1.weight": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "parameter"
+    },
+    "layer2.0.bn1.bias": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "parameter"
+    },
+    "layer2.0.bn2.weight": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "parameter"
+    },
+    "layer2.0.bn2.bias": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "parameter"
+    },
+    "layer2.0.downsample.1.weight": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "parameter"
+    },
+    "layer2.0.downsample.1.bias": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "parameter"
+    },
+    "layer2.1.bn1.weight": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "parameter"
+    },
+    "layer2.1.bn1.bias": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "parameter"
+    },
+    "layer2.1.bn2.weight": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "parameter"
+    },
+    "layer2.1.bn2.bias": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "parameter"
+    },
+    "layer3.0.bn1.weight": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "parameter"
+    },
+    "layer3.0.bn1.bias": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "parameter"
+    },
+    "layer3.0.bn2.weight": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "parameter"
+    },
+    "layer3.0.bn2.bias": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "parameter"
+    },
+    "layer3.0.downsample.1.weight": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "parameter"
+    },
+    "layer3.0.downsample.1.bias": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "parameter"
+    },
+    "layer3.1.bn1.weight": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "parameter"
+    },
+    "layer3.1.bn1.bias": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "parameter"
+    },
+    "layer3.1.bn2.weight": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "parameter"
+    },
+    "layer3.1.bn2.bias": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "parameter"
+    },
+    "layer4.0.bn1.weight": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "parameter"
+    },
+    "layer4.0.bn1.bias": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "parameter"
+    },
+    "layer4.0.bn2.weight": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "parameter"
+    },
+    "layer4.0.bn2.bias": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "parameter"
+    },
+    "layer4.0.downsample.1.weight": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "parameter"
+    },
+    "layer4.0.downsample.1.bias": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "parameter"
+    },
+    "layer4.1.bn1.weight": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "parameter"
+    },
+    "layer4.1.bn1.bias": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "parameter"
+    },
+    "layer4.1.bn2.weight": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "parameter"
+    },
+    "layer4.1.bn2.bias": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "parameter"
+    },
+    "fc.bias": {
+      "shape": [
+        10
+      ],
+      "numel": 10,
+      "bytes": 40,
+      "kind": "parameter"
+    },
+    "bn1.running_mean": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "bn1.running_var": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "bn1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer1.0.bn1.running_mean": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "layer1.0.bn1.running_var": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "layer1.0.bn1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer1.0.bn2.running_mean": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "layer1.0.bn2.running_var": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "layer1.0.bn2.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer1.1.bn1.running_mean": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "layer1.1.bn1.running_var": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "layer1.1.bn1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer1.1.bn2.running_mean": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "layer1.1.bn2.running_var": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "layer1.1.bn2.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer2.0.bn1.running_mean": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "buffer"
+    },
+    "layer2.0.bn1.running_var": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "buffer"
+    },
+    "layer2.0.bn1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer2.0.bn2.running_mean": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "buffer"
+    },
+    "layer2.0.bn2.running_var": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "buffer"
+    },
+    "layer2.0.bn2.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer2.0.downsample.1.running_mean": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "buffer"
+    },
+    "layer2.0.downsample.1.running_var": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "buffer"
+    },
+    "layer2.0.downsample.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer2.1.bn1.running_mean": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "buffer"
+    },
+    "layer2.1.bn1.running_var": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "buffer"
+    },
+    "layer2.1.bn1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer2.1.bn2.running_mean": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "buffer"
+    },
+    "layer2.1.bn2.running_var": {
+      "shape": [
+        128
+      ],
+      "numel": 128,
+      "bytes": 512,
+      "kind": "buffer"
+    },
+    "layer2.1.bn2.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer3.0.bn1.running_mean": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "buffer"
+    },
+    "layer3.0.bn1.running_var": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "buffer"
+    },
+    "layer3.0.bn1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer3.0.bn2.running_mean": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "buffer"
+    },
+    "layer3.0.bn2.running_var": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "buffer"
+    },
+    "layer3.0.bn2.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer3.0.downsample.1.running_mean": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "buffer"
+    },
+    "layer3.0.downsample.1.running_var": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "buffer"
+    },
+    "layer3.0.downsample.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer3.1.bn1.running_mean": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "buffer"
+    },
+    "layer3.1.bn1.running_var": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "buffer"
+    },
+    "layer3.1.bn1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer3.1.bn2.running_mean": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "buffer"
+    },
+    "layer3.1.bn2.running_var": {
+      "shape": [
+        256
+      ],
+      "numel": 256,
+      "bytes": 1024,
+      "kind": "buffer"
+    },
+    "layer3.1.bn2.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer4.0.bn1.running_mean": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "buffer"
+    },
+    "layer4.0.bn1.running_var": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "buffer"
+    },
+    "layer4.0.bn1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer4.0.bn2.running_mean": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "buffer"
+    },
+    "layer4.0.bn2.running_var": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "buffer"
+    },
+    "layer4.0.bn2.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer4.0.downsample.1.running_mean": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "buffer"
+    },
+    "layer4.0.downsample.1.running_var": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "buffer"
+    },
+    "layer4.0.downsample.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer4.1.bn1.running_mean": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "buffer"
+    },
+    "layer4.1.bn1.running_var": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "buffer"
+    },
+    "layer4.1.bn1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "layer4.1.bn2.running_mean": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "buffer"
+    },
+    "layer4.1.bn2.running_var": {
+      "shape": [
+        512
+      ],
+      "numel": 512,
+      "bytes": 2048,
+      "kind": "buffer"
+    },
+    "layer4.1.bn2.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    }
+  },
+  "reconciliation": {
+    "sum_layer_weights_equals_global": true,
+    "sum_layer_bytes_equals_4x_global": true,
+    "every_conv_linear_listed": true
+  },
+  "runbook_reference_check": {
+    "layers": {
+      "expected": 21,
+      "got": 21,
+      "matches": true
+    },
+    "quantizable_weights": {
+      "expected": 11164352,
+      "got": 11164352,
+      "matches": true
+    },
+    "total_parameters": {
+      "expected": 11173962,
+      "got": 11173962,
+      "matches": true
+    },
+    "fp32_quantizable_bytes": {
+      "expected": 44657408,
+      "got": 44657408,
+      "matches": true
+    }
+  }
+}

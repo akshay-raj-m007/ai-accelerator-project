@@ -1,0 +1,150 @@
+{
+  "checkpoint": {
+    "path": "/home/ssl25/fr_runs/checkpoints/scratch/best.pth",
+    "file_name": "best.pth",
+    "size_bytes": 89504508,
+    "sha256": "c612da6a4b20c34fd864f236a3bd5564cb3ce253c162e479bcbfa56d80aafb3f",
+    "file_modified_utc": "2026-11-05T19:13:42+00:00",
+    "supplied_by": "akshay",
+    "source_location": "trained from scratch in this project (best.pth)",
+    "top_level_keys": [
+      "epoch",
+      "model_state_dict",
+      "optimizer_state_dict",
+      "scheduler_state_dict",
+      "scaler_state_dict",
+      "rng_state",
+      "config",
+      "git_commit",
+      "train_accuracy",
+      "average_loss",
+      "val_acc",
+      "best_val_acc",
+      "best_val_loss"
+    ],
+    "state_dict_tensors": 122,
+    "epoch": 200,
+    "best_val_acc_during_training": 95.48,
+    "best_val_loss_during_training": 0.170370369720459,
+    "git_commit_at_training": {
+      "commit": "239c2850161e51be4311e63e142d49e93254ba6e",
+      "dirty": true
+    }
+  },
+  "model": {
+    "definition": "fr.model.build_resnet18_cifar",
+    "arch_in_config": "resnet18_cifar",
+    "constructor": {
+      "num_classes": 10
+    },
+    "stem": "3x3 conv, stride 1, padding 1, no max-pooling",
+    "output_dim": 10
+  },
+  "training_config": {
+    "root": null,
+    "data_dir": null,
+    "run_name": "scratch",
+    "init_checkpoint": null,
+    "init": "scratch",
+    "normalize": "auto",
+    "epochs": 200,
+    "lr": 0.1,
+    "batch_size": 128,
+    "momentum": 0.9,
+    "nesterov": true,
+    "weight_decay": 0.0005,
+    "warmup_epochs": 5,
+    "label_smoothing": 0.0,
+    "amp": true,
+    "val_size": 5000,
+    "train_subset": null,
+    "test_subset": null,
+    "num_workers": 4,
+    "eval_batch_size": 500,
+    "seed": 0,
+    "device": "auto",
+    "deterministic": false,
+    "resume": false,
+    "normalization": {
+      "mean": [
+        0.4914,
+        0.4822,
+        0.4465
+      ],
+      "std": [
+        0.247,
+        0.2435,
+        0.2616
+      ]
+    },
+    "arch": "resnet18_cifar",
+    "warmup_iters": 1755,
+    "iters_per_epoch": 351
+  },
+  "environment_at_evaluation": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "9bddc609c0460313f555f2212ff52f8c0acebeea",
+      "dirty": true
+    }
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 3050 OEM",
+    "total_memory_bytes": 8202813440,
+    "free_memory_bytes_at_start": 7915241472
+  },
+  "evaluation_device": "cuda",
+  "dataset": {
+    "name": "CIFAR-10",
+    "train_pool": 50000,
+    "val_size": 5000,
+    "split_seed": 0,
+    "split_rule": "fr.data.split_indices (generator seed 1234 + split_seed)",
+    "val_indices_sha256": "d2e1ec6587c2c4d4018f6e02e47393b604da05c6ce4d3e2f42e51c8b9f5b7372",
+    "train_indices_sha256": "9e71eb3375dbeffdbd893ba4d931130a04a13c6ac9d570a63ff9603c94154aa7",
+    "test_images": 10000,
+    "test_set": "official CIFAR-10 test split, never used for selection or tuning"
+  },
+  "preprocessing": {
+    "normalization_mean": [
+      0.4914,
+      0.4822,
+      0.4465
+    ],
+    "normalization_std": [
+      0.247,
+      0.2435,
+      0.2616
+    ],
+    "image_size": "32x32",
+    "channel_order": "RGB",
+    "interpolation": "none (no resize)",
+    "evaluation_transform": "Compose(\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+    "training_transform": "Compose(\n    RandomCrop(size=(32, 32), padding=4)\n    RandomHorizontalFlip(p=0.5)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+    "evaluation_deterministic": true
+  },
+  "evaluation": {
+    "precision": "FP32 (no autocast)",
+    "model_eval_mode": true,
+    "gradients_disabled": true,
+    "batch_size": 500,
+    "timestamp_utc": "2026-11-11T06:06:45+00:00"
+  },
+  "runbook_reference": {
+    "test_accuracy_percent": 95.11,
+    "test_correct": 9511,
+    "test_total": 10000,
+    "n_quantizable_layers": 21,
+    "n_quantizable_weights": 11164352,
+    "n_parameters_total": 11173962,
+    "fp32_quantizable_bytes": 44657408
+  }
+}
