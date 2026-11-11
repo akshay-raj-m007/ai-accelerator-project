@@ -1,0 +1,315 @@
+{
+  "stage": "J-FAMP runbook Stage 4 - global and layer-wise fault screening (Sections 6.1-6.3)",
+  "label": "SCREENING on validation images (not paper-grade coverage); the test set is not used",
+  "run_id": "20261111T083515Z-fff093af",
+  "experiment_id": "jfamp-resnet18-cifar10-stage4-fault-screening",
+  "checkpoint_sha256": "c612da6a4b20c34fd864f236a3bd5564cb3ce253c162e479bcbfa56d80aafb3f",
+  "stage2_frozen_config_sha256": "387ff9741de4a14dbea7073b9a968ccca0fee13ee94c611444e71f264ae1514a",
+  "stage3": {
+    "run_id": "20261111T073720Z-35b172e9",
+    "gate3_per_format": {
+      "e4m11_sn": "PASS",
+      "fp16": "PASS",
+      "fp8_e4m3fn": "PASS",
+      "int8_pt": "PASS",
+      "int4_pt": "PASS",
+      "e4m11_ftz": "PASS"
+    },
+    "injector_version": "stage3-injector-v1"
+  },
+  "settings": {
+    "trials_per_configuration": 20,
+    "k_values": [
+      1,
+      8
+    ],
+    "validation_images": 1000,
+    "base_seed": 0,
+    "formats": [
+      "e4m11_sn",
+      "fp16",
+      "fp8_e4m3fn",
+      "int8_pt",
+      "int4_pt"
+    ],
+    "scale_scope_extension": true,
+    "sampling": "k distinct elements without replacement within the scope, bit uniform within the group; one derived seed per trial (see fault_protocol.json of Stage 3)",
+    "non_finite_policy": "images with non-finite logits count as incorrect; fault_loss is null if any logit is non-finite; such trials are kept and counted as failures",
+    "groups": {
+      "e4m11_sn": [
+        "sign",
+        "exponent",
+        "fraction",
+        "all"
+      ],
+      "fp16": [
+        "sign",
+        "exponent",
+        "fraction",
+        "all"
+      ],
+      "fp8_e4m3fn": [
+        "sign",
+        "exponent",
+        "fraction",
+        "all"
+      ],
+      "int8_pt": [
+        "sign",
+        "value",
+        "all"
+      ],
+      "int4_pt": [
+        "sign",
+        "value",
+        "all"
+      ]
+    },
+    "preflight": "one k=8 global trial per format and fault group before the campaign (not recorded in the trial file)"
+  },
+  "metric_definitions": {
+    "drop_pp": "clean accuracy - fault accuracy, percentage points, same 1,000 images and same model state",
+    "rel_drop_percent": "100 * drop_pp / clean accuracy (reported only alongside pp)",
+    "loss_increase": "fault loss - clean loss, over trials whose fault loss is finite (n_loss_finite)",
+    "failure": "trial with non-finite weights, activations, logits or loss; failure_rate = failures / n_trials; the four causes are counted separately",
+    "std": "sample standard deviation (ddof = 1)",
+    "p90": "90th percentile (linear interpolation) of the accuracy drop",
+    "worst": "maximum accuracy drop",
+    "sem": "std / sqrt(n_trials)"
+  },
+  "fairness_notes": [
+    "clean accuracy differs between formats on the same images (see clean_per_format); compare formats by fault accuracy and by drop together with the clean accuracy, not by drop alone",
+    "a 1,000-image validation screen is not comparable with a 10,000-image test result"
+  ],
+  "clean_per_format": {
+    "e4m11_sn": {
+      "clean_accuracy": 96.30000591278076,
+      "clean_loss": 0.14729256927967072,
+      "sample_count": 1000,
+      "seconds_this_session": 1429.085090637207
+    },
+    "fp16": {
+      "clean_accuracy": 96.30000591278076,
+      "clean_loss": 0.14722849428653717,
+      "sample_count": 1000,
+      "seconds_this_session": 1428.8958694934845
+    },
+    "fp8_e4m3fn": {
+      "clean_accuracy": 96.00000381469727,
+      "clean_loss": 0.14882314205169678,
+      "sample_count": 1000,
+      "seconds_this_session": 1364.7938318252563
+    },
+    "int8_pt": {
+      "clean_accuracy": 96.30000591278076,
+      "clean_loss": 0.14621169865131378,
+      "sample_count": 1000,
+      "seconds_this_session": 1743.294668674469
+    },
+    "int4_pt": {
+      "clean_accuracy": 95.40000557899475,
+      "clean_loss": 0.1490386575460434,
+      "sample_count": 1000,
+      "seconds_this_session": 1709.6264193058014
+    }
+  },
+  "per_format": {
+    "e4m11_sn": {
+      "configurations": 176,
+      "global": 8,
+      "layerwise": 168,
+      "scale_scope": 0,
+      "expected_trials": 3520,
+      "recorded_trials": 3520,
+      "clean_accuracy": 96.30000591278076,
+      "clean_loss": 0.14729256927967072,
+      "sample_count": 1000,
+      "seconds_this_session": 1429.085090637207
+    },
+    "fp16": {
+      "configurations": 176,
+      "global": 8,
+      "layerwise": 168,
+      "scale_scope": 0,
+      "expected_trials": 3520,
+      "recorded_trials": 3520,
+      "clean_accuracy": 96.30000591278076,
+      "clean_loss": 0.14722849428653717,
+      "sample_count": 1000,
+      "seconds_this_session": 1428.8958694934845
+    },
+    "fp8_e4m3fn": {
+      "configurations": 176,
+      "global": 8,
+      "layerwise": 168,
+      "scale_scope": 0,
+      "expected_trials": 3520,
+      "recorded_trials": 3520,
+      "clean_accuracy": 96.00000381469727,
+      "clean_loss": 0.14882314205169678,
+      "sample_count": 1000,
+      "seconds_this_session": 1364.7938318252563
+    },
+    "int8_pt": {
+      "configurations": 224,
+      "global": 14,
+      "layerwise": 210,
+      "scale_scope": 92,
+      "expected_trials": 4480,
+      "recorded_trials": 4480,
+      "clean_accuracy": 96.30000591278076,
+      "clean_loss": 0.14621169865131378,
+      "sample_count": 1000,
+      "seconds_this_session": 1743.294668674469
+    },
+    "int4_pt": {
+      "configurations": 224,
+      "global": 14,
+      "layerwise": 210,
+      "scale_scope": 92,
+      "expected_trials": 4480,
+      "recorded_trials": 4480,
+      "clean_accuracy": 95.40000557899475,
+      "clean_loss": 0.1490386575460434,
+      "sample_count": 1000,
+      "seconds_this_session": 1709.6264193058014
+    }
+  },
+  "configurations": {
+    "total": 976,
+    "trials_total_expected": 19520
+  },
+  "skipped_configurations": [
+    {
+      "format": "int8_pt",
+      "group": "exponent",
+      "reason": "integer format has no exponent field (runbook 6.1)"
+    },
+    {
+      "format": "int8_pt",
+      "scope_kind": "scales",
+      "level": "layerwise",
+      "group": "sign",
+      "k": 8,
+      "reason": "a layer has a single scale word; k = 8 distinct scale words cannot be drawn"
+    },
+    {
+      "format": "int8_pt",
+      "scope_kind": "scales",
+      "level": "layerwise",
+      "group": "exponent",
+      "k": 8,
+      "reason": "a layer has a single scale word; k = 8 distinct scale words cannot be drawn"
+    },
+    {
+      "format": "int8_pt",
+      "scope_kind": "scales",
+      "level": "layerwise",
+      "group": "fraction",
+      "k": 8,
+      "reason": "a layer has a single scale word; k = 8 distinct scale words cannot be drawn"
+    },
+    {
+      "format": "int8_pt",
+      "scope_kind": "scales",
+      "level": "layerwise",
+      "group": "all",
+      "k": 8,
+      "reason": "a layer has a single scale word; k = 8 distinct scale words cannot be drawn"
+    },
+    {
+      "format": "int4_pt",
+      "group": "exponent",
+      "reason": "integer format has no exponent field (runbook 6.1)"
+    },
+    {
+      "format": "int4_pt",
+      "scope_kind": "scales",
+      "level": "layerwise",
+      "group": "sign",
+      "k": 8,
+      "reason": "a layer has a single scale word; k = 8 distinct scale words cannot be drawn"
+    },
+    {
+      "format": "int4_pt",
+      "scope_kind": "scales",
+      "level": "layerwise",
+      "group": "exponent",
+      "k": 8,
+      "reason": "a layer has a single scale word; k = 8 distinct scale words cannot be drawn"
+    },
+    {
+      "format": "int4_pt",
+      "scope_kind": "scales",
+      "level": "layerwise",
+      "group": "fraction",
+      "k": 8,
+      "reason": "a layer has a single scale word; k = 8 distinct scale words cannot be drawn"
+    },
+    {
+      "format": "int4_pt",
+      "scope_kind": "scales",
+      "level": "layerwise",
+      "group": "all",
+      "k": 8,
+      "reason": "a layer has a single scale word; k = 8 distinct scale words cannot be drawn"
+    },
+    {
+      "format": "e4m11_ftz",
+      "reason": "comparison format, not screened unless --include-comparison"
+    }
+  ],
+  "completion": {
+    "expected": 19520,
+    "recorded": 19520,
+    "duplicates": [],
+    "missing": [],
+    "n_missing": 0,
+    "unexpected": [],
+    "n_unexpected": 0,
+    "complete": true
+  },
+  "failure_counts_by_cause": {
+    "weights_nonfinite": 0,
+    "activations_nonfinite": 187,
+    "logits_nonfinite": 187,
+    "loss_nonfinite": 187
+  },
+  "trials_recorded": 19520,
+  "mean_seconds_per_trial": 0.39375390776845276,
+  "sessions": [
+    {
+      "started_utc": "2026-11-11T08:35:15+00:00",
+      "new_trials": 19520,
+      "skipped_already_done": 0,
+      "git": {
+        "commit": "ba3a3d8586275b29e560a0b6612f8ac3f169a449",
+        "dirty": true
+      },
+      "summarize_only": false,
+      "seconds": 7686.076279640198,
+      "finished_utc": "2026-11-11T10:43:21+00:00"
+    }
+  ],
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "ba3a3d8586275b29e560a0b6612f8ac3f169a449",
+      "dirty": true
+    }
+  },
+  "git": {
+    "commit": "ba3a3d8586275b29e560a0b6612f8ac3f169a449",
+    "dirty": true
+  },
+  "injector_version": "stage3-injector-v1",
+  "robustness_score": "not defined (no composite score is computed; underlying metrics are preserved)"
+}
