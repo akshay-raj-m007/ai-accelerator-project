@@ -66,13 +66,11 @@ and 95.4 / 95.3 for INT4 layer4.1.conv2, fc, layer4.1.conv1. A scale exponent fl
 The integer payload that looked immune above is not the weak point; the float32 scale is. Full per-layer values are in `fault_summary.csv`.
 Whether per-channel scales or protecting the 21 scale words (84 bytes) is worthwhile is a Stage 5 question.
 
-## Figures (`reports/scratch/jfamp/fault_screening/figures/`)
-Global screening (from the raw trial records, `scripts/plot_stage4_global.py`; bar = mean of 20 trials, dots = trials, tick = p90):
-`global_screening_weights.png` (k = 1 and 8), `global_screening_weights_zoom_no_fp16.png`, `global_screening_int_scales.png`.
-FP16 exponent faults are the only visible weight bars: most trials sit at 0 and a few reach 70-86 pp, so the mean (8.1 pp at k=1) is far below p90 (32 pp).
+## Figures
+The first set of plots was removed (not readable enough); redesigned plots are being prepared and will be listed here once verified.
 
 ### Weight and activation distributions, FP16 vs E4M11-SN, clean vs faulted
-`fault_distributions_fp16_vs_e4m11_sn.png` and `.json` (`scripts/plot_fault_distributions.py`, run on the GPU machine). Formats chosen: FP16 (largest
+Formats chosen: FP16 (largest
 global damage) and E4M11-SN (the proposed format). Each format shows the worst RECORDED trial of the same configuration, exponent group, k = 8, layer conv1
 (the layer with the largest summed mean drop of the two formats), replayed with the same encoded elements and bits. Both replays reproduce the recorded fault
 accuracy exactly. 1,000 validation images; activations are conv1 outputs.
