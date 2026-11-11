@@ -1,7 +1,7 @@
 # Phase 3 - Fault-injection protocol validation (J-FAMP runbook Stage 3, Sections 5.1-5.3)
 
 Reference: `JFAMP_ResNet18_CIFAR10_Experimental_Flow.pdf` Section 5. Previous phases: [phase1](../phase1/README.md), [phase2](../phase2/README.md).
-Status: code written, unit-tested and dry-run locally on a tiny batch; **GPU run and results pending** (updated after the run).
+Status: **done - Gate 3 passed for all 6 formats** (GPU run, 497 synthetic cases, 264 trial records, all restored byte-exactly). Results and analysis: [RESULTS.md](RESULTS.md).
 
 ## Aim
 Prove, before any fault campaign, that the injector flips bits in the **actual encoded representation** (the stored words and
@@ -88,6 +88,6 @@ cd ~/Music/aia/ai-accelerator-project && git pull
 export FR_ROOT=$HOME/fr_runs
 python scripts/stage3_fault_validation.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch
 ```
-Needs the frozen Stage 2 outputs on the GPU machine (`results/scratch/jfamp/quantization/`, including `quantized_weights/`).
+Run on 2026-11-11. Needs the frozen Stage 2 outputs on the GPU machine (`results/scratch/jfamp/quantization/`, including `quantized_weights/`).
 Code: `src/fr/stage3.py`, `src/fr/stage3_validation.py`, `src/fr/stage3_protocol.py`, `scripts/stage3_fault_validation.py`;
 tests `tests/test_stage3.py` (26 tests).
