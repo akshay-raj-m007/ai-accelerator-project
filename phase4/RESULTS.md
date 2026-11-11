@@ -9,7 +9,7 @@ Files: `reports/scratch/jfamp/fault_screening/`. **Screening evidence only (20 t
 | trials recorded | 19,520 of 19,520 expected, 19,520 unique ids, 0 duplicates, 0 missing |
 | per format | E4M11-SN 3,520; FP16 3,520; FP8 3,520; INT8 4,480; INT4 4,480 |
 | every trial restored byte-exactly / flip applied to encoded bytes | 19,520 / 19,520 both |
-| failures (non-finite) | 187, all with output flag activations+logits+loss non-finite; none are weight-level |
+| failures (non-finite) | 188: 187 with activations + logits + loss non-finite, and 1 with finite logits but an overflowed loss (flagged `loss_nonfinite` after the fix below); none are weight-level |
 | test set | not used |
 
 Clean accuracy on the 1,000 images differs per format (E4M11-SN/FP16/INT8 96.3 %, FP8 96.0 %, INT4 95.4 %), so formats are compared by
@@ -93,9 +93,9 @@ use the layer-wise means for decisions. The conv1 weakness of E4M11-SN suggests 
 1. **One non-finite loss was not flagged (bug, fixed in code).** In INT4 global scales, exponent, k=8, trial t1 had finite logits but `fault_loss = inf` (float32 overflow in the
    loss), so it was counted as a finite loss: its row showed `inf` loss-increase values and a failure count of 13 instead of 14, and it caused the NumPy `invalid value in subtract`
    warning. It was the only such trial in all 19,520. `stage3.evaluate` now reports a non-finite loss as null, which flags `loss_nonfinite` (test added). Accuracy and drop columns were never affected.
-   The record is re-run with the fixed code (seeds are deterministic, so the same bit flips are replayed); see the status line below.
+   The record was re-run with the fixed code on the GPU machine (same seed, same bit flips, same accuracy 8.6 %): it now has `fault_loss = null`, `output_flag = loss_nonfinite`, `failure = true`; that row now shows 14 failures (rate 0.70) and `n_loss_finite` 6. No NaN/inf remains in any summary cell. Its mean loss increase (2.6e19) is dominated by one trial with loss 1.5e20, so use the median or the accuracy columns for that row.
 2. Clean accuracy differs per format on the same images (see above). The manifest's `git dirty: true` came from untracked files only (`.venv312/`, `stage4.log`); `git diff` on the GPU machine was empty, so the code run equals commit ba3a3d8.
 3. 20 trials give coarse p90/worst values; rows with k=1 and a rare catastrophic outcome (e.g. FP16 exponent) have large std.
 
 ## Status
-Stage 4 complete for the planned 976 configurations. Not yet done: extra trials for the worst/most promising configurations (runbook 6.1).
+Stage 4 complete for the planned 976 configurations (19,520 / 19,520 trials, re-verified after the loss fix). Not yet done: extra trials for the worst/most promising configurations (runbook 6.1).
