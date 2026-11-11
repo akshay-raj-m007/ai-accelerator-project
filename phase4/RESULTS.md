@@ -66,8 +66,22 @@ and 95.4 / 95.3 for INT4 layer4.1.conv2, fc, layer4.1.conv1. A scale exponent fl
 The integer payload that looked immune above is not the weak point; the float32 scale is. Full per-layer values are in `fault_summary.csv`.
 Whether per-channel scales or protecting the 21 scale words (84 bytes) is worthwhile is a Stage 5 question.
 
-## Figures
-The first set of plots was removed (not readable enough); redesigned plots are being prepared and will be listed here once verified.
+## Figures (`reports/scratch/jfamp/fault_screening/figures-faults_injected/`)
+Made by `scripts/plot_stage4_summary.py` from the CSV/JSONL files (figures 6-7 also use `fault_distribution_data.npz`, collected on the GPU machine by
+`scripts/fault_distribution_data.py`). Meaning of each figure and how to read it:
+
+| file | what it shows |
+|---|---|
+| `1_format_overview.png` | accuracy after compression (5,000 validation images), SQNR (dB) and bits per weight for the five formats |
+| `2_global_screening_weights.png` | global screening, k = 1 and 8: mean accuracy after random bit flips in the stored weights, per fault group; black tick = worst of 20 trials; number = mean accuracy lost (pp); n/a = no such bit group for integer formats |
+| `3_global_screening_scales.png` | the same for flips in the 21 float32 scale words of INT8/INT4 (extension, not in the paper); groups are the bits of the scale (1 sign, 8 exponent, 23 fraction) |
+| `4_layer_heatmaps.png` | layer x format mean accuracy lost: any bit k=1, any bit k=8, exponent bits k=8 (float formats) |
+| `5_quality_vs_robustness.png` | SQNR against accuracy before (hollow) and after (filled) faults; axis starts at 80 % |
+| `6_distributions_fp16_vs_e4m11_sn.png` | weights of conv1, conv1 outputs and logits, clean vs faulted, same axes for both formats |
+| `7_activation_growth_fp16_vs_e4m11_sn.png` | largest value produced by each layer, clean vs faulted |
+
+Cautions: plots 1 and 5 use truncated accuracy axes (stated on the axes); E4M11-FTZ (comparison format) is not drawn; plot 3 is not part of the paper's fault model (the
+paper injects into the quantized weight representation only).
 
 ### Weight and activation distributions, FP16 vs E4M11-SN, clean vs faulted
 Formats chosen: FP16 (largest

@@ -42,7 +42,7 @@ airplane 17, cat as bird 16. Full matrix: `baseline/confusion_matrix.csv`.
 Non-quantized parameters (biases and BatchNorm parameters): 9,610 (11,173,962 - 11,164,352). Per-layer rows:
 `layer_profile/layer_inventory.csv`.
 
-## Weight and activation distributions (figures in `figures/`)
+## Weight and activation distributions (figures in `figures-baselinefp32/`)
 Read from `layer_inventory.csv` and `distribution_stats.json`:
 - **Weight scale shrinks with depth.** Standard deviation: conv1 0.067, layer1 about 0.015, layer2 0.010-0.027,
   layer3 0.008-0.015, layer4 0.0014-0.0064 (layer4.1.conv2: 0.0014, |w| max 0.020). fc is larger (0.081).

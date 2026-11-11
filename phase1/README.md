@@ -75,7 +75,7 @@ Code: `src/fr/baseline_profile.py`, `src/fr/dist_plots.py`; tests `tests/test_ba
 |---|---|---|
 | baseline_manifest.json, baseline_metrics.json, confusion_matrix.csv, per_class_metrics.csv, checkpoint_validation.txt | `baseline/` | yes (5 of 5) |
 | layer_inventory.csv, layer_inventory.json, layer_storage_summary.csv, parameter_summary.json | `layer_profile/` | yes (4 of 4) |
-| weights / activations (input, output) distribution PDF + 3 PNG pages each, distribution_stats.json | `figures/` | yes (13 of 13) |
+| weights / activations (input, output) distribution PDF + 3 PNG pages each, distribution_stats.json | `figures-baselinefp32/` | yes (13 of 13) |
 
 ## Known deviations and limits
 - The checkpoint is not teammate-supplied (the runbook's starting assumption). The manifest fields `supplied_by` and
