@@ -1,0 +1,594 @@
+{
+  "stage": "J-FAMP runbook Stage 3 - fault-injection protocol (Section 5.1)",
+  "label": "SCREENING protocol (not paper-grade statistical coverage)",
+  "run_id": "20261111T073720Z-35b172e9",
+  "checkpoint_sha256": "c612da6a4b20c34fd864f236a3bd5564cb3ce253c162e479bcbfa56d80aafb3f",
+  "stage2_frozen_config_sha256": "387ff9741de4a14dbea7073b9a968ccca0fee13ee94c611444e71f264ae1514a",
+  "injector_version": "stage3-injector-v1",
+  "fault_model": "random bit flips (DRAM disturbance) applied to the STORED ENCODED representation of the weights; weights are decoded from the faulted stored bytes only; FP32 source values are never modified",
+  "formats": {
+    "e4m11_sn": {
+      "role": "primary",
+      "kind": "float",
+      "bits_per_element": 16,
+      "stored_unit": "16-bit word",
+      "bit_numbering": "0 = least significant bit of the element's stored word",
+      "groups": {
+        "sign": [
+          15
+        ],
+        "exponent": [
+          11,
+          12,
+          13,
+          14
+        ],
+        "fraction": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "all": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      "fields": {
+        "sign": [
+          15
+        ],
+        "exponent": [
+          11,
+          12,
+          13,
+          14
+        ],
+        "fraction": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "codec_version": "e4m11_sn|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+      "layout": "S(1) E(4) M(11), exponent bias 7",
+      "groups_missing": []
+    },
+    "fp16": {
+      "role": "primary",
+      "kind": "float",
+      "bits_per_element": 16,
+      "stored_unit": "16-bit word",
+      "bit_numbering": "0 = least significant bit of the element's stored word",
+      "groups": {
+        "sign": [
+          15
+        ],
+        "exponent": [
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "fraction": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ],
+        "all": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      "fields": {
+        "sign": [
+          15
+        ],
+        "exponent": [
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "fraction": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      },
+      "codec_version": "fp16|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+      "layout": "S(1) E(5) M(10), exponent bias 15",
+      "groups_missing": []
+    },
+    "fp8_e4m3fn": {
+      "role": "primary",
+      "kind": "float",
+      "bits_per_element": 8,
+      "stored_unit": "8-bit word",
+      "bit_numbering": "0 = least significant bit of the element's stored word",
+      "groups": {
+        "sign": [
+          7
+        ],
+        "exponent": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "fraction": [
+          0,
+          1,
+          2
+        ],
+        "all": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "fields": {
+        "sign": [
+          7
+        ],
+        "exponent": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "fraction": [
+          0,
+          1,
+          2
+        ]
+      },
+      "codec_version": "fp8_e4m3fn|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+      "layout": "S(1) E(4) M(3), exponent bias 7",
+      "groups_missing": []
+    },
+    "int8_pt": {
+      "role": "primary",
+      "kind": "int",
+      "bits_per_element": 8,
+      "stored_unit": "8-bit word",
+      "bit_numbering": "0 = least significant bit of the element's stored word",
+      "groups": {
+        "sign": [
+          7
+        ],
+        "value": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "all": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ]
+      },
+      "fields": {
+        "sign": [
+          7
+        ],
+        "value": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      },
+      "codec_version": "int8_pt|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+      "layout": "8-bit two's complement code, value = code * float32 scale",
+      "groups_missing": [
+        "exponent (integer formats have no exponent field; no 'exponent' group is created)"
+      ],
+      "sign_bit_interpretation": "bit 7 is the two's complement MSB with weight -128: flipping it changes the code by +/-128 (not a plain sign change); value bits 0..6 have weights +1..+64",
+      "scale_metadata": "one float32 per tensor (per-tensor scale); optional scope 'scales' with bit groups {'sign': [31], 'exponent': [23, 24, 25, 26, 27, 28, 29, 30], 'fraction': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]}"
+    },
+    "int4_pt": {
+      "role": "primary",
+      "kind": "int",
+      "bits_per_element": 4,
+      "stored_unit": "packed byte (two INT4 elements)",
+      "bit_numbering": "0 = least significant bit of the element's stored word",
+      "groups": {
+        "sign": [
+          3
+        ],
+        "value": [
+          0,
+          1,
+          2
+        ],
+        "all": [
+          0,
+          1,
+          2,
+          3
+        ]
+      },
+      "fields": {
+        "sign": [
+          3
+        ],
+        "value": [
+          0,
+          1,
+          2
+        ]
+      },
+      "codec_version": "int4_pt|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+      "layout": "4-bit two's complement code, value = code * float32 scale",
+      "groups_missing": [
+        "exponent (integer formats have no exponent field; no 'exponent' group is created)"
+      ],
+      "sign_bit_interpretation": "bit 3 is the two's complement MSB with weight -8: flipping it changes the code by +/-8 (not a plain sign change); value bits 0..2 have weights +1..+4",
+      "scale_metadata": "one float32 per tensor (per-tensor scale); optional scope 'scales' with bit groups {'sign': [31], 'exponent': [23, 24, 25, 26, 27, 28, 29, 30], 'fraction': [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22]}",
+      "packing": {
+        "element_to_stored_bit": "element e, bit b -> byte e // 2, bit (e % 2) * 4 + b",
+        "nibble_order": "element 2j in the LOW nibble (bits 0-3) of byte j, element 2j+1 in the HIGH nibble (bits 4-7)",
+        "byte_alignment": "one byte holds two elements; tensor payloads are byte aligned",
+        "padding": "an odd element count leaves one zero padding nibble (high nibble of the last byte); it is never a fault target (all 21 ResNet-18 tensors have even counts, so none occurs)",
+        "verified_by": "fault_injection_smoke_tests.csv (every element x bit of a 7-element tensor, plus the padding test)"
+      }
+    },
+    "e4m11_ftz": {
+      "role": "comparison",
+      "kind": "float",
+      "bits_per_element": 16,
+      "stored_unit": "16-bit word",
+      "bit_numbering": "0 = least significant bit of the element's stored word",
+      "groups": {
+        "sign": [
+          15
+        ],
+        "exponent": [
+          11,
+          12,
+          13,
+          14
+        ],
+        "fraction": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ],
+        "all": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14,
+          15
+        ]
+      },
+      "fields": {
+        "sign": [
+          15
+        ],
+        "exponent": [
+          11,
+          12,
+          13,
+          14
+        ],
+        "fraction": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      },
+      "codec_version": "e4m11_ftz|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+      "layout": "S(1) E(4) M(11), exponent bias 7",
+      "groups_missing": []
+    }
+  },
+  "target_scope": {
+    "primary": "Conv2d/Linear weight words, either one layer at a time (layer-wise) or all 11164352 weights (global)",
+    "layers": [
+      {
+        "layer_id": 0,
+        "layer_name": "conv1",
+        "n_elements": 1728
+      },
+      {
+        "layer_id": 1,
+        "layer_name": "layer1.0.conv1",
+        "n_elements": 36864
+      },
+      {
+        "layer_id": 2,
+        "layer_name": "layer1.0.conv2",
+        "n_elements": 36864
+      },
+      {
+        "layer_id": 3,
+        "layer_name": "layer1.1.conv1",
+        "n_elements": 36864
+      },
+      {
+        "layer_id": 4,
+        "layer_name": "layer1.1.conv2",
+        "n_elements": 36864
+      },
+      {
+        "layer_id": 5,
+        "layer_name": "layer2.0.conv1",
+        "n_elements": 73728
+      },
+      {
+        "layer_id": 6,
+        "layer_name": "layer2.0.conv2",
+        "n_elements": 147456
+      },
+      {
+        "layer_id": 7,
+        "layer_name": "layer2.0.downsample.0",
+        "n_elements": 8192
+      },
+      {
+        "layer_id": 8,
+        "layer_name": "layer2.1.conv1",
+        "n_elements": 147456
+      },
+      {
+        "layer_id": 9,
+        "layer_name": "layer2.1.conv2",
+        "n_elements": 147456
+      },
+      {
+        "layer_id": 10,
+        "layer_name": "layer3.0.conv1",
+        "n_elements": 294912
+      },
+      {
+        "layer_id": 11,
+        "layer_name": "layer3.0.conv2",
+        "n_elements": 589824
+      },
+      {
+        "layer_id": 12,
+        "layer_name": "layer3.0.downsample.0",
+        "n_elements": 32768
+      },
+      {
+        "layer_id": 13,
+        "layer_name": "layer3.1.conv1",
+        "n_elements": 589824
+      },
+      {
+        "layer_id": 14,
+        "layer_name": "layer3.1.conv2",
+        "n_elements": 589824
+      },
+      {
+        "layer_id": 15,
+        "layer_name": "layer4.0.conv1",
+        "n_elements": 1179648
+      },
+      {
+        "layer_id": 16,
+        "layer_name": "layer4.0.conv2",
+        "n_elements": 2359296
+      },
+      {
+        "layer_id": 17,
+        "layer_name": "layer4.0.downsample.0",
+        "n_elements": 131072
+      },
+      {
+        "layer_id": 18,
+        "layer_name": "layer4.1.conv1",
+        "n_elements": 2359296
+      },
+      {
+        "layer_id": 19,
+        "layer_name": "layer4.1.conv2",
+        "n_elements": 2359296
+      },
+      {
+        "layer_id": 20,
+        "layer_name": "fc",
+        "n_elements": 5120
+      }
+    ],
+    "total_elements": 11164352,
+    "not_in_scope": "biases, BatchNorm parameters and buffers (kept FP32, weight-only study)",
+    "optional_extension_scope": "'scales': the float32 per-tensor scale of INT formats (not part of the runbook screening; implemented and validated, off by default)"
+  },
+  "fault_counts_k": [
+    1,
+    8
+  ],
+  "sampling_policy": {
+    "locations": "k DISTINCT elements per trial, drawn uniformly WITHOUT replacement from the scope (recorded policy; the paper's wording draws with replacement, immaterial for k<=8)",
+    "bit": "uniformly at random within the target group, independently per struck element",
+    "independence": "one seed per trial derived from (base seed, format, scope, scope kind, group, k, trial) with numpy SeedSequence; the seed is stored in every trial record",
+    "application": "all k flips applied simultaneously before decoding; distinct elements, so no element is hit twice"
+  },
+  "seeds": {
+    "base_seed": 0,
+    "derivation": "seed = SeedSequence([base_seed, crc32(format), crc32(scope name), crc32(scope kind), crc32(group), k, trial]).generate_state(1)[0] % 2**63"
+  },
+  "trial_budget": {
+    "screening_trials_per_layer_format_group": "30 (runbook: 20-30; 20 if runtime is high)",
+    "smoke_trials_per_configuration_in_this_stage": 3,
+    "estimate": {
+      "configurations_layerwise_primary_formats": 756,
+      "trials_per_configuration": 30,
+      "evaluations": 22680,
+      "seconds_per_evaluation_measured": 0.3880406925172517,
+      "estimated_hours": 2.444656362858686,
+      "note": "layer-wise screening of the five primary formats over all groups (incl. 'all'), k in {1, 8}; excludes global screening"
+    }
+  },
+  "evaluation": {
+    "images": "first 1000 images of the validation holdout (deterministic, held out from training)",
+    "sample_count": 1000,
+    "precision": "FP32 compute on weights decoded from the stored bytes",
+    "note": "never compare this screen with a 10,000-image test result as the same protocol"
+  },
+  "non_finite_policy": {
+    "detection": "decoded weights (all Conv/Linear weights), activations (outputs of every Conv/Linear/BatchNorm module), logits and loss",
+    "accuracy_convention": "an image whose logits contain NaN/Inf counts as incorrect",
+    "loss_convention": "fault_loss is null when any logit is non-finite",
+    "never_dropped": "the trial is kept with output_flag set (weights_nonfinite, activations_nonfinite, logits_nonfinite, loss_nonfinite) and failure=true"
+  },
+  "restoration_policy": "the stored bytes (and scales) are restored after every trial, also on errors; SHA-256 of the whole encoded state is stored before the fault, during the fault and after restoration",
+  "trial_record_fields": [
+    "experiment_id",
+    "run_id",
+    "model",
+    "dataset",
+    "checkpoint_hash",
+    "layer_id",
+    "layer_name",
+    "format",
+    "codec_version",
+    "fault_group",
+    "bit_index",
+    "fault_count",
+    "trial_index",
+    "seed",
+    "sample_count",
+    "clean_accuracy",
+    "fault_accuracy",
+    "clean_loss",
+    "fault_loss",
+    "nonfinite_weight_count",
+    "output_flag",
+    "encoded_hash_before",
+    "encoded_hash_after_restore",
+    "scope_kind",
+    "requested_k",
+    "failure",
+    "encoded_hash_faulted",
+    "restored_exactly",
+    "flip_applied_to_encoded_bytes",
+    "flips",
+    "sampling"
+  ],
+  "validation_suite": [
+    "round-trip exactness and stable bytes",
+    "bit mapping of every bit of a synthetic tensor",
+    "special values (inf/NaN, reserved exponent, subnormal/FTZ, two's complement sign bit)",
+    "INT4 packing and padding",
+    "INT scale bit mapping",
+    "scope",
+    "no-fault control",
+    "restoration",
+    "non-finite handling"
+  ],
+  "codec_versions": {
+    "e4m11_sn": "e4m11_sn|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+    "fp16": "fp16|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+    "fp8_e4m3fn": "fp8_e4m3fn|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+    "int8_pt": "int8_pt|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+    "int4_pt": "int4_pt|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002",
+    "e4m11_ftz": "e4m11_ftz|stage2-frozen:387ff9741de4|stage3-injector-v1|git:e33a7002"
+  }
+}
