@@ -145,7 +145,7 @@ def plot_pages(stats: "Dict[str, dict]", kind: str, title: str, out_pdf, out_png
                 ax.plot([], [], " ", label=f"min {s['min']:.4g}   max {s['max']:.4g}")
                 ax.plot([], [], " ", label=f"zeros {100 * s['zero_fraction']:.2f} %")
                 ax.set_xlim(s["min"], s["max"]) if s["max"] > s["min"] else None
-                ax.set_title(f"L{i}  {n}  [{_group(n)}]  layer weight shape {tuple(s["shape"])}", fontsize=10, fontweight="bold")
+                ax.set_title(f"L{i}  {n}  [{_group(n)}]  layer weight shape {tuple(s['shape'])}", fontsize=10, fontweight="bold")
                 ax.set_xlabel(xlabel, fontsize=8)
                 ax.set_ylabel("count (log scale)", fontsize=8)
                 ax.tick_params(labelsize=8)
