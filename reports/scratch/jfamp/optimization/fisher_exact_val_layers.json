@@ -1,0 +1,138 @@
+{
+  "checkpoint": "/home/ssl25/fr_runs/checkpoints/scratch/best.pth",
+  "kind": "exact",
+  "source": "val",
+  "n_samples": 2048,
+  "val_index_range": [
+    0,
+    2048
+  ],
+  "layers": {
+    "conv1.weight": {
+      "count": 1728,
+      "trace": 53.83655848903816,
+      "trace_per_param": 0.031155415792267455,
+      "max": 0.31155335903167725
+    },
+    "layer1.0.conv1.weight": {
+      "count": 36864,
+      "trace": 151.53803823241083,
+      "trace_per_param": 0.004110732373926075,
+      "max": 0.3093985319137573
+    },
+    "layer1.0.conv2.weight": {
+      "count": 36864,
+      "trace": 138.87278986609243,
+      "trace_per_param": 0.0037671655237112747,
+      "max": 0.1533738523721695
+    },
+    "layer1.1.conv1.weight": {
+      "count": 36864,
+      "trace": 144.77702267067116,
+      "trace_per_param": 0.003927328088939647,
+      "max": 0.3729032278060913
+    },
+    "layer1.1.conv2.weight": {
+      "count": 36864,
+      "trace": 95.36586676240447,
+      "trace_per_param": 0.002586964701671128,
+      "max": 0.036664653569459915
+    },
+    "layer2.0.conv1.weight": {
+      "count": 73728,
+      "trace": 184.30462591700416,
+      "trace_per_param": 0.002499791475653811,
+      "max": 0.030747663229703903
+    },
+    "layer2.0.conv2.weight": {
+      "count": 147456,
+      "trace": 227.60155030914424,
+      "trace_per_param": 0.001543521798428984,
+      "max": 0.025017809122800827
+    },
+    "layer2.0.downsample.0.weight": {
+      "count": 8192,
+      "trace": 71.73677218837838,
+      "trace_per_param": 0.008756930198776658,
+      "max": 0.28221800923347473
+    },
+    "layer2.1.conv1.weight": {
+      "count": 147456,
+      "trace": 162.88259605654935,
+      "trace_per_param": 0.0011046183000796804,
+      "max": 0.021006373688578606
+    },
+    "layer2.1.conv2.weight": {
+      "count": 147456,
+      "trace": 105.03242859530613,
+      "trace_per_param": 0.0007122967434034975,
+      "max": 0.03601479530334473
+    },
+    "layer3.0.conv1.weight": {
+      "count": 294912,
+      "trace": 292.7449331455864,
+      "trace_per_param": 0.0009926518186631483,
+      "max": 0.014579292386770248
+    },
+    "layer3.0.conv2.weight": {
+      "count": 589824,
+      "trace": 436.99786458089875,
+      "trace_per_param": 0.0007408953596003193,
+      "max": 0.04463253915309906
+    },
+    "layer3.0.downsample.0.weight": {
+      "count": 32768,
+      "trace": 45.40345009552589,
+      "trace_per_param": 0.00138560333543475,
+      "max": 0.03464649245142937
+    },
+    "layer3.1.conv1.weight": {
+      "count": 589824,
+      "trace": 379.9795188761619,
+      "trace_per_param": 0.0006442252585112879,
+      "max": 0.03566153347492218
+    },
+    "layer3.1.conv2.weight": {
+      "count": 589824,
+      "trace": 187.4392608264634,
+      "trace_per_param": 0.0003177884603313249,
+      "max": 0.020933551713824272
+    },
+    "layer4.0.conv1.weight": {
+      "count": 1179648,
+      "trace": 142.98739337605429,
+      "trace_per_param": 0.00012121191522899567,
+      "max": 0.007026628125458956
+    },
+    "layer4.0.conv2.weight": {
+      "count": 2359296,
+      "trace": 93.13276108117266,
+      "trace_per_param": 3.947480989293953e-05,
+      "max": 0.004069216083735228
+    },
+    "layer4.0.downsample.0.weight": {
+      "count": 131072,
+      "trace": 12.192559126819845,
+      "trace_per_param": 9.30218439241016e-05,
+      "max": 0.00803501158952713
+    },
+    "layer4.1.conv1.weight": {
+      "count": 2359296,
+      "trace": 68.8058103905206,
+      "trace_per_param": 2.916370408398124e-05,
+      "max": 0.005884469486773014
+    },
+    "layer4.1.conv2.weight": {
+      "count": 2359296,
+      "trace": 21.76874187856553,
+      "trace_per_param": 9.226795568917816e-06,
+      "max": 0.0010320114670321345
+    },
+    "fc.weight": {
+      "count": 5120,
+      "trace": 0.757305022099672,
+      "trace_per_param": 0.0001479111371288422,
+      "max": 0.004063230473548174
+    }
+  }
+}
