@@ -192,3 +192,24 @@ def test_protocol_document_contains_the_required_items():
     assert p["formats"]["fp16"]["groups"]["exponent"] == [10, 11, 12, 13, 14]
     assert p["sampling_policy"]["locations"] and p["seeds"]["derivation"] and p["non_finite_policy"]["never_dropped"]
     assert p["trial_budget"]["estimate"]["estimated_hours"] > 0 and p["target_scope"]["total_elements"] == 30
+
+
+def test_loss_overflow_with_finite_logits_is_flagged_as_nonfinite_loss():
+    """Finite but huge logits make cross-entropy inf: the loss must be reported as None (-> loss_nonfinite), not as inf."""
+    import torch.nn as nn
+
+    class Huge(nn.Module):
+        def __init__(self):
+            super().__init__()
+            self.fc = nn.Linear(2, 3)
+            with torch.no_grad():
+                self.fc.weight.copy_(torch.tensor([[3e38, 0.0], [-3e38, 0.0], [0.0, 0.0]]))
+                self.fc.bias.zero_()
+
+        def forward(self, x):
+            return self.fc(x)
+
+    X = torch.tensor([[1.0, 0.0], [1.0, 0.0]])
+    y = torch.tensor([1, 1])
+    out = S3.evaluate(Huge(), X, y)
+    assert out["logit_rows_nonfinite"] == 0 and out["loss"] is None

@@ -90,10 +90,10 @@ failure: eight exponent flips in conv1 destroy accuracy in both formats (layer-w
 use the layer-wise means for decisions. The conv1 weakness of E4M11-SN suggests protecting or constraining the first layer in Stage 5 (not tested here).
 
 ## Issues found (honest)
-1. **One non-finite loss is not flagged.** In INT4 global scales, exponent, k=8, one trial has finite logits but `fault_loss = inf` (float32 overflow in the loss).
-   The code counts it as a finite loss (n_loss_finite = 7 not 6), so `loss_increase_mean/p90/worst` of that row are `inf`, and it triggered the
-   NumPy `invalid value in subtract` warning (inf - mean in the std). The trial is kept; the accuracy and drop columns of that row are unaffected, and no other
-   row has NaN/inf. The failure count (13) misses this one trial. Not fixed yet because it needs a decision (see below); it affects loss columns of one row only.
+1. **One non-finite loss was not flagged (bug, fixed in code).** In INT4 global scales, exponent, k=8, trial t1 had finite logits but `fault_loss = inf` (float32 overflow in the
+   loss), so it was counted as a finite loss: its row showed `inf` loss-increase values and a failure count of 13 instead of 14, and it caused the NumPy `invalid value in subtract`
+   warning. It was the only such trial in all 19,520. `stage3.evaluate` now reports a non-finite loss as null, which flags `loss_nonfinite` (test added). Accuracy and drop columns were never affected.
+   The record is re-run with the fixed code (seeds are deterministic, so the same bit flips are replayed); see the status line below.
 2. Clean accuracy differs per format on the same images (see above). The manifest's `git dirty: true` came from untracked files only (`.venv312/`, `stage4.log`); `git diff` on the GPU machine was empty, so the code run equals commit ba3a3d8.
 3. 20 trials give coarse p90/worst values; rows with k=1 and a rare catastrophic outcome (e.g. FP16 exponent) have large std.
 

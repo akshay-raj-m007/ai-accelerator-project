@@ -27,6 +27,7 @@ FORMATS = ["e4m11_sn", "fp16", "fp8_e4m3fn", "int8_pt", "int4_pt"]
 NAME = {"e4m11_sn": "E4M11-SN", "fp16": "FP16", "fp8_e4m3fn": "FP8 (E4M3)", "int8_pt": "INT8", "int4_pt": "INT4"}
 FCOLOR = {"e4m11_sn": "#2a9d8f", "fp16": "#e76f51", "fp8_e4m3fn": "#8d6cab", "int8_pt": "#3d7ab8", "int4_pt": "#9aa5b1"}
 GROUPS = [("sign", "sign bit"), ("exponent", "exponent bits"), ("fraction", "fraction / value bits"), ("all", "all bits (random)")]
+SCALE_LABEL = {"sign": "scale: sign bit (1 bit)", "exponent": "scale: exponent bits (8 bits)", "fraction": "scale: fraction bits (23 bits)", "all": "scale: any of its 32 bits"}
 GCOLOR = {"sign": "#4c78a8", "exponent": "#e4572e", "fraction": "#59a14f", "all": "#8c8c8c"}
 CLEAN_C, FAULT_C = "#9ecae1", "#c0392b"
 plt.rcParams.update({"font.size": 10, "axes.titlesize": 11, "axes.titleweight": "bold", "axes.spines.top": False, "axes.spines.right": False})
@@ -114,7 +115,7 @@ def grouped_fault_bars(ax, grows, formats, k, scope, name_layer):
             r = r[0]
             cl, fa, worst = float(r["clean_accuracy"]), float(r["fault_accuracy_mean"]), float(r["clean_accuracy"]) - float(r["drop_pp_worst"])
             cleans.append(cl)
-            ax.bar(x, fa, width=slot_w, color=GCOLOR[g], edgecolor="k", lw=0.5, label=dict(GROUPS)[g] if i == 0 else None)
+            ax.bar(x, fa, width=slot_w, color=GCOLOR[g], edgecolor="k", lw=0.5, label=(SCALE_LABEL if scope == "scales" else dict(GROUPS))[g] if i == 0 else None)
             ax.plot([x, x], [fa, worst], color="k", lw=1)
             ax.plot([x - slot_w * 0.3, x + slot_w * 0.3], [worst, worst], color="k", lw=1.6)
             d = cl - fa
@@ -141,8 +142,7 @@ def fig_global(frows, out, scope, formats, fname, title, noun):
     seen["worst of the 20 trials (black tick)"] = plt.Line2D([], [], color="k", lw=1.6)
     fig.legend(seen.values(), seen.keys(), loc="lower center", ncol=len(seen), fontsize=9, frameon=False, bbox_to_anchor=(0.5, 0.045))
     fig.suptitle(title, fontsize=13, fontweight="bold")
-    fig.text(0.5, 0.005, "Each bar = mean accuracy of 20 independent fault trials (1,000 validation images each). Number above a bar = mean accuracy lost (percentage points). "
-             "n/a = this bit group does not exist for the format.", ha="center", fontsize=8.5)
+    fig.text(0.5, 0.005, "Each bar = mean accuracy of 20 independent fault trials (1,000 validation images each). Number above a bar = mean accuracy lost (percentage points)." + ("" if scope == "scales" else " n/a = this bit group does not exist for the format."), ha="center", fontsize=8.5)
     fig.tight_layout(rect=(0, 0.09, 1, 0.93))
     fig.savefig(out / fname, dpi=150)
     plt.close(fig)
@@ -312,7 +312,7 @@ def main():
     fig_global(grows, out, "weights", FORMATS, "2_global_screening_weights.png",
                "Global screening: accuracy of the model after random bit flips in the stored weights (all 11.2 million weights)", "among the 11.2 million stored weights")
     fig_global(grows, out, "scales", ["int8_pt", "int4_pt"], "3_global_screening_scales.png",
-               "Extra test for the integer formats: accuracy after bit flips in the 21 stored scale factors (one float32 number per layer)", "among the 21 stored scale factors")
+               "Extra test for the integer formats: bit flips in the 21 stored scale factors (one float32 number per layer; the integer weights are not touched)", "among the 21 stored scale factors")
     fig_heatmaps(lrows, out)
     fig_quality_vs_robust(grows, qd, out)
     npz = Path(a.npz) if a.npz else fd / "fault_distribution_data.npz"

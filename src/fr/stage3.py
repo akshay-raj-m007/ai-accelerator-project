@@ -280,6 +280,8 @@ def evaluate(model: nn.Module, X: torch.Tensor, y: torch.Tensor, batch_size: int
     correct = rows_ok & (logits.argmax(1) == y)
     bad_layers = [n for n, f in flags.items() if bool(f)]
     loss = float(nn.functional.cross_entropy(logits, y)) if bool(rows_ok.all()) else None
+    if loss is not None and not math.isfinite(loss):         # finite but huge logits can still overflow the loss to inf: declared policy -> null + loss_nonfinite
+        loss = None
     out = {"accuracy": 100.0 * float(correct.float().mean()), "correct": int(correct.sum()), "total": int(y.numel()),
            "loss": loss, "logit_rows_nonfinite": int((~rows_ok).sum()), "activation_nonfinite": bool(bad_layers),
            "first_nonfinite_activation_layer": bad_layers[0] if bad_layers else None}
