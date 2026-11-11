@@ -1,0 +1,65 @@
+{
+  "n_val": 500,
+  "n_fisher": 256,
+  "confidence": {
+    "train_calibration_images": {
+      "n": 256,
+      "accuracy": 1.0,
+      "mean_ce": 0.000860566389746964,
+      "mean_max_prob": 0.9991403818130493,
+      "mean_one_minus_pmax_sq": 1.8264227037434466e-06,
+      "frac_pmax_gt_0.999": 0.80078125
+    },
+    "validation_images": {
+      "n": 500,
+      "accuracy": 0.9679999947547913,
+      "mean_ce": 0.11181715130805969,
+      "mean_max_prob": 0.9799643754959106,
+      "mean_one_minus_pmax_sq": 0.005439474247395992,
+      "frac_pmax_gt_0.999": 0.593999981880188
+    }
+  },
+  "fisher_trace": {
+    "train_images": 35.832454594453445,
+    "validation_images": 1698.3286373764513,
+    "ratio_val_over_train": 47.39638008609485
+  },
+  "formats": {
+    "int4_pt": {
+      "actual_dL_t0.25": -0.00392663955688477,
+      "actual_dL_t0.5": -0.0017890129089355444,
+      "actual_dL_t1": 0.021390785217285144,
+      "first_order_g_dot_d": -0.024220373772550374,
+      "half_dHd_full_hessian": 0.06518291363317985,
+      "taylor_2nd_order_g.d+1/2dHd": 0.04096253986062948,
+      "half_dFd_diag_fisher_VAL": 0.03216341301981226,
+      "half_dFd_diag_fisher_TRAIN_candidate_table": 0.0001454004269215385,
+      "d_norm2": 76.31637890359107,
+      "relative_perturbation_|d|/|w|": 0.4049191117905595
+    },
+    "int8_pt": {
+      "actual_dL_t0.25": -0.00021595764160156627,
+      "actual_dL_t0.5": -0.0004169044494628932,
+      "actual_dL_t1": -0.000829822540283201,
+      "first_order_g_dot_d": -0.0008588753189542331,
+      "half_dHd_full_hessian": 0.00014251912449481097,
+      "taylor_2nd_order_g.d+1/2dHd": -0.0007163561944594221,
+      "half_dFd_diag_fisher_VAL": 9.526547100472726e-05,
+      "half_dFd_diag_fisher_TRAIN_candidate_table": 4.689710054226382e-07,
+      "d_norm2": 0.25678711305937757,
+      "relative_perturbation_|d|/|w|": 0.02348799847923744
+    },
+    "fp8_e4m3fn": {
+      "actual_dL_t0.25": 0.0010475387573242179,
+      "actual_dL_t0.5": 0.0021798477172851605,
+      "actual_dL_t1": 0.004422634124755853,
+      "first_order_g_dot_d": 0.004538534150924534,
+      "half_dHd_full_hessian": 0.0012337207535892958,
+      "taylor_2nd_order_g.d+1/2dHd": 0.005772254904513829,
+      "half_dFd_diag_fisher_VAL": 0.0005623592573930676,
+      "half_dFd_diag_fisher_TRAIN_candidate_table": 7.542666681935628e-06,
+      "d_norm2": 3.530601940202842,
+      "relative_perturbation_|d|/|w|": 0.08709310528807894
+    }
+  }
+}
