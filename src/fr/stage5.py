@@ -4,9 +4,9 @@ DATATYPE-ONLY analysis: the only protection option is ``p = none``. No protectio
 
 Candidate = (layer l, datatype d, protection p = none):
 
-    Q(l,d)  Fisher-weighted reconstruction penalty   Q = sum_i F_i (w_i - w^_i)^2      (second-order loss estimate; F = diagonal
-            true Fisher of the FP32 model on 1,024 TRAINING-split images; w^ = decoded stored weights of the frozen Stage 2 encoding).
-            0.5 * Q is the predicted clean cross-entropy increase if only this layer is stored in d.
+    Q(l,d)  Fisher-weighted reconstruction penalty   Q = sum_i F_i (w_i - w^_i)^2      (second-order loss estimate; w^ = decoded stored weights of the
+            frozen Stage 2 encoding). PRIMARY: F = exact-expectation diagonal Fisher on held-out validation images 0..2047. ALTERNATIVE (labelled): sampled-label
+            true Fisher on 1,024 training images. 0.5 * Q is the predicted clean cross-entropy increase if only this layer is stored in d.
     R(l,d)  residual fault risk = Stage 4 layer-wise mean accuracy drop (pp), group "all" (any bit of the stored weight), k = 8,
             one layer at a time, 20 trials x 1,000 validation images. Extra columns keep k = 1, p90, worst, failure rate, and (INT only)
             the Stage 4 scale-word result (group all, k = 1), which is a different fault process and is NOT added to R unless a sweep
@@ -26,7 +26,9 @@ import numpy as np
 FORMATS = ["e4m11_sn", "fp16", "fp8_e4m3fn", "int8_pt", "int4_pt"]
 LABEL = {"e4m11_sn": "E4M11-SN", "fp16": "FP16", "fp8_e4m3fn": "FP8 E4M3FN", "int8_pt": "INT8 per-tensor", "int4_pt": "INT4 per-tensor"}
 PROTECTION = "none"
-Q_DEFINITION = "Q = sum_i F_i (w_i - w_hat_i)^2, F = diagonal true Fisher (FP32 model, 1,024 training-split images); w_hat = decoded frozen Stage 2 encoding"
+Q_DEFINITION = ("PRIMARY Q (Q_fisher_val_exact) = sum_i F_i (w_i - w_hat_i)^2 with F = diagonal Fisher of the FP32 model, expectation over labels computed EXACTLY, on held-out "
+                "validation images 0..2047; w_hat = decoded frozen Stage 2 encoding. ALTERNATIVE (Q_fisher_train_sampled): same with the sampled-label true Fisher on 1,024 training images "
+                "(this network is saturated on its training images and the sampled estimator undercounts; see phase5/Q_ANALYSIS.md)")
 R_DEFINITION = ("R = Stage 4 layer-wise mean accuracy drop in percentage points, fault group 'all' (any bit of the stored weight), k = 8, "
                 "one layer at a time, 20 trials x 1,000 validation images, p = none")
 

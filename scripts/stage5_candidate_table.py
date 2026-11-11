@@ -1,8 +1,9 @@
 """J-FAMP Stage 5 (7.1): the per-layer x datatype x protection candidate table (DATATYPE-ONLY: protection p = none).
 
-Needs, on the GPU machine: the FP32 checkpoint, the frozen Stage 2 outputs (incl. quantized_weights/), the Stage 4 fault summary, and the
-per-weight true Fisher computed on the TRAINING split (results/<run>/sensitivity/fisher_true.pt; scripts/fisher_sensitivity.py). No GPU compute is
-needed (elementwise arithmetic on 11 M weights x 5 formats), and no images are read.
+Needs, on the GPU machine: the FP32 checkpoint, the frozen Stage 2 outputs (incl. quantized_weights/), the Stage 4 fault summary, and two per-weight Fishers:
+  PRIMARY      exact-expectation Fisher on held-out VALIDATION images 0..2047 (results/<run>/sensitivity_heldout/fisher_exact_val.pt; scripts/fisher_exact.py)
+  ALTERNATIVE  sampled-label true Fisher on 1,024 TRAINING images (results/<run>/sensitivity/fisher_true.pt; scripts/fisher_sensitivity.py), kept and labelled
+No GPU compute is needed (elementwise arithmetic on 11 M weights x 5 formats), and no images are read. Why the primary changed: phase5/Q_ANALYSIS.md.
 
   python scripts/stage5_candidate_table.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch
 
@@ -36,7 +37,8 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     add_config_args(ap)
     ap.add_argument("--checkpoint", required=True)
-    ap.add_argument("--fisher", default=None, help="default results/<run>/sensitivity/fisher_true.pt (training-split true Fisher)")
+    ap.add_argument("--fisher", default=None, help="ALTERNATIVE Q: default results/<run>/sensitivity/fisher_true.pt (training-split sampled-label true Fisher)")
+    ap.add_argument("--fisher-val", default=None, help="PRIMARY Q: default results/<run>/sensitivity_heldout/fisher_exact_val.pt (exact Fisher, validation images 0..2047)")
     ap.add_argument("--quant-dir", default=None)
     ap.add_argument("--fault-dir", default=None, help="Stage 4 outputs, default results/<run>/jfamp/fault_screening")
     ap.add_argument("--out-dir", default=None, help="default results/<run>/jfamp/optimization")
@@ -48,6 +50,7 @@ def main():
     fdir = Path(args.fault_dir) if args.fault_dir else base / "fault_screening"
     out = Path(args.out_dir) if args.out_dir else base / "optimization"
     fpath = Path(args.fisher) if args.fisher else cfg.results_dir() / "sensitivity" / "fisher_true.pt"
+    fvpath = Path(args.fisher_val) if args.fisher_val else cfg.results_dir() / "sensitivity_heldout" / "fisher_exact_val.pt"
     out.mkdir(parents=True, exist_ok=True)
 
     man2 = json.load(open(qdir / "quantizer_manifest.json"))
@@ -61,11 +64,17 @@ def main():
     if fres.get("source") not in (None, "train"):
         sys.exit(f"{fpath} was computed on the {fres.get('source')!r} split; Q must use training-split calibration images (no validation leakage)")
     F = fres["fisher"]
+    fv = load_fisher(fvpath)
+    if fv.get("kind") != "exact" or fv.get("source") != "val" or list(fv.get("val_index_range", [])) != [0, int(fv.get("n_samples", -1))]:
+        sys.exit(f"{fvpath}: the primary Q needs the exact-expectation Fisher on validation images 0..n-1 (scripts/fisher_exact.py)")
+    if fv.get("checkpoint_sha256") != ck_sha:
+        sys.exit(f"{fvpath} was computed on a different checkpoint")
+    FV = fv["fisher"]
     model, _ = load_model(ck)
     mods = quantizable_modules(model)
     names = [n for n, _ in mods]
     lnames = [f"{n}.weight" for n in names]
-    if list(F) != lnames:
+    if list(F) != lnames or list(FV) != lnames:
         sys.exit("Fisher layer names / order differ from the model's Conv2d/Linear weights")
     W = {f"{n}.weight": m.weight.detach().cpu().numpy() for n, m in mods}
 
@@ -87,10 +96,11 @@ def main():
             what = codec.decode(stored[ln]).reshape(W[ln].shape)
             rt = S2.roundtrip_row(W[ln], what)
             st = S2.storage_row(codec, stored[ln])
-            q = S5.fisher_q(W[ln], what, F[ln].numpy())
+            q = S5.fisher_q(W[ln], what, F[ln].numpy())                 # alternative: training-image sampled-label Fisher
+            qv = S5.fisher_q(W[ln], what, FV[ln].numpy())               # primary: validation-image exact-expectation Fisher
             row = {"layer_id": lid, "layer_name": n, "num_weights": int(W[ln].size), "datatype": fmt, "datatype_label": S5.LABEL[fmt],
                    "protection": S5.PROTECTION,
-                   "Q_fisher_weighted": q, "Q_pred_dCE": 0.5 * q, "relative_l2_error": rt["relative_l2"], "sqnr_db": rt["sqnr_db"],
+                   "Q_fisher_val_exact": qv, "Q_fisher_train_sampled": q, "Q_pred_dCE_val": 0.5 * qv, "Q_pred_dCE_train": 0.5 * q, "relative_l2_error": rt["relative_l2"], "sqnr_db": rt["sqnr_db"],
                    "max_abs_error": rt["max_abs_error"], "decoded_nonfinite": rt["decoded_nonfinite"]}
             row.update(S5.risk_columns(risk, fmt, n))
             row.update({"S_payload_bytes": st["payload_bytes"], "S_scale_bytes": st["scale_bytes"], "S_padding_bits": st["padding_bits"],
@@ -108,22 +118,28 @@ def main():
         for r in rows:
             w.writerow(r)
 
-    # does the Fisher-weighted Q predict the clean change of the uniform formats? (5 points, reported not tuned)
+    # does the Fisher-weighted Q predict the clean change of the uniform formats? (5 points, reported not tuned; measured on ALL 5,000 validation images, which include the
+    # 2,048 Fisher images - the strict disjoint check is scripts/stage5_q_validation.py)
     val = []
     for fmt in args.formats:
-        pred = sum(r["Q_pred_dCE"] for r in rows if r["datatype"] == fmt)
-        val.append({"datatype": fmt, "predicted_dCE_sum_half_Q": pred, "measured_val_delta_ce_5000": float(acc2[fmt]["val_delta_ce"]),
-                    "measured_val_drop_pp_5000": float(acc2[fmt]["val_drop_pp"])})
-    sp = spearman([v["predicted_dCE_sum_half_Q"] for v in val], [v["measured_val_delta_ce_5000"] for v in val])
-    dump_json({"note": "uniform assignments; Q is a second-order estimate from training-split Fisher, measured values are on 5,000 validation images",
-               "rows": val, "spearman_predicted_vs_measured_dCE": sp}, out / "q_validation.json")
+        val.append({"datatype": fmt, "predicted_dCE_val_fisher": sum(r["Q_pred_dCE_val"] for r in rows if r["datatype"] == fmt),
+                    "predicted_dCE_train_fisher": sum(r["Q_pred_dCE_train"] for r in rows if r["datatype"] == fmt),
+                    "measured_val_delta_ce_5000": float(acc2[fmt]["val_delta_ce"]), "measured_val_drop_pp_5000": float(acc2[fmt]["val_drop_pp"])})
+    meas = [v["measured_val_delta_ce_5000"] for v in val]
+    sp_v = spearman([v["predicted_dCE_val_fisher"] for v in val], meas)
+    sp_t = spearman([v["predicted_dCE_train_fisher"] for v in val], meas)
+    dump_json({"note": "uniform assignments; 1/2 sum Q (second-order estimate) vs the measured clean CE change on 5,000 validation images (overlaps the Fisher images; see q_layerwise_validation.json for the disjoint check)",
+               "rows": val, "spearman_val_fisher_vs_measured": sp_v, "spearman_train_fisher_vs_measured": sp_t,
+               "measured_values_for_the_four_non_INT4_formats_are_within_evaluation_noise": True}, out / "q_validation.json")
 
     const = float(stor[args.formats[0]]["non_quantized_param_bytes_fp32"]) + float(stor[args.formats[0]]["buffer_bytes"])
     meta = {"label": "DATATYPE-ONLY reliability-aware analysis (protection p = none; no protection implemented)",
-            "Q_definition": S5.Q_DEFINITION, "R_definition": S5.R_DEFINITION, "formats": args.formats, "layers": names,
+            "Q_definition": S5.Q_DEFINITION, "Q_primary_column": "Q_fisher_val_exact", "Q_alternative_column": "Q_fisher_train_sampled", "R_definition": S5.R_DEFINITION, "formats": args.formats, "layers": names,
             "fixed_non_quantized_bytes": const, "num_quantized_weights": int(sum(W[ln].size for ln in lnames)),
             "inputs": {"checkpoint_sha256": ck_sha, "fisher_file": str(fpath), "fisher_sha256": sha256_file(fpath), "fisher_kind": fres.get("kind"),
                        "fisher_source": fres.get("source"), "fisher_n_samples": fres.get("n_samples"),
+                       "fisher_val_file": str(fvpath), "fisher_val_sha256": sha256_file(fvpath), "fisher_val_kind": fv.get("kind"), "fisher_val_source": fv.get("source"),
+                       "fisher_val_n_samples": fv.get("n_samples"), "fisher_val_index_range": fv.get("val_index_range"), "fisher_val_min_prob": fv.get("min_prob"),
                        "stage2_frozen_config_sha256": man2["frozen_config_sha256"],
                        "stage4_fault_summary_sha256": sha256_file(fdir / "fault_summary.csv"),
                        "stage4_fault_trials_sha256": sha256_file(fdir / "fault_trials.jsonl"), "stage4_run_id": camp["run_id"]},
@@ -132,9 +148,9 @@ def main():
                       "Clean accuracy is a format-level measurement (Stage 2, all layers in the same format); per-layer clean accuracy was not measured."]}
     dump_json(meta, out / "candidate_table_meta.json")
     print(f"{len(rows)} candidate rows -> {out / 'jfamp_candidate_table.csv'}")
-    print(f"Spearman (sum 0.5 Q vs measured val dCE, 5 uniform formats): {sp:+.3f}")
+    print(f"Spearman (sum 0.5 Q vs measured val dCE, 5 uniform formats): val-Fisher {sp_v:+.3f}, train-Fisher {sp_t:+.3f}")
     for v in val:
-        print(f"  {v['datatype']:11s} predicted dCE {v['predicted_dCE_sum_half_Q']:.5f}   measured {v['measured_val_delta_ce_5000']:+.5f}")
+        print(f"  {v['datatype']:11s} predicted dCE: val-Fisher {v['predicted_dCE_val_fisher']:.2e}  train-Fisher {v['predicted_dCE_train_fisher']:.2e}   measured {v['measured_val_delta_ce_5000']:+.5f}")
 
 
 if __name__ == "__main__":

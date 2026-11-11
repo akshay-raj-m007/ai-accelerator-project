@@ -31,7 +31,7 @@ from fr.utils import dump_json
 SHORT = {"e4m11_sn": "E4M11", "fp16": "FP16", "fp8_e4m3fn": "FP8", "int8_pt": "INT8", "int4_pt": "INT4"}
 
 
-def load_problem(path):
+def load_problem(path, q_column="Q_fisher_val_exact"):
     rows = list(csv.DictReader(open(path, encoding="utf8")))
     layers, formats = [], []
     for r in rows:
@@ -49,7 +49,7 @@ def load_problem(path):
         seen.add((i, j))
         if r["protection"] != "none":
             raise SystemExit("this optimiser is datatype-only: only protection = none is allowed")
-        arr["Q"][i, j] = float(r["Q_fisher_weighted"])
+        arr["Q"][i, j] = float(r[q_column])
         arr["R"][i, j] = float(r["R_any_k8_mean_drop_pp"])
         arr["S"][i, j] = float(r["S_total_bytes"]) + float(r["R_protection_overhead_bytes"])
         arr["Rs"][i, j] = float(r["R_scale_any_k1_mean_drop_pp"])
@@ -68,6 +68,7 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     add_config_args(ap)
     ap.add_argument("--table", default=None)
+    ap.add_argument("--q-column", default="Q_fisher_val_exact", help="Q_fisher_val_exact (primary) or Q_fisher_train_sampled (labelled alternative)")
     ap.add_argument("--out-dir", default=None)
     ap.add_argument("--lambdas", type=float, nargs="+", default=[0, 0.1, 0.25, 0.5, 1, 2, 4, 10])
     ap.add_argument("--avg-bits", type=float, nargs="+", default=[4.5, 5, 6, 7, 8, 10, 12, 16], help="storage budget B as average stored bits per weight")
@@ -91,7 +92,7 @@ def main():
     meta = json.load(open(meta_path)) if meta_path.exists() else {}
     const_bytes = float(meta.get("fixed_non_quantized_bytes", 0.0))
 
-    p, nw, _ = load_problem(table)
+    p, nw, _ = load_problem(table, args.q_column)
     N = float(nw.sum())
     L, D = len(p.layers), len(p.formats)
     print(f"{L} layers x {D} datatypes = {L * D} candidates, {int(N):,} quantized weights")
@@ -162,7 +163,7 @@ def main():
                "selected": layers,
                "constraints": {"B_avg_bits_per_weight": args.select_bits, "B_bytes": B, "tau_fault_mean_layer_risk_pp": args.select_tau,
                                "eps_clean_pred_dCE": args.select_eps, "delta_clean": "checked end to end after assembly (not an optimiser constraint)"},
-               "objective": {"formula": "sum x[l,d] (Q_norm + lambda R_norm)", "lambda": args.select_lambda, "normalization": args.select_norm,
+               "objective": {"formula": "sum x[l,d] (Q_norm + lambda R_norm)", "q_column": args.q_column, "lambda": args.select_lambda, "normalization": args.select_norm,
                              "risk_variant": args.select_risk, "value": sol["objective"]},
                "totals_predicted": t, "model_storage_bytes_incl_fixed": t["storage_bytes"] + const_bytes,
                "solver": {"name": "scipy.optimize.milp (HiGHS), exact", "scipy": scipy.__version__, "variables": L * D},

@@ -103,6 +103,54 @@ def compute_fisher(model: nn.Module, loader, device, kind: str = "true", seed: i
             "mean_nll": nll_sum / n}
 
 
+def compute_fisher_exact(model: nn.Module, loader, device, max_samples: Optional[int] = None, min_prob: float = 1e-8) -> Dict[str, object]:
+    """Diagonal Fisher with the EXPECTATION OVER LABELS computed exactly (no label sampling):
+
+        F_jj = (1/n) sum_x sum_c p(c|x) (d log p(c|x) / d w_j)^2 ,     classes with p(c|x) < ``min_prob`` are skipped.
+
+    The sampled-label estimator (``compute_fisher``, ``kind="true"``) has the same expectation but, for a confident model, almost always draws the arg-max
+    class whose gradient is tiny; the expectation is carried by rare labels, so the estimate is very noisy (the 1,024-sample draw undercounted the exact
+    value by about 140x on this network's training images). One backward pass per (image, class) with p >= ``min_prob``; the neglected probability mass
+    is at most ``min_prob`` per image and is reported.
+    """
+    named = weight_params(model)
+    params = [p for _, p in named]
+    was_training = model.training
+    model.eval().to(device)
+    flags = [p.requires_grad for p in params]
+    for p in params:
+        p.requires_grad_(True)
+    acc = [torch.zeros_like(p, dtype=torch.float64) for p in params]
+    n, n_backward, nll_sum, dropped = 0, 0, 0.0, 0.0
+    try:
+        for images, labels in loader:
+            for i in range(images.shape[0]):
+                if max_samples is not None and n >= max_samples:
+                    break
+                x = images[i:i + 1].to(device)
+                logp = torch.log_softmax(model(x).float(), dim=1)
+                prob = logp.detach().exp().view(-1)
+                nll_sum += float(-logp.detach()[0, int(labels[i])])
+                keep = [c for c in range(prob.numel()) if float(prob[c]) >= min_prob]
+                dropped += float(prob.sum()) - float(sum(float(prob[c]) for c in keep))
+                for c in keep:
+                    grads = torch.autograd.grad(-logp[0, c], params, retain_graph=True)
+                    w = float(prob[c])
+                    for a, g in zip(acc, grads):
+                        a.add_(g.double().pow(2) * w)
+                    n_backward += 1
+                n += 1
+    finally:
+        for p, f in zip(params, flags):
+            p.requires_grad_(f)
+        model.train(was_training)
+    if n == 0:
+        raise ValueError("empty loader")
+    fisher = OrderedDict((name, (a / n).float().cpu()) for (name, _), a in zip(named, acc))
+    return {"fisher": fisher, "n_samples": n, "kind": "exact", "min_prob": min_prob, "n_backward": n_backward, "mean_nll": nll_sum / n,
+            "max_neglected_probability_mass_per_image": dropped / n}
+
+
 def per_sample_layer_traces(model: nn.Module, loader, device, kind: str = "true", seed: int = 0,
                             max_samples: Optional[int] = None) -> Dict[str, object]:
     """Per-sample Fisher trace of every layer: ``traces[i, l] = sum_j (d loss_i / d w_lj)^2``.

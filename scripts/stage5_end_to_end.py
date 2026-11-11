@@ -3,7 +3,7 @@
 Runbook 7.2: "the selected assignment must be assembled into a full model and measured end-to-end ... if predicted and measured metrics differ, update
 layer-level estimates and repeat refinement." This script does, for every distinct optimal assignment found by stage5_optimize.py (plus the five uniform
 single-datatype models as references):
-  A. clean validation accuracy / loss of the assembled model (all 5,000 validation images) and actual stored bytes        -> A_clean(x), S(x)
+  A. clean validation accuracy / loss of the assembled model (validation images 2,048..4,999, disjoint from the 2,048 Fisher images) and actual stored bytes        -> A_clean(x), S(x)
   B. a shortlist (non-dominated in storage, predicted risk and measured clean drop, plus the uniform references) gets end-to-end fault trials on the
      assembled model's stored bytes (declared distributions in stage5_e2e.py), 1,000 validation images, N trials     -> R_fault(x)
   C. predicted-vs-measured comparison and the constraint grid (delta_clean, tau_fault, B): the best MEASURED-feasible assignment per setting.
@@ -69,7 +69,9 @@ def main():
     ap.add_argument("--quant-dir", default=None)
     ap.add_argument("--opt-dir", default=None, help="folder with jfamp_candidate_table.csv, distinct_assignments.csv (default results/<run>/jfamp/optimization)")
     ap.add_argument("--n-fault-images", type=int, default=1000)
-    ap.add_argument("--clean-images", type=int, default=None, help="validation images for the clean evaluation (default: all; only for dry runs)")
+    ap.add_argument("--clean-images", type=int, default=None, help="validation images for the clean evaluation after the skip (default: all remaining; only for dry runs)")
+    ap.add_argument("--clean-skip", type=int, default=2048, help="skip the first N validation images (the exact-Fisher images used for Q) in the clean evaluation")
+    ap.add_argument("--q-column", default="Q_fisher_val_exact", help="Q column of the candidate table (must match the one used by stage5_optimize.py)")
     ap.add_argument("--trials", type=int, default=50, help="independent fault trials per assignment and distribution")
     ap.add_argument("--max-fault-assignments", type=int, default=25, help="size of the shortlist that gets fault trials (uniform references are extra)")
     ap.add_argument("--include", nargs="*", default=[], help="extra assignment ids that must get fault trials")
@@ -95,7 +97,7 @@ def main():
     odir.mkdir(parents=True, exist_ok=True)
     meta = json.load(open(odir / "candidate_table_meta.json"))
     const_bytes = float(meta["fixed_non_quantized_bytes"])
-    p, nw, _ = load_problem(odir / "jfamp_candidate_table.csv")
+    p, nw, _ = load_problem(odir / "jfamp_candidate_table.csv", args.q_column)
     L = len(p.layers)
     N = float(nw.sum())
     sweep_rows = list(csv.DictReader(open(odir / "normalization_lambda_sweep.csv")))
@@ -134,10 +136,13 @@ def main():
             sys.exit("layer order differs from the candidate table")
         norm = fdata.resolve_normalization(cfg.normalize, "checkpoint", ckpt.get("config"))
         val_size, split_seed = split_params(ckpt, cfg)
-        loader = fdata.get_val_loader(cfg.data_path(), norm, cfg.eval_batch_size, val_size, split_seed, cfg.num_workers, False, subset=args.clean_images)
+        loader = fdata.get_val_loader(cfg.data_path(), norm, cfg.eval_batch_size, val_size, split_seed, cfg.num_workers, False, subset=args.clean_images, skip=args.clean_skip)
         Xv, yv = load_tensors(loader, device)
-        Xf, yf = Xv[:args.n_fault_images], yv[:args.n_fault_images]
-        print(f"run {run_id}: {int(yv.numel())} validation images (clean), first {int(yf.numel())} for fault trials, device {device}")
+        # fault trials use the first images of the validation split, as in Stage 4 (they overlap the Fisher images; the Fisher uses gradients, the fault result a measured accuracy drop)
+        Xf, yf = load_tensors(fdata.get_val_loader(cfg.data_path(), norm, cfg.eval_batch_size, val_size, split_seed, cfg.num_workers, False, subset=args.n_fault_images), device)
+        if prev and prev.get("settings") and (prev["settings"].get("q_column"), prev["settings"].get("clean_skip")) != (args.q_column, args.clean_skip):
+            sys.exit("end_to_end_manifest.json was made with a different --q-column / --clean-skip: use another --opt-dir or delete the old end_to_end_* files")
+        print(f"run {run_id}: {int(yv.numel())} validation images (clean, skipping the first {args.clean_skip}), first {int(yf.numel())} for fault trials, device {device}")
         codecs = S2.make_codecs(True)
         stores = {}
         for f in S5.FORMATS:
@@ -234,7 +239,7 @@ def main():
         log.close()
         print(f"C. fault trials: {n_trials_new} new")
         dump_json({"run_id": run_id, "fp32_reference": fp32, "shortlist": shortlist, "checkpoint_sha256": ck_sha, "stage2_frozen_config_sha256": frozen,
-                   "settings": {"trials": args.trials, "n_fault_images": args.n_fault_images, "base_seed": cfg.seed, "distributions": E2.DISTRIBUTIONS},
+                   "settings": {"q_column": args.q_column, "clean_skip": args.clean_skip, "trials": args.trials, "n_fault_images": args.n_fault_images, "base_seed": cfg.seed, "distributions": E2.DISTRIBUTIONS},
                    "git": git_info(), "environment": env_info(), "seconds_last_session": time.time() - t0}, manifest_path)
         prev = json.load(open(manifest_path))
 
@@ -323,7 +328,7 @@ def main():
                              "R_fault_pp_mean_" + args.fault_dist: "" if not b else rfault(b)})
     write_csv(odir / "constraint_grid_selection.csv", grid)
     dump_json({"label": "DATATYPE-ONLY (protection p = none). Measured end to end on assembled models; validation data only unless final_test_evaluation.json exists.",
-               "fp32_reference": fp32, "protocol": {"clean": "all 5,000 validation images", "fault": f"first {prev['settings']['n_fault_images']} validation images, {trials_expected} trials per distribution",
+               "fp32_reference": fp32, "protocol": {"clean": f"validation images {prev['settings']['clean_skip']}..4999 (disjoint from the Fisher images 0..2047)", "q_column": prev["settings"]["q_column"], "fault": f"first {prev['settings']['n_fault_images']} validation images, {trials_expected} trials per distribution",
                                                     "distributions": "weights_k8: 8 distinct weights over the whole assembled model, bit uniform over the weight's own encoding; scales_k1: 1 INT scale word, 1 of 32 bits (extension)"},
                "fault_shortlist_rule": "union of two fronts among the optimiser's distinct assignments, each non-dominated in (actual storage, predicted mean layer risk, measured clean drop) - one with weights-only risk, one with risk plus INT scale-word risk - each evenly thinned to half the size limit, plus the five uniform references",
                "shortlist": shortlist, "incomplete_cells": problems, "predicted_vs_measured": comp, "assignments": items}, odir / "end_to_end_assignment_metrics.json")
@@ -371,7 +376,7 @@ def main():
                    "assignment_id": aid,
                    "constraints": {"B_avg_bits_per_weight": args.final_avg_bits, "delta_clean_pp": args.final_delta_clean, "tau_fault_weights_k8_mean_drop_pp": args.final_tau_fault,
                                    "A_FP32_validation": fp32["val_accuracy"], "checked_on": "measured end-to-end validation metrics (not layer-additive proxies)"},
-                   "objective": {"formula": "sum x[l,d,p] (Q_norm + lambda R_norm)", "lambda": args.lam, "normalization": args.norm, "risk_variant": args.risk, "value": b["objective_value"]},
+                   "objective": {"formula": "sum x[l,d,p] (Q_norm + lambda R_norm)", "q_column": args.q_column, "lambda": args.lam, "normalization": args.norm, "risk_variant": args.risk, "value": b["objective_value"]},
                    "optimiser_settings_that_produced_it": sw[:3], "solver": "scipy.optimize.milp (HiGHS), exact; candidate assignments from normalization_lambda_sweep.csv",
                    "measured": {"storage": b["storage"], "clean_validation": b["clean_validation"], "fault_end_to_end": b["fault_end_to_end"]},
                    "test_set": {"file": "final_test_evaluation.json"}}, odir / "assignment.json")

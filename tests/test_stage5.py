@@ -1,7 +1,32 @@
 import numpy as np
 import pytest
+import torch
 
 from fr import stage5 as S5
+
+
+def test_exact_fisher_matches_the_definition_on_a_tiny_model():
+    import torch.nn as nn
+    from fr import sensitivity as SE
+    torch.manual_seed(0)
+    net = nn.Sequential(nn.Flatten(), nn.Linear(6, 4, bias=False), nn.ReLU(), nn.Linear(4, 3, bias=False)).eval()
+    X = torch.randn(5, 6)
+    y = torch.randint(0, 3, (5,))
+    ld = torch.utils.data.DataLoader(torch.utils.data.TensorDataset(X, y), batch_size=2)
+    res = SE.compute_fisher_exact(net, ld, "cpu", min_prob=0.0)
+    params = [p for _, p in SE.weight_params(net)]
+    ref = [torch.zeros_like(p, dtype=torch.float64) for p in params]
+    for i in range(5):
+        lp = torch.log_softmax(net(X[i:i + 1]), 1)
+        for c in range(3):
+            g = torch.autograd.grad(-lp[0, c], params, retain_graph=True)
+            for r, gi in zip(ref, g):
+                r += float(lp[0, c].exp()) * gi.double() ** 2
+    for f, r in zip(res["fisher"].values(), ref):
+        assert np.allclose(f.double().numpy(), (r / 5).numpy(), rtol=1e-5, atol=1e-12)
+    assert res["kind"] == "exact" and res["n_samples"] == 5 and res["n_backward"] == 15
+    res2 = SE.compute_fisher_exact(net, ld, "cpu", min_prob=0.3)           # skipping classes below min_prob: fewer passes, neglected mass reported
+    assert res2["n_backward"] < 15 and res2["max_neglected_probability_mass_per_image"] > 0
 
 
 def _problem(seed, L=4, D=3):
