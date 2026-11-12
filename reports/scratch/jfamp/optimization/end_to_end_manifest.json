@@ -1,0 +1,70 @@
+{
+  "run_id": "20261111T173748Z-3dfdf4a6",
+  "fp32_reference": {
+    "val_accuracy": 95.29132843017578,
+    "val_loss": 0.1759788542985916,
+    "val_samples": 2952
+  },
+  "shortlist": [
+    "A051",
+    "A152",
+    "A093",
+    "A048",
+    "A246",
+    "A054",
+    "A044",
+    "A072",
+    "A217",
+    "A164",
+    "A202",
+    "A194",
+    "A222",
+    "A020",
+    "A207",
+    "A187",
+    "A029",
+    "A018",
+    "A063",
+    "A007",
+    "A014",
+    "A025",
+    "U_E4M11SN",
+    "U_FP16",
+    "U_FP8",
+    "U_INT8",
+    "U_INT4"
+  ],
+  "checkpoint_sha256": "c612da6a4b20c34fd864f236a3bd5564cb3ce253c162e479bcbfa56d80aafb3f",
+  "stage2_frozen_config_sha256": "387ff9741de4a14dbea7073b9a968ccca0fee13ee94c611444e71f264ae1514a",
+  "settings": {
+    "q_column": "Q_fisher_val_exact",
+    "clean_skip": 2048,
+    "trials": 50,
+    "n_fault_images": 1000,
+    "base_seed": 0,
+    "distributions": [
+      "weights_k8",
+      "scales_k1"
+    ]
+  },
+  "git": {
+    "commit": "704b2ecd34f5165d0d1a5fc12e76af0c69bde9d2",
+    "dirty": true
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "704b2ecd34f5165d0d1a5fc12e76af0c69bde9d2",
+      "dirty": true
+    }
+  },
+  "seconds_last_session": 1214.314535856247
+}
