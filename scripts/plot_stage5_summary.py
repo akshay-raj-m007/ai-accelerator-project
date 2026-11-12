@@ -1,9 +1,9 @@
 """Stage 5 figures (J-FAMP, datatype-only): per-layer sensitivities, Q / R / S inputs, selected assignments, predicted versus measured.
 
-Reads only saved files of reports/scratch/jfamp/optimization (jfamp_candidate_table.csv, q_layerwise_validation.csv, fisher_exact_val_layers.json,
+Reads only saved files of reports/scratch/jfamp/optimization_round1 (jfamp_candidate_table.csv, q_layerwise_validation.csv, fisher_exact_val_layers.json,
 normalization_lambda_sweep.csv, end_to_end_assignment_metrics.json, end_to_end_fault_trials.jsonl) and writes PNGs.
 
-  python scripts/plot_stage5_summary.py --opt-dir reports/scratch/jfamp/optimization --out plots_preview/stage5
+  python scripts/plot_stage5_summary.py --opt-dir reports/scratch/jfamp/optimization_round1 --out plots_preview/stage5
 """
 import argparse
 import csv
@@ -531,7 +531,7 @@ def fig11(out, layers, tab, QV, fl):
 
 def main():
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
-    ap.add_argument("--opt-dir", default="reports/scratch/jfamp/optimization")
+    ap.add_argument("--opt-dir", default="reports/scratch/jfamp/optimization_round1")
     ap.add_argument("--out", default="plots_preview/stage5")
     args = ap.parse_args()
     opt, out = Path(args.opt_dir), Path(args.out)

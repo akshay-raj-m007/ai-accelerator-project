@@ -84,3 +84,33 @@ def test_risk_columns_and_missing_row():
     assert c["R_any_k8_mean_drop_pp"] == 0.4 and c["R_scale_any_k1_mean_drop_pp"] == 30 and c["has_scale_word"] and c["R_n_trials"] == 20
     with pytest.raises(KeyError):
         S5.risk_columns(rk, "fp16", "conv1")
+
+
+def test_exposure_risk_definition():
+    assert S5.per_flip_drop(-0.3, 0.8) == pytest.approx(0.0)                       # 0.5 * (-0.3 + 0.1) < 0 -> clipped (noise)
+    assert S5.per_flip_drop(0.4, 8.0) == pytest.approx(0.7)
+    assert S5.exposure_risk(500, 1000, 0.4, 8.0) == pytest.approx(8 * 0.5 * 0.7)
+    # additivity over layers: summing the layer risks of a split equals the risk of the merged layer with the same per-flip drop
+    assert S5.exposure_risk(300, 1000, 1, 8) + S5.exposure_risk(700, 1000, 1, 8) == pytest.approx(S5.exposure_risk(1000, 1000, 1, 8))
+
+
+@pytest.mark.parametrize("seed", range(5))
+def test_solver_with_protection_options_sum_risk_and_scale_admissibility(seed):
+    rng = np.random.default_rng(seed)
+    L, D = 4, 4
+    Q = rng.random((L, D))
+    R = rng.random((L, D)) * 2
+    S = rng.integers(1, 6, size=(L, D)).astype(float)
+    Rs = rng.random((L, D)) * np.array([0.0, 0.2, 30.0, 0.2])            # option 2 = an "unprotected INT": large scale-word risk
+    p = S5.Problem([f"l{i}" for i in range(L)], ["a", "b", "c", "d"], Q, R, S, Rscale=Rs)
+    for lam, B, sumR, tau_s in [(1.0, None, None, None), (1.0, 14.0, 3.0, 1.0), (0.3, 12.0, 2.5, 0.5), (2.0, None, 4.0, 1.0)]:
+        bf = S5.brute_force(p, lam, "minmax", "weights", B, None, None, sumR, tau_s)
+        sol = S5.solve(p, lam, "minmax", "weights", B, None, None, sumR, tau_s)
+        if bf is None:
+            assert sol["status"] == "infeasible"
+        else:
+            assert sol["status"] == "optimal" and sol["objective"] == pytest.approx(bf[0], abs=1e-7)
+            if tau_s is not None:
+                assert all(Rs[l, c] <= tau_s for l, c in enumerate(sol["choice"]))                    # no inadmissible option selected
+            if sumR is not None:
+                assert p.totals(sol["choice"])["sum_R_pp"] <= sumR + 1e-9

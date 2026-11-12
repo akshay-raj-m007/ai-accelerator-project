@@ -64,7 +64,7 @@ def main():
     ap.add_argument("--index", type=int, default=None, help="validation image index; default: first image (of the first 300) correctly classified by all four models")
     ap.add_argument("--only-fig12", action="store_true", help="draw only the feature-map figure (fast)")
     ap.add_argument("--n-error", type=int, default=500, help="validation images for the error-versus-depth figure")
-    ap.add_argument("--opt-dir", default="reports/scratch/jfamp/optimization", help="folder with q_layerwise_validation.csv (measured per-layer loss change)")
+    ap.add_argument("--opt-dir", default="reports/scratch/jfamp/optimization_round1", help="folder with q_layerwise_validation.csv (measured per-layer loss change)")
     args = ap.parse_args()
     cfg = config_from_args(args)
     out = Path(args.out)

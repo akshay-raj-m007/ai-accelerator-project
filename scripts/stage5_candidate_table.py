@@ -43,6 +43,9 @@ def main():
     ap.add_argument("--fault-dir", default=None, help="Stage 4 outputs, default results/<run>/jfamp/fault_screening")
     ap.add_argument("--out-dir", default=None, help="default results/<run>/jfamp/optimization")
     ap.add_argument("--formats", nargs="+", default=S5.FORMATS)
+    ap.add_argument("--tmr-dir", default=None, help="folder with tmr_layerwise_summary.csv (scripts/stage5_tmr_layerwise.py), default = --out-dir")
+    ap.add_argument("--no-protection", action="store_true", help="datatype-only table (no scale_tmr rows)")
+    ap.add_argument("--q-layerwise", default=None, help="q_layerwise_validation.csv for the per-layer measured clean metric (default <out-dir>/q_layerwise_validation.csv)")
     args = ap.parse_args()
     cfg = config_from_args(args)
     base = cfg.results_dir() / "jfamp"
@@ -107,9 +110,58 @@ def main():
                         "S_total_bytes": st["total_bytes"], "bits_per_weight": 8.0 * st["total_bytes"] / W[ln].size,
                         "format_clean_val_accuracy_5000": float(acc2[fmt]["val_accuracy_percent"]),
                         "format_clean_val_delta_ce_5000": float(acc2[fmt]["val_delta_ce"]),
-                        "format_clean_accuracy_screen_1000": float(clean1000[fmt]), "R_protection_overhead_bytes": 0})
+                        "format_clean_accuracy_screen_1000": float(clean1000[fmt]), "S_protection_overhead_bytes": 0})
             rows.append(row)
         print(f"{fmt}: {len(lnames)} layers done")
+
+    # ---- PRIMARY R (declared distribution): exposure-weighted per-flip risk, additive over layers (see stage5.py)
+    n_total = int(sum(W[ln].size for ln in lnames))
+    for r in rows:
+        r["R_per_flip_drop_pp"] = S5.per_flip_drop(r["R_any_k1_mean_drop_pp"], r["R_any_k8_mean_drop_pp"])
+        r["R_exposure_k8_pp"] = S5.exposure_risk(r["num_weights"], n_total, r["R_any_k1_mean_drop_pp"], r["R_any_k8_mean_drop_pp"])
+    # ---- SECOND metric: scale-word risk (never merged into R). unprotected: Stage 4 layer values, pooled per format over the 21 layers (the layer values are noisy: 20 bimodal trials)
+    for fmt in args.formats:
+        vals = [r["R_scale_any_k1_mean_drop_pp"] for r in rows if r["datatype"] == fmt]
+        pooled = float(np.mean(vals)) if rows and S2.make_codecs(True)[fmt].has_scale else 0.0
+        for r in rows:
+            if r["datatype"] == fmt:
+                r["R_scale_pooled_format_pp"] = pooled
+    # ---- measured per-layer clean metric (only layer l quantized, validation images 2,048-4,999), if q_layerwise_validation.csv is available
+    qlw = Path(args.q_layerwise) if args.q_layerwise else out / "q_layerwise_validation.csv"
+    single = {(r["datatype"], r["layer_name"]): r for r in csv.DictReader(open(qlw, encoding="utf8"))} if qlw.exists() else {}
+    for r in rows:
+        s = single.get((r["datatype"], r["layer_name"]))
+        r["clean_single_layer_dCE_val"] = float(s["measured_dCE"]) if s else ""
+        r["clean_single_layer_acc_drop_pp_val"] = float(s["measured_acc_drop_pp"]) if s else ""
+        r["option"] = r["datatype"]
+    # ---- protection option scale_tmr for the INT formats: S + 8 bytes, weights risk unchanged, scale risk MEASURED on the protected store
+    tmr_rows = []
+    if not args.no_protection:
+        tp = Path(args.tmr_dir) if args.tmr_dir else out
+        tsum = tp / "tmr_layerwise_summary.csv"
+        if not tsum.exists():
+            sys.exit(f"{tsum} not found: run scripts/stage5_tmr_layerwise.py first (the protection option must be measured, not assumed), or pass --no-protection")
+        tmr = {(r["format"], r["layer_name"]): r for r in csv.DictReader(open(tsum, encoding="utf8"))}
+        pooled_tmr = {f: float(np.mean([float(r["protected_drop_pp_mean"]) for (ff, _), r in tmr.items() if ff == f])) for f in ("int8_pt", "int4_pt")}
+        for r in rows:
+            if r["datatype"] not in ("int8_pt", "int4_pt"):
+                continue
+            t = tmr[(r["datatype"], r["layer_name"])]            # layer_name = module name (e.g. layer1.0.conv1)
+            q = dict(r)
+            q.update({"protection": "scale_tmr", "option": f"{r['datatype']}+scale_tmr", "datatype_label": r["datatype_label"] + " + scale TMR",
+                      "S_protection_overhead_bytes": 8, "S_total_bytes": r["S_total_bytes"] + 8,
+                      "bits_per_weight": 8.0 * (r["S_total_bytes"] + 8) / r["num_weights"],
+                      "R_scale_any_k1_mean_drop_pp": float(t["protected_drop_pp_mean"]), "R_scale_pooled_format_pp": pooled_tmr[r["datatype"]],
+                      "R_scale_unprotected_control_pp": float(t["unprotected_control_drop_pp_mean"]), "R_scale_protected_worst_pp": float(t["protected_drop_pp_worst"]),
+                      "R_scale_n_trials": int(t["n_trials"])})
+            tmr_rows.append(q)
+    for r in rows:
+        r.setdefault("R_scale_unprotected_control_pp", "")
+        r.setdefault("R_scale_protected_worst_pp", "")
+        r.setdefault("R_scale_n_trials", int(r["R_n_trials"]) if r["has_scale_word"] else "")
+    for q in tmr_rows:
+        q.setdefault("R_scale_unprotected_control_pp", "")
+    rows = rows + tmr_rows
 
     fields = list(rows[0])
     with open(out / "jfamp_candidate_table.csv", "w", newline="", encoding="utf8") as f:
@@ -122,8 +174,8 @@ def main():
     # 2,048 Fisher images - the strict disjoint check is scripts/stage5_q_validation.py)
     val = []
     for fmt in args.formats:
-        val.append({"datatype": fmt, "predicted_dCE_val_fisher": sum(r["Q_pred_dCE_val"] for r in rows if r["datatype"] == fmt),
-                    "predicted_dCE_train_fisher": sum(r["Q_pred_dCE_train"] for r in rows if r["datatype"] == fmt),
+        val.append({"datatype": fmt, "predicted_dCE_val_fisher": sum(r["Q_pred_dCE_val"] for r in rows if r["datatype"] == fmt and r["protection"] == "none"),
+                    "predicted_dCE_train_fisher": sum(r["Q_pred_dCE_train"] for r in rows if r["datatype"] == fmt and r["protection"] == "none"),
                     "measured_val_delta_ce_5000": float(acc2[fmt]["val_delta_ce"]), "measured_val_drop_pp_5000": float(acc2[fmt]["val_drop_pp"])})
     meas = [v["measured_val_delta_ce_5000"] for v in val]
     sp_v = spearman([v["predicted_dCE_val_fisher"] for v in val], meas)
@@ -133,7 +185,10 @@ def main():
                "measured_values_for_the_four_non_INT4_formats_are_within_evaluation_noise": True}, out / "q_validation.json")
 
     const = float(stor[args.formats[0]]["non_quantized_param_bytes_fp32"]) + float(stor[args.formats[0]]["buffer_bytes"])
-    meta = {"label": "DATATYPE-ONLY reliability-aware analysis (protection p = none; no protection implemented)",
+    meta = {"label": ("DATATYPE-ONLY reliability-aware analysis (protection p = none)" if args.no_protection else
+                      "JOINT datatype-protection analysis: protection options none and scale_tmr (INT scale word stored 3x, majority vote), both implemented and measured; the datatype-only analysis is the p = none subset"),
+            "options": sorted({r["option"] for r in rows}), "R_primary_column": "R_exposure_k8_pp", "R_round1_column": "R_any_k8_mean_drop_pp",
+            "R_scale_columns": "R_scale_pooled_format_pp (used by the optimiser), R_scale_any_k1_mean_drop_pp (per layer)",
             "Q_definition": S5.Q_DEFINITION, "Q_primary_column": "Q_fisher_val_exact", "Q_alternative_column": "Q_fisher_train_sampled", "R_definition": S5.R_DEFINITION, "formats": args.formats, "layers": names,
             "fixed_non_quantized_bytes": const, "num_quantized_weights": int(sum(W[ln].size for ln in lnames)),
             "inputs": {"checkpoint_sha256": ck_sha, "fisher_file": str(fpath), "fisher_sha256": sha256_file(fpath), "fisher_kind": fres.get("kind"),
@@ -144,10 +199,10 @@ def main():
                        "stage4_fault_summary_sha256": sha256_file(fdir / "fault_summary.csv"),
                        "stage4_fault_trials_sha256": sha256_file(fdir / "fault_trials.jsonl"), "stage4_run_id": camp["run_id"]},
             "notes": ["Layer-additive scores approximate the full model; the selected assignment must be assembled and measured end to end.",
-                      "R_scale_any_k1_mean_drop_pp is a different fault process (INT scale words, k = 1) and is not part of R unless a sweep variant says so.",
-                      "Clean accuracy is a format-level measurement (Stage 2, all layers in the same format); per-layer clean accuracy was not measured."]}
+                      "R_scale_* is a different fault process (one flipped bit of an INT scale word) and is a SECOND metric, never merged into the primary R.",
+                      "Clean accuracy: format-level (Stage 2) and, per layer, the single-layer measurement clean_single_layer_* (validation images 2,048-4,999, q_layerwise_validation.csv); the complete-model clean accuracy is measured end to end."]}
     dump_json(meta, out / "candidate_table_meta.json")
-    print(f"{len(rows)} candidate rows -> {out / 'jfamp_candidate_table.csv'}")
+    print(f"{len(rows)} candidate rows ({len(tmr_rows)} with scale_tmr) -> {out / 'jfamp_candidate_table.csv'}")
     print(f"Spearman (sum 0.5 Q vs measured val dCE, 5 uniform formats): val-Fisher {sp_v:+.3f}, train-Fisher {sp_t:+.3f}")
     for v in val:
         print(f"  {v['datatype']:11s} predicted dCE: val-Fisher {v['predicted_dCE_val_fisher']:.2e}  train-Fisher {v['predicted_dCE_train_fisher']:.2e}   measured {v['measured_val_delta_ce_5000']:+.5f}")
