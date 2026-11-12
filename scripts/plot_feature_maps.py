@@ -14,6 +14,7 @@ import _common  # noqa: F401
 import matplotlib
 
 matplotlib.use("Agg")
+import matplotlib.lines
 import matplotlib.pyplot as plt
 import numpy as np
 import torch
@@ -61,6 +62,7 @@ def main():
     ap.add_argument("--checkpoint", required=True)
     ap.add_argument("--out", default="plots_preview/stage5")
     ap.add_argument("--index", type=int, default=None, help="validation image index; default: first image (of the first 300) correctly classified by all four models")
+    ap.add_argument("--only-fig12", action="store_true", help="draw only the feature-map figure (fast)")
     ap.add_argument("--n-error", type=int, default=500, help="validation images for the error-versus-depth figure")
     ap.add_argument("--opt-dir", default="reports/scratch/jfamp/optimization", help="folder with q_layerwise_validation.csv (measured per-layer loss change)")
     args = ap.parse_args()
@@ -91,23 +93,28 @@ def main():
 
     # ------------------------------------------------------------ figure 12: feature maps, 3 channels per stage
     ncol_ch = 3
-    fig = plt.figure(figsize=(15.5, 11.2))
-    gs = fig.add_gridspec(len(STAGES), 1 + ncol_ch * len(FORMATS), width_ratios=[1.5] + [1] * (ncol_ch * len(FORMATS)), hspace=0.14, wspace=0.05, top=0.74, bottom=0.03, left=0.055, right=0.995)
+    nf = len(FORMATS)
+    ratios = []
+    for g in range(ncol_ch):
+        ratios += [1] * nf + ([0.45] if g < ncol_ch - 1 else [])
+    fig = plt.figure(figsize=(15.5, 11.6))
+    gs = fig.add_gridspec(len(STAGES), len(ratios), width_ratios=ratios, hspace=0.14, wspace=0.05, top=0.72, bottom=0.03, left=0.115, right=0.995)
     fig.text(0.012, 0.985, f"What do the early and late layers see?  Feature maps of one validation image ({CLASSES[label]}), weights stored in different formats", fontsize=14.5, fontweight="bold", va="top")
-    fig.text(0.012, 0.95, "Each row is one stage of ResNet-18 (spatial size shrinks, channel count grows). For every stage the 3 channels with the largest FP32 activation energy are shown; each group of 4 squares is the same channel for\n"
-             "FP32, E4M11-SN, FP8 and INT4 weights (same colour scale within the group; bright = strong response). Only the weights are quantized; activations stay FP32. Early stages look like the photo (edges, colour blobs); later\n"
-             "stages are coarse and abstract. This figure shows what the layers respond to; the size of the differences is quantified in the next figures.", fontsize=9.6, color=INK2, va="top", linespacing=1.4)
-    ax0 = fig.add_axes([0.03, 0.76, 0.11, 0.11])
+    fig.text(0.012, 0.95, "Each row is one stage of ResNet-18 (spatial size shrinks, channel count grows). Each of the three column groups is one channel per stage (the 1st, 2nd and 3rd strongest in FP32, so the channel\n"
+             "numbers differ between rows); inside a group the 4 squares are that same channel for FP32, E4M11-SN, FP8 and INT4 weights, on one colour scale (bright = strong response). Only the weights are quantized;\n"
+             "activations stay FP32. Early stages look like the photo (edges, colour blobs); later stages are coarse and abstract. The size of the differences is quantified in figures 13 and 14.", fontsize=9.6, color=INK2, va="top", linespacing=1.4)
+    ax0 = fig.add_axes([0.015, 0.765, 0.085, 0.085])
     ax0.imshow(img, interpolation="nearest")
-    ax0.set_title(f"input: {CLASSES[label]}", fontsize=10)
+    ax0.set_title(f"input: {CLASSES[label]}", fontsize=9)
     ax0.axis("off")
+    row0 = {}
     for r, (key, name, nch, hw) in enumerate(STAGES):
         f32 = feats["fp32"][key][0]
         top = torch.argsort(f32.pow(2).sum((1, 2)), descending=True)[:ncol_ch].tolist()
         for ci, ch in enumerate(top):
             vmax = float(f32[ch].max()) or 1.0
             for fi, (fk, fname, col) in enumerate(FORMATS):
-                ax = fig.add_subplot(gs[r, 1 + ci * len(FORMATS) + fi])
+                ax = fig.add_subplot(gs[r, ci * (nf + 1) + fi])
                 ax.imshow(feats[fk][key][0][ch].numpy(), cmap="magma", vmin=0, vmax=vmax, interpolation="nearest")
                 ax.set_xticks([])
                 ax.set_yticks([])
@@ -117,14 +124,20 @@ def main():
                     s.set_linewidth(1.6)
                 if r == 0:
                     ax.set_title(fname.replace(" (reference)", "").replace("FP8 E4M3FN", "FP8"), fontsize=7.6, color=INK2)
-                if fi == 0:
-                    ax.set_ylabel("")
-            fig.text(0.0, 0.0, "")
-        axl = fig.add_subplot(gs[r, 0]) if False else None
-        fig.text(0.012, 0.74 - (r + 0.5) * (0.71 / len(STAGES)), f"{name}\n{nch} ch, {hw}x{hw}", fontsize=9.2, fontweight="bold", va="center", ha="left")
+                    row0.setdefault(ci, []).append(ax)
+            ax_last = fig.axes[-1]
+            ax_last.set_xlabel(f"ch {ch}", fontsize=7.4, color=INK2, loc="left") if False else None
+        fig.text(0.012, 0.72 - (r + 0.5) * (0.69 / len(STAGES)), f"{name}\n{nch} ch, {hw}x{hw}", fontsize=9.2, fontweight="bold", va="center", ha="left")
+    for ci, axs_ in row0.items():
+        x0, x1 = axs_[0].get_position().x0, axs_[-1].get_position().x1
+        ytop = axs_[0].get_position().y1 + 0.028
+        fig.text((x0 + x1) / 2, ytop + 0.004, f"channel group {ci + 1}  (same channel, 4 formats)", ha="center", va="bottom", fontsize=9.4, fontweight="bold")
+        fig.add_artist(matplotlib.lines.Line2D([x0, x1], [ytop, ytop], color=INK2, lw=1.2))
     fig.savefig(out / "12_feature_maps_one_image.png", dpi=150)
     plt.close(fig)
     print("wrote", out / "12_feature_maps_one_image.png")
+    if args.only_fig12:
+        return
 
     # ------------------------------------------------------------ figure 13: how much do the features change (many images)
     Xe = X[:args.n_error]
