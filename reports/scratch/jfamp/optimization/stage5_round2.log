@@ -1,0 +1,49 @@
+nohup: ignoring input
+Files already downloaded and verified
+Files already downloaded and verified
+run 20261112T180259Z-9f4ca1cf: 2952 validation images (clean, skipping the first 2048), first 1000 for fault trials, device cuda
+FP32 reference: 95.29 % / loss 0.1760 on 2952 validation images
+  clean: 20/198 assignments
+  clean: 40/198 assignments
+  clean: 60/198 assignments
+  clean: 80/198 assignments
+  clean: 100/198 assignments
+  clean: 120/198 assignments
+  clean: 140/198 assignments
+  clean: 160/198 assignments
+  clean: 180/198 assignments
+A. clean measurements: 198 assignments (198 new)
+B. fault shortlist (31): ['A067', 'A023', 'A101', 'A068', 'A059', 'A102', 'A060', 'A071', 'A056', 'A026', 'A065', 'A002', 'A125', 'A022', 'A161', 'A156', 'A117', 'A162', 'A118', 'A128', 'A170', 'A114', 'A123', 'A119', 'U_E4M11SN', 'U_FP16', 'U_FP8', 'U_INT8', 'U_INT4', 'U_INT8_TMR', 'U_INT4_TMR']
+  A067: 200 trials in 75 s (clean 96.40 % on 1000 images)
+  A023: 200 trials in 75 s (clean 96.30 % on 1000 images)
+  A101: 200 trials in 75 s (clean 96.40 % on 1000 images)
+  A068: 200 trials in 75 s (clean 96.50 % on 1000 images)
+  A059: 200 trials in 75 s (clean 96.50 % on 1000 images)
+  A102: 200 trials in 75 s (clean 95.90 % on 1000 images)
+  A060: 200 trials in 76 s (clean 96.20 % on 1000 images)
+  A071: 200 trials in 76 s (clean 96.20 % on 1000 images)
+  A056: 200 trials in 77 s (clean 96.30 % on 1000 images)
+  A026: 200 trials in 77 s (clean 96.20 % on 1000 images)
+  A065: 200 trials in 78 s (clean 96.20 % on 1000 images)
+  A002: 100 trials in 40 s (clean 96.30 % on 1000 images)
+  A125: 200 trials in 75 s (clean 96.40 % on 1000 images)
+  A022: 200 trials in 75 s (clean 96.00 % on 1000 images)
+  A161: 200 trials in 75 s (clean 96.40 % on 1000 images)
+  A156: 200 trials in 75 s (clean 96.60 % on 1000 images)
+  A117: 200 trials in 75 s (clean 96.50 % on 1000 images)
+  A162: 200 trials in 75 s (clean 95.90 % on 1000 images)
+  A118: 200 trials in 76 s (clean 96.20 % on 1000 images)
+  A128: 200 trials in 76 s (clean 96.20 % on 1000 images)
+  A170: 200 trials in 78 s (clean 96.20 % on 1000 images)
+  A114: 200 trials in 77 s (clean 96.30 % on 1000 images)
+  A123: 200 trials in 78 s (clean 96.20 % on 1000 images)
+  A119: 200 trials in 78 s (clean 96.30 % on 1000 images)
+  U_E4M11SN: 100 trials in 40 s (clean 96.30 % on 1000 images)
+  U_FP16: 100 trials in 40 s (clean 96.30 % on 1000 images)
+  U_FP8: 100 trials in 38 s (clean 96.00 % on 1000 images)
+  U_INT8: 200 trials in 76 s (clean 96.30 % on 1000 images)
+  U_INT4: 200 trials in 75 s (clean 95.40 % on 1000 images)
+  U_INT8_TMR: 200 trials in 76 s (clean 96.30 % on 1000 images)
+  U_INT4_TMR: 200 trials in 75 s (clean 95.40 % on 1000 images)
+C. fault trials: 5800 new
+summaries written to /home/ssl25/fr_runs/results/scratch/jfamp/optimization  (incomplete trial cells: 0)

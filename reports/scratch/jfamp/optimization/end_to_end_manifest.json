@@ -1,0 +1,75 @@
+{
+  "run_id": "20261112T180259Z-9f4ca1cf",
+  "fp32_reference": {
+    "val_accuracy": 95.29132843017578,
+    "val_loss": 0.1759788542985916,
+    "val_samples": 2952
+  },
+  "shortlist": [
+    "A067",
+    "A023",
+    "A101",
+    "A068",
+    "A059",
+    "A102",
+    "A060",
+    "A071",
+    "A056",
+    "A026",
+    "A065",
+    "A002",
+    "A125",
+    "A022",
+    "A161",
+    "A156",
+    "A117",
+    "A162",
+    "A118",
+    "A128",
+    "A170",
+    "A114",
+    "A123",
+    "A119",
+    "U_E4M11SN",
+    "U_FP16",
+    "U_FP8",
+    "U_INT8",
+    "U_INT4",
+    "U_INT8_TMR",
+    "U_INT4_TMR"
+  ],
+  "checkpoint_sha256": "c612da6a4b20c34fd864f236a3bd5564cb3ce253c162e479bcbfa56d80aafb3f",
+  "stage2_frozen_config_sha256": "387ff9741de4a14dbea7073b9a968ccca0fee13ee94c611444e71f264ae1514a",
+  "settings": {
+    "q_column": "Q_fisher_val_exact",
+    "r_column": "R_exposure_k8_pp",
+    "clean_skip": 2048,
+    "trials": 100,
+    "n_fault_images": 1000,
+    "base_seed": 0,
+    "distributions": [
+      "weights_k8",
+      "scales_k1"
+    ]
+  },
+  "git": {
+    "commit": "b25bde618881eccaedc54accd20d6aa8c7cb776b",
+    "dirty": true
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "b25bde618881eccaedc54accd20d6aa8c7cb776b",
+      "dirty": true
+    }
+  },
+  "seconds_last_session": 2456.6389620304108
+}

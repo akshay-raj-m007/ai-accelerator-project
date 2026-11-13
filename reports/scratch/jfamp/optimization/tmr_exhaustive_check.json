@@ -1,0 +1,361 @@
+{
+  "note": "stored-byte check, no model: single flips in any copy/bit are all corrected; two flips in two different copies are corrected unless they hit the SAME bit position",
+  "totals": {
+    "int8_pt": {
+      "single_flips_tested": 2016,
+      "single_flips_corrected": 2016,
+      "double_flips_tested": 64512,
+      "double_flips_corrected": 62496,
+      "double_flips_uncorrected_same_bit_position": 2016
+    },
+    "int4_pt": {
+      "single_flips_tested": 2016,
+      "single_flips_corrected": 2016,
+      "double_flips_tested": 64512,
+      "double_flips_corrected": 62496,
+      "double_flips_uncorrected_same_bit_position": 2016
+    }
+  },
+  "per_layer": {
+    "int8_pt": [
+      {
+        "layer": "conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer1.0.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer1.0.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer1.1.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer1.1.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer2.0.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer2.0.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer2.0.downsample.0.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer2.1.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer2.1.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer3.0.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer3.0.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer3.0.downsample.0.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer3.1.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer3.1.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer4.0.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer4.0.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer4.0.downsample.0.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer4.1.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer4.1.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "fc.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      }
+    ],
+    "int4_pt": [
+      {
+        "layer": "conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer1.0.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer1.0.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer1.1.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer1.1.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer2.0.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer2.0.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer2.0.downsample.0.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer2.1.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer2.1.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer3.0.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer3.0.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer3.0.downsample.0.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer3.1.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer3.1.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer4.0.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer4.0.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer4.0.downsample.0.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer4.1.conv1.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "layer4.1.conv2.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      },
+      {
+        "layer": "fc.weight",
+        "single_flips_tested": 96,
+        "single_flips_corrected": 96,
+        "double_flips_tested": 3072,
+        "double_flips_corrected": 2976,
+        "double_flips_uncorrected_same_bit_position": 96
+      }
+    ]
+  }
+}

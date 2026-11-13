@@ -1,0 +1,78 @@
+{
+  "note": "one layer quantized at a time, others FP32; validation images 2,048..4,999 only (disjoint from the Fisher images); primary Q = exact-expectation validation Fisher",
+  "val_samples": 2952,
+  "val_skip": 2048,
+  "fp32": {
+    "accuracy": 95.29132843017578,
+    "loss": 0.1759788542985916
+  },
+  "per_datatype": {
+    "e4m11_sn": {
+      "spearman_Q_vs_measured_dCE_over_21_layers": 0.17662337662337665,
+      "spearman_Qtrain_vs_measured_dCE_over_21_layers": -0.06493506493506493,
+      "sum_predicted_dCE": 1.605851186591267e-08,
+      "sum_predicted_dCE_train_fisher": 8.136816216214869e-13,
+      "sum_measured_dCE_single_layer": 6.112456321716309e-05,
+      "all_layers_measured_dCE": 4.2304396629333496e-05,
+      "all_layers_measured_acc_drop_pp": 0.0,
+      "sum_predicted_over_all_layers_measured": 0.0003795943955096582,
+      "n_layers_with_positive_measured_dCE": 17,
+      "median_measured_over_predicted": 10080.596255501814,
+      "max_abs_measured_dCE": 1.1101365089416504e-05
+    },
+    "fp16": {
+      "spearman_Q_vs_measured_dCE_over_21_layers": 0.36115623859964363,
+      "spearman_Qtrain_vs_measured_dCE_over_21_layers": 0.4274115197815926,
+      "sum_predicted_dCE": 4.624770101497684e-08,
+      "sum_predicted_dCE_train_fisher": 2.4124311669886907e-12,
+      "sum_measured_dCE_single_layer": 3.579258918762207e-05,
+      "all_layers_measured_dCE": -5.662441253662109e-07,
+      "all_layers_measured_acc_drop_pp": 0.0,
+      "sum_predicted_over_all_layers_measured": null,
+      "n_layers_with_positive_measured_dCE": 16,
+      "median_measured_over_predicted": 1218.3719365494228,
+      "max_abs_measured_dCE": 1.6763806343078613e-05
+    },
+    "fp8_e4m3fn": {
+      "spearman_Q_vs_measured_dCE_over_21_layers": 0.03766233766233767,
+      "spearman_Qtrain_vs_measured_dCE_over_21_layers": 0.022077922077922082,
+      "sum_predicted_dCE": 0.0011071790045888196,
+      "sum_predicted_dCE_train_fisher": 5.6745241258797335e-08,
+      "sum_measured_dCE_single_layer": -0.0009002834558486938,
+      "all_layers_measured_dCE": -0.001280456781387329,
+      "all_layers_measured_acc_drop_pp": 0.23712515830993652,
+      "sum_predicted_over_all_layers_measured": null,
+      "n_layers_with_positive_measured_dCE": 11,
+      "median_measured_over_predicted": 7.143442448041708,
+      "max_abs_measured_dCE": 0.0009527355432510376
+    },
+    "int8_pt": {
+      "spearman_Q_vs_measured_dCE_over_21_layers": -0.10519480519480517,
+      "spearman_Qtrain_vs_measured_dCE_over_21_layers": -0.14805194805194805,
+      "sum_predicted_dCE": 0.00017682306435189062,
+      "sum_predicted_dCE_train_fisher": 8.459501334064655e-09,
+      "sum_measured_dCE_single_layer": -8.621811866760254e-05,
+      "all_layers_measured_dCE": -0.00018633902072906494,
+      "all_layers_measured_acc_drop_pp": 0.16937255859375,
+      "sum_predicted_over_all_layers_measured": null,
+      "n_layers_with_positive_measured_dCE": 11,
+      "median_measured_over_predicted": 16.298225379892767,
+      "max_abs_measured_dCE": 0.0004659295082092285
+    },
+    "int4_pt": {
+      "spearman_Q_vs_measured_dCE_over_21_layers": 0.7129870129870131,
+      "spearman_Qtrain_vs_measured_dCE_over_21_layers": 0.7077922077922078,
+      "sum_predicted_dCE": 0.058886438104020375,
+      "sum_predicted_dCE_train_fisher": 2.7441955100272236e-06,
+      "sum_measured_dCE_single_layer": 0.01992817223072052,
+      "all_layers_measured_dCE": 0.015798300504684448,
+      "all_layers_measured_acc_drop_pp": 1.2195110321044922,
+      "sum_predicted_over_all_layers_measured": 3.7273906827230947,
+      "n_layers_with_positive_measured_dCE": 13,
+      "median_measured_over_predicted": 0.8518666170590095,
+      "max_abs_measured_dCE": 0.017942845821380615
+    }
+  },
+  "spearman_pooled_105_candidates": 0.1974398648147436,
+  "spearman_pooled_105_candidates_train_fisher": 0.180707497169115
+}
