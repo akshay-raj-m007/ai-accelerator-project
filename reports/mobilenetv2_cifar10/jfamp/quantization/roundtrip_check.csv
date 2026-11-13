@@ -1,0 +1,531 @@
+format_key,layer_id,module_name,file_roundtrip_identical,reference_kind,reference_max_abs_diff,reference_match
+fp16,0,features.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,1,features.1.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,2,features.1.conv.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,3,features.2.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,4,features.2.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,5,features.2.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,6,features.3.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,7,features.3.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,8,features.3.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,9,features.4.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,10,features.4.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,11,features.4.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,12,features.5.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,13,features.5.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,14,features.5.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,15,features.6.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,16,features.6.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,17,features.6.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,18,features.7.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,19,features.7.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,20,features.7.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,21,features.8.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,22,features.8.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,23,features.8.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,24,features.9.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,25,features.9.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,26,features.9.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,27,features.10.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,28,features.10.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,29,features.10.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,30,features.11.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,31,features.11.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,32,features.11.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,33,features.12.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,34,features.12.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,35,features.12.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,36,features.13.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,37,features.13.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,38,features.13.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,39,features.14.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,40,features.14.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,41,features.14.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,42,features.15.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,43,features.15.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,44,features.15.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,45,features.16.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,46,features.16.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,47,features.16.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,48,features.17.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,49,features.17.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,50,features.17.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,51,features.18.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp16,52,classifier.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,0,features.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,1,features.1.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,2,features.1.conv.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,3,features.2.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,4,features.2.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,5,features.2.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,6,features.3.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,7,features.3.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,8,features.3.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,9,features.4.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,10,features.4.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,11,features.4.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,12,features.5.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,13,features.5.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,14,features.5.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,15,features.6.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,16,features.6.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,17,features.6.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,18,features.7.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,19,features.7.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,20,features.7.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,21,features.8.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,22,features.8.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,23,features.8.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,24,features.9.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,25,features.9.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,26,features.9.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,27,features.10.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,28,features.10.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,29,features.10.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,30,features.11.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,31,features.11.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,32,features.11.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,33,features.12.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,34,features.12.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,35,features.12.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,36,features.13.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,37,features.13.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,38,features.13.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,39,features.14.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,40,features.14.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,41,features.14.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,42,features.15.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,43,features.15.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,44,features.15.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,45,features.16.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,46,features.16.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,47,features.16.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,48,features.17.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,49,features.17.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,50,features.17.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,51,features.18.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+bf16,52,classifier.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+e4m11_sn,0,features.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,1,features.1.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,2,features.1.conv.1,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,3,features.2.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,4,features.2.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,5,features.2.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,6,features.3.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,7,features.3.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,8,features.3.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,9,features.4.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,10,features.4.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,11,features.4.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,12,features.5.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,13,features.5.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,14,features.5.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,15,features.6.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,16,features.6.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,17,features.6.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,18,features.7.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,19,features.7.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,20,features.7.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,21,features.8.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,22,features.8.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,23,features.8.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,24,features.9.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,25,features.9.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,26,features.9.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,27,features.10.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,28,features.10.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,29,features.10.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,30,features.11.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,31,features.11.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,32,features.11.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,33,features.12.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,34,features.12.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,35,features.12.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,36,features.13.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,37,features.13.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,38,features.13.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,39,features.14.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,40,features.14.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,41,features.14.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,42,features.15.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,43,features.15.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,44,features.15.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,45,features.16.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,46,features.16.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,47,features.16.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,48,features.17.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,49,features.17.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,50,features.17.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,51,features.18.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_sn,52,classifier.1,1,none (covered by the exhaustive word round-trip self-test),,
+fp8_e4m3fn,0,features.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,1,features.1.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,2,features.1.conv.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,3,features.2.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,4,features.2.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,5,features.2.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,6,features.3.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,7,features.3.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,8,features.3.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,9,features.4.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,10,features.4.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,11,features.4.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,12,features.5.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,13,features.5.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,14,features.5.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,15,features.6.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,16,features.6.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,17,features.6.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,18,features.7.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,19,features.7.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,20,features.7.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,21,features.8.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,22,features.8.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,23,features.8.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,24,features.9.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,25,features.9.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,26,features.9.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,27,features.10.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,28,features.10.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,29,features.10.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,30,features.11.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,31,features.11.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,32,features.11.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,33,features.12.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,34,features.12.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,35,features.12.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,36,features.13.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,37,features.13.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,38,features.13.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,39,features.14.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,40,features.14.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,41,features.14.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,42,features.15.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,43,features.15.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,44,features.15.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,45,features.16.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,46,features.16.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,47,features.16.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,48,features.17.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,49,features.17.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,50,features.17.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,51,features.18.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e4m3fn,52,classifier.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,0,features.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,1,features.1.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,2,features.1.conv.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,3,features.2.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,4,features.2.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,5,features.2.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,6,features.3.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,7,features.3.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,8,features.3.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,9,features.4.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,10,features.4.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,11,features.4.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,12,features.5.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,13,features.5.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,14,features.5.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,15,features.6.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,16,features.6.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,17,features.6.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,18,features.7.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,19,features.7.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,20,features.7.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,21,features.8.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,22,features.8.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,23,features.8.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,24,features.9.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,25,features.9.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,26,features.9.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,27,features.10.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,28,features.10.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,29,features.10.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,30,features.11.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,31,features.11.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,32,features.11.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,33,features.12.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,34,features.12.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,35,features.12.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,36,features.13.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,37,features.13.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,38,features.13.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,39,features.14.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,40,features.14.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,41,features.14.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,42,features.15.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,43,features.15.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,44,features.15.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,45,features.16.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,46,features.16.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,47,features.16.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,48,features.17.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,49,features.17.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,50,features.17.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,51,features.18.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+fp8_e5m2,52,classifier.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,0,features.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,1,features.1.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,2,features.1.conv.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,3,features.2.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,4,features.2.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,5,features.2.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,6,features.3.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,7,features.3.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,8,features.3.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,9,features.4.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,10,features.4.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,11,features.4.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,12,features.5.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,13,features.5.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,14,features.5.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,15,features.6.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,16,features.6.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,17,features.6.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,18,features.7.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,19,features.7.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,20,features.7.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,21,features.8.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,22,features.8.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,23,features.8.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,24,features.9.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,25,features.9.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,26,features.9.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,27,features.10.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,28,features.10.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,29,features.10.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,30,features.11.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,31,features.11.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,32,features.11.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,33,features.12.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,34,features.12.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,35,features.12.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,36,features.13.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,37,features.13.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,38,features.13.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,39,features.14.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,40,features.14.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,41,features.14.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,42,features.15.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,43,features.15.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,44,features.15.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,45,features.16.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,46,features.16.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,47,features.16.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,48,features.17.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,49,features.17.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,50,features.17.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,51,features.18.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pt,52,classifier.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,0,features.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,1,features.1.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,2,features.1.conv.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,3,features.2.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,4,features.2.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,5,features.2.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,6,features.3.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,7,features.3.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,8,features.3.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,9,features.4.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,10,features.4.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,11,features.4.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,12,features.5.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,13,features.5.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,14,features.5.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,15,features.6.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,16,features.6.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,17,features.6.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,18,features.7.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,19,features.7.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,20,features.7.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,21,features.8.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,22,features.8.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,23,features.8.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,24,features.9.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,25,features.9.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,26,features.9.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,27,features.10.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,28,features.10.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,29,features.10.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,30,features.11.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,31,features.11.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,32,features.11.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,33,features.12.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,34,features.12.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,35,features.12.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,36,features.13.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,37,features.13.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,38,features.13.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,39,features.14.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,40,features.14.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,41,features.14.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,42,features.15.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,43,features.15.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,44,features.15.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,45,features.16.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,46,features.16.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,47,features.16.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,48,features.17.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,49,features.17.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,50,features.17.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,51,features.18.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pt,52,classifier.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,0,features.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,1,features.1.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,2,features.1.conv.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,3,features.2.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,4,features.2.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,5,features.2.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,6,features.3.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,7,features.3.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,8,features.3.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,9,features.4.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,10,features.4.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,11,features.4.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,12,features.5.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,13,features.5.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,14,features.5.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,15,features.6.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,16,features.6.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,17,features.6.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,18,features.7.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,19,features.7.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,20,features.7.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,21,features.8.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,22,features.8.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,23,features.8.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,24,features.9.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,25,features.9.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,26,features.9.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,27,features.10.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,28,features.10.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,29,features.10.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,30,features.11.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,31,features.11.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,32,features.11.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,33,features.12.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,34,features.12.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,35,features.12.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,36,features.13.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,37,features.13.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,38,features.13.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,39,features.14.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,40,features.14.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,41,features.14.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,42,features.15.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,43,features.15.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,44,features.15.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,45,features.16.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,46,features.16.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,47,features.16.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,48,features.17.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,49,features.17.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,50,features.17.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,51,features.18.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int8_pc,52,classifier.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,0,features.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,1,features.1.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,2,features.1.conv.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,3,features.2.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,4,features.2.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,5,features.2.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,6,features.3.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,7,features.3.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,8,features.3.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,9,features.4.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,10,features.4.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,11,features.4.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,12,features.5.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,13,features.5.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,14,features.5.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,15,features.6.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,16,features.6.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,17,features.6.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,18,features.7.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,19,features.7.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,20,features.7.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,21,features.8.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,22,features.8.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,23,features.8.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,24,features.9.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,25,features.9.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,26,features.9.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,27,features.10.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,28,features.10.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,29,features.10.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,30,features.11.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,31,features.11.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,32,features.11.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,33,features.12.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,34,features.12.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,35,features.12.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,36,features.13.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,37,features.13.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,38,features.13.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,39,features.14.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,40,features.14.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,41,features.14.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,42,features.15.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,43,features.15.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,44,features.15.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,45,features.16.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,46,features.16.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,47,features.16.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,48,features.17.conv.0.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,49,features.17.conv.1.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,50,features.17.conv.2,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,51,features.18.0,1,torch cast / plain NumPy integer arithmetic,0.0,1
+int4_pc,52,classifier.1,1,torch cast / plain NumPy integer arithmetic,0.0,1
+e4m11_ftz,0,features.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,1,features.1.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,2,features.1.conv.1,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,3,features.2.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,4,features.2.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,5,features.2.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,6,features.3.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,7,features.3.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,8,features.3.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,9,features.4.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,10,features.4.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,11,features.4.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,12,features.5.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,13,features.5.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,14,features.5.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,15,features.6.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,16,features.6.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,17,features.6.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,18,features.7.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,19,features.7.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,20,features.7.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,21,features.8.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,22,features.8.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,23,features.8.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,24,features.9.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,25,features.9.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,26,features.9.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,27,features.10.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,28,features.10.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,29,features.10.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,30,features.11.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,31,features.11.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,32,features.11.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,33,features.12.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,34,features.12.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,35,features.12.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,36,features.13.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,37,features.13.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,38,features.13.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,39,features.14.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,40,features.14.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,41,features.14.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,42,features.15.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,43,features.15.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,44,features.15.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,45,features.16.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,46,features.16.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,47,features.16.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,48,features.17.conv.0.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,49,features.17.conv.1.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,50,features.17.conv.2,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,51,features.18.0,1,none (covered by the exhaustive word round-trip self-test),,
+e4m11_ftz,52,classifier.1,1,none (covered by the exhaustive word round-trip self-test),,

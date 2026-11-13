@@ -1,0 +1,23 @@
+Checkpoint validation (J-FAMP runbook Stage 0)
+file: /home/ssl25/fr_runs/checkpoints/mobilenetv2_cifar10/best.pth
+sha256: 268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e
+evaluated (UTC): 2026-11-13T16:00:54+00:00
+
+strict load of the state dict: PASS
+  missing keys: []  unexpected keys: []  shape mismatches: []
+architecture: mobilenetv2_cifar
+output dimension 10 (must be 10): PASS
+first conv kernel (3, 3) stride (1, 1), no max-pooling: PASS
+NaN/Inf parameters: none
+NaN/Inf logits on validation / test: False / False
+model.eval(): True; gradients disabled during evaluation (requires_grad False, inference_mode)
+
+No reference values (protocol: counts and metrics are computed from this model only):
+  test accuracy: 91.69 % (9169/10000)
+  validation accuracy (5,000 held-out images): 92.16 % (4608/5000); best-epoch value recorded during training: 92.16
+
+Notes:
+  - the checkpoint was trained in this project, not supplied by a teammate (see supplied_by in the manifest)
+  - training ran with deterministic=False; training git state: {'commit': '8173119046b4a3dffe8ed762f41e5e0fd2c45e23', 'dirty': True}
+
+GATE 0: PASS  {"checkpoint_loads_strictly": true, "output_dim_is_10": true, "stem_3x3_stride1_no_maxpool": true, "parameters_finite": true, "logits_finite": true, "preprocessing_known": true, "PASS": true}

@@ -1,0 +1,727 @@
+{
+  "stage": "J-FAMP runbook Stage 2 (candidate quantization and clean evaluation)",
+  "codec_version": "jfamp-codecs-2.0",
+  "architecture": "mobilenetv2_cifar",
+  "format_set": "protocol",
+  "checkpoint": {
+    "path": "/home/ssl25/fr_runs/checkpoints/mobilenetv2_cifar10/best.pth",
+    "sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+    "size_bytes": 18200924
+  },
+  "scope": "weight-only: Conv2d/Linear weights (53 tensors, 2202560 weights) are quantized; biases, BatchNorm parameters, running statistics and activations stay FP32",
+  "int_scale_policy": {
+    "primary": "per_tensor",
+    "comparison": "per_channel",
+    "note": "per-tensor and per-output-channel results are never mixed: every table row carries the granularity in its variant label and a role (primary | comparison). Protocol rule: if the previous JFAMP implementation used another policy than per-output-channel it is retained for both datasets and documented; the ResNet-18 implementation used per-tensor."
+  },
+  "declared_constraints": {
+    "delta_clean_pp": 0.5,
+    "note": "only used here to flag the clean-accuracy shortlist on the validation split (column meets_delta_clean); value declared in the ResNet-18 run, must be identical for both protocol owners"
+  },
+  "shortlist_validation": [
+    "fp16",
+    "bf16",
+    "e4m11_sn",
+    "fp8_e4m3fn",
+    "int8_pt"
+  ],
+  "alignment": "each tensor is stored as its own contiguous byte array (no inter-tensor alignment padding); the .npz container overhead is not counted in any byte total",
+  "formats_excluded": {
+    "INT3": "optional and deferred (runbook 4.1)"
+  },
+  "independence": "each format is generated from the original FP32 checkpoint, never from another format",
+  "metric_definitions": {
+    "sqnr_db": "10*log10(sum_i w_i^2 / sum_i (w_i - w^_i)^2), signal = FP32 weights, noise = FP32 weights minus decoded weights; per layer, and GLOBAL pooled over all 53 tensors (sums of powers, paper Eq. 6); float64",
+    "mse/rmse/mae/max_abs_error": "of w - w^ over the tensor (GLOBAL: pooled; MAE is the weight-weighted mean)",
+    "relative_l2": "||w - w^||_2 / ||w||_2",
+    "n_clipped": "weights whose magnitude exceeded the format's range before rounding (saturated)",
+    "zeroed_from_nonzero": "weights that are nonzero in FP32 but decode to exactly 0",
+    "zero_count/zero_fraction": "number / fraction of DECODED weights equal to zero (fp32_zero_count: the same count in the FP32 tensor)",
+    "roundtrip_check.csv": "per layer and format: the weights decoded from the saved .npz file are bit-identical to the in-memory decode, and (where an independent reference exists) identical to a torch-cast / plain NumPy simulated quantization of the FP32 tensor, i.e. the no-fault output equals the clean quantized reference",
+    "accuracy": "top-1 correct / total; drop_pp = FP32 accuracy - candidate accuracy on the SAME images",
+    "cross_entropy": "mean over images of the softmax cross-entropy, same images and criterion for all formats",
+    "storage": "payload_bytes = actual bytes of the stored words; scale_bytes = float32 scales; padding_bits = bits in payload beyond n*bits (INT4 odd count); total_bytes = payload + scales + codec metadata (none); theoretical_bits = n * bits, reported separately",
+    "compression_ratio_weights": "FP32 Conv/Linear weight bytes (8810240) / total_bytes (payload + scales); excludes biases, BatchNorm parameters and buffers",
+    "compression_ratio_full_model": "FP32 model bytes incl. non-quantized parameters and buffers (9083592) / (total_bytes + non-quantized parameters 136488 B + buffers 136864 B, both left FP32)"
+  },
+  "evaluation": {
+    "precision": "FP32 compute on decoded weights, model.eval(), inference_mode",
+    "validation": "all 5000 held-out validation images (split seed 0)",
+    "test": "official 10,000 test images, evaluated only by --stage test after this manifest exists",
+    "preprocessing": {
+      "normalization": {
+        "mean": [
+          0.4914,
+          0.4822,
+          0.4465
+        ],
+        "std": [
+          0.247,
+          0.2435,
+          0.2616
+        ]
+      }
+    }
+  },
+  "codec_source": {
+    "git": {
+      "commit": "8173119046b4a3dffe8ed762f41e5e0fd2c45e23",
+      "dirty": true
+    },
+    "source_sha256": {
+      "src/fr/e4m11.py": "1d7f1c7389e6641c6ddaf234abd1369189be87ce3e090e801760677d683d9ece",
+      "src/fr/formats8.py": "4fdbbc0c403e9fc7b029013eaceb532dbbfad6b959a0d04adfde376765686acd",
+      "src/fr/stage2.py": "2c9e4ce88a69a3625ddae68a4d42b512e0e56cc6497a84ca83f44510b2921fe9",
+      "src/fr/sqnr.py": "a57a93edc3680230ac6c5ff702b24da12008761804f07b8b17f49ac723ebec3d",
+      "src/fr/model.py": "d81194d80afdb53cfe1f49c57e54033e5f759c1a2b5f52c3f74d2078868d6937",
+      "src/fr/baseline_profile.py": "3bced5d412d0a8ce99a8a15d7e7e3c535ef2776dd69d38852fc81e21600506ee",
+      "scripts/stage2_quantize.py": "23988e036b87fffa23110fc865539e893a1bb8e4fa69cb16b4f2954bc0c13b00"
+    }
+  },
+  "codec_selftests": [
+    {
+      "test": "e4m11_sn: decode->encode returns the same word for all 61440 non-reserved words",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "e4m11_ftz: decode->encode returns the same word for all 57344 non-reserved words",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "e4m11_sn: paper example w=3.14 -> 0x448F",
+      "passed": true,
+      "detail": "got 0x448F"
+    },
+    {
+      "test": "e4m11_sn: 2^-10 is a subnormal (es=0, m=128) and decodes exactly",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "e4m11_ftz: 2^-10 flushes to zero",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "e4m11_sn: saturation at max finite 255.9375",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "e4m11_sn: round-to-nearest-even on exact ties (1+2^-12 -> m=0, 1+3*2^-12 -> m=2)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp16: 1.0 -> 0x3C00, 65504 -> 0x7BFF, 2^-24 -> 0x0001 (smallest subnormal), 1e9 saturates to 65504, -0.5 -> 0xB800",
+      "passed": true,
+      "detail": "['0x3c00', '0x7bff', '0x1', '0x7bff', '0xb800']"
+    },
+    {
+      "test": "fp16: decode->encode returns the same word for every finite word (-0 and +0 included)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e4m3fn: exactly 2 NaN words (0x7F, 0xFF), no infinities, max finite 448, min positive 2^-9",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e4m3fn: decode->encode returns the same word for all 254 finite words",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e4m3fn: values above 448 saturate to +-448 (0x7E / 0xFE), never to the NaN pattern",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e4m3fn: all 256 decoded values equal torch.float8_e4m3fn",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e4m3fn: encoder rounding equals torch.float8_e4m3fn casting (200k random values + all exact ties)",
+      "passed": true,
+      "detail": "0 mismatches"
+    },
+    {
+      "test": "fp16: encoder equals torch.float16 casting on 100k N(0, 0.01) values",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int8_pt: scale = max|w|/127 stored as one float32",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int8_pt: decode equals round(w/s)*s with codes in [-128, 127]",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int8_pt: all-zero tensor uses scale 1 and decodes to zeros",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4_pt: scale = max|w|/7 stored as one float32",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4_pt: decode equals round(w/s)*s with codes in [-8, 7]",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4_pt: all-zero tensor uses scale 1 and decodes to zeros",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4 packing: pack/unpack round trip for n=1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4 packing: pack/unpack round trip for n=2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4 packing: pack/unpack round trip for n=7",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4 packing: pack/unpack round trip for n=8",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4 packing: pack/unpack round trip for n=1001",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4 packing: element 0 -> low nibble, element 1 -> high nibble, odd count pads a zero high nibble",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4 bit location: element 3 bit 2 -> byte 1, bit position 6",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4_pt: two's complement nibbles (-7 -> 0x9, 7 -> 0x7, 1 -> 0x1) packed as [0x79, 0x01]",
+      "passed": true,
+      "detail": "['0x79', '0x1']"
+    },
+    {
+      "test": "bf16: 1.0 -> 0x3F80, -2.0 -> 0xC000, float32 max saturates to 0x7F7F, 2^-133 -> 0x0001 (smallest subnormal), 2^-149 rounds to 0, -0.0 -> 0x8000",
+      "passed": true,
+      "detail": "['0x3f80', '0xc000', '0x7f7f', '0x1', '0x0', '0x8000']"
+    },
+    {
+      "test": "bf16: round-to-nearest-even on exact ties (1+2^-8 -> 0x3F80, 1+3*2^-8 -> 0x3F82)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "bf16: the all-ones exponent gives 256 inf/NaN words (2 infinities, 254 NaN); the other 65,280 words are finite",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "bf16: decode->encode returns the same word for every finite word (-0 and +0 included)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e5m2: 6 NaN words, 2 infinities (0x7C, 0xFC), max finite 57344, min positive 2^-16, min normal 2^-14",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e5m2: decode->encode returns the same word for all 248 finite words",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e5m2: values above 57344 saturate to +-57344 (0x7B / 0xFB), never to inf or NaN",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e5m2: all 256 decoded values equal torch.float8_e5m2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e5m2: encoder rounding equals torch.float8_e5m2 casting (200k random values + all exact ties)",
+      "passed": true,
+      "detail": "0 mismatches"
+    },
+    {
+      "test": "bf16: encoder equals torch.bfloat16 casting on 200k values (N(0, 0.01) and log-uniform 1e-30..1e30)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int8_pc: one float32 scale per output channel (axis 0) = max|w_c|/127; all-zero channel -> scale 1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int8_pc: decode equals round(w/s_c)*s_c with codes in [-128, 127]",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int8_pc: every channel reaches the code +-127 (its own maximum maps to full range)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4_pc: one float32 scale per output channel (axis 0) = max|w_c|/7; all-zero channel -> scale 1",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4_pc: decode equals round(w/s_c)*s_c with codes in [-8, 7]",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4_pc: every channel reaches the code +-7 (its own maximum maps to full range)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "int4_pc: 9 elements -> 5 packed bytes (one zero padding nibble), 3 float32 scales (12 bytes)",
+      "passed": true,
+      "detail": ""
+    }
+  ],
+  "formats": {
+    "fp16": {
+      "role": "primary",
+      "config": {
+        "variant": "FP16 (IEEE 754 binary16, E5M10)",
+        "bit_layout": "S(1) EEEEE(5) M(10), uint16",
+        "exponent_bias": 15,
+        "subnormal_behavior": "enabled (IEEE): es=0 stores m * 2^-24",
+        "rounding": "round-to-nearest, ties to even (NumPy float32 -> float16 cast)",
+        "saturation_clipping": "|w| clipped to +-65504.0 before the cast (no overflow to inf)",
+        "scale": "none",
+        "zero_point": "none",
+        "nan_inf": "encoder rejects non-finite input; the all-ones exponent (inf/NaN) is IEEE-reserved and is decoded as inf/NaN (reachable only through bit flips)",
+        "granularity": "n/a (float format)",
+        "calibration": "none (data-free)",
+        "storage": "actual encoded uint16 words; decoded to FP32 for evaluation (weight-only)",
+        "codec_source": "src/fr/stage2.py (NumPy float16)"
+      },
+      "encoded_file": "quantized_weights/fp16.npz",
+      "content_sha256": "78c37473fc51263f841db51bb5d36d5e15bf25f107e9ab6afbcfec27bd9e068e",
+      "encoded_file_bytes": 4453706,
+      "stored_total_bytes": 4405120,
+      "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+      "global_sqnr_db": 73.69929945048985,
+      "global_rmse": 3.6077297308691696e-06,
+      "roundtrip": {
+        "file_decode_identical_to_memory_decode": true,
+        "independent_reference_layers_matching": 53,
+        "independent_reference_layers_mismatching": 0,
+        "independent_reference_available": true
+      },
+      "validation": {
+        "val_accuracy_percent": 92.16,
+        "val_correct": 4608,
+        "val_total": 5000,
+        "val_cross_entropy": 0.2528569305419922,
+        "meets_delta_clean": 1
+      }
+    },
+    "bf16": {
+      "role": "primary",
+      "config": {
+        "variant": "BF16 (bfloat16, E8M7)",
+        "bit_layout": "S(1) EEEEEEEE(8) M(7), uint16 = upper half of the IEEE float32 word",
+        "exponent_bias": 127,
+        "subnormal_behavior": "enabled: es=0 stores m * 2^-133 (same exponent range as float32)",
+        "rounding": "round-to-nearest, ties to even (on the 16 discarded float32 mantissa bits)",
+        "saturation_clipping": "|w| clipped to +-3.3895314e+38 (word 0x7F7F) before rounding (no overflow to inf)",
+        "scale": "none",
+        "zero_point": "none",
+        "nan_inf": "encoder rejects non-finite input; the all-ones exponent (inf/NaN) is IEEE-reserved and is decoded as inf/NaN (reachable only through bit flips)",
+        "granularity": "n/a (float format)",
+        "calibration": "none (data-free)",
+        "storage": "actual encoded uint16 words; decoded to FP32 for evaluation (weight-only)",
+        "codec_source": "src/fr/stage2.py (integer rounding of the float32 bit pattern); cross-checked against torch.bfloat16 in the self-tests"
+      },
+      "encoded_file": "quantized_weights/bf16.npz",
+      "content_sha256": "61a6dea614258fbf2e94681675c3ec61c2f88ef518de959914c9d0bcb9fff109",
+      "encoded_file_bytes": 4453706,
+      "stored_total_bytes": 4405120,
+      "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+      "global_sqnr_db": 55.557968278296315,
+      "global_rmse": 2.9127321804180475e-05,
+      "roundtrip": {
+        "file_decode_identical_to_memory_decode": true,
+        "independent_reference_layers_matching": 53,
+        "independent_reference_layers_mismatching": 0,
+        "independent_reference_available": true
+      },
+      "validation": {
+        "val_accuracy_percent": 92.16,
+        "val_correct": 4608,
+        "val_total": 5000,
+        "val_cross_entropy": 0.2531038055419922,
+        "meets_delta_clean": 1
+      }
+    },
+    "e4m11_sn": {
+      "role": "primary",
+      "config": {
+        "variant": "E4M11-SN",
+        "bit_layout": "S(1) EEEE(4) M(11), word = (s<<15)|(es<<11)|m, uint16",
+        "exponent_bias": 7,
+        "stored_exponent_range_normals": "1..14 (value (1+m/2^11)*2^(es-7))",
+        "subnormal_behavior": "enabled: es=0 stores (-1)^s * m * 2^-17 (= m/2^11 * 2^-6)",
+        "rounding": "round-to-nearest, ties to even (np.rint on the integer mantissa); mantissa carry increments the exponent",
+        "saturation_clipping": "|w| clipped to max finite 255.9375 before encoding",
+        "scale": "none",
+        "zero_point": "none",
+        "nan_inf": "encoder rejects non-finite input; decoder reads the reserved all-ones exponent (es=15) as es=14 ('clamp'), reachable only through bit flips",
+        "granularity": "n/a (float format)",
+        "calibration": "none (data-free)",
+        "storage": "actual encoded uint16 words; decoded to FP32 for evaluation (weight-only)",
+        "codec_source": "src/fr/e4m11.py (mode='subnormal')"
+      },
+      "encoded_file": "quantized_weights/e4m11_sn.npz",
+      "content_sha256": "3d1b8cef12a6d1fb6c6e45f45b77c95579f7b3dac4133119d09fec659e96fd4b",
+      "encoded_file_bytes": 4453706,
+      "stored_total_bytes": 4405120,
+      "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+      "global_sqnr_db": 76.11850930099709,
+      "global_rmse": 2.7306969350176775e-06,
+      "roundtrip": {
+        "file_decode_identical_to_memory_decode": true,
+        "independent_reference_layers_matching": 0,
+        "independent_reference_layers_mismatching": 0,
+        "independent_reference_available": false
+      },
+      "validation": {
+        "val_accuracy_percent": 92.16,
+        "val_correct": 4608,
+        "val_total": 5000,
+        "val_cross_entropy": 0.2530241470336914,
+        "meets_delta_clean": 1
+      }
+    },
+    "fp8_e4m3fn": {
+      "role": "primary",
+      "config": {
+        "variant": "FP8 E4M3FN (OCP, bias 7, max 448)",
+        "bit_layout": "S(1) EEEE(4) MMM(3), word = (s<<7)|(es<<3)|m, uint8",
+        "exponent_bias": 7,
+        "subnormal_behavior": "enabled: es=0 stores m * 2^-9 (smallest nonzero magnitude 2^-9 = 0.001953)",
+        "finite_nan_handling": "no infinities; exactly one NaN magnitude pattern S.1111.111 (0x7F / 0xFF); all other 254 words are finite; max finite 448 (S.1111.110); min normal 2^-6",
+        "rounding": "round-to-nearest, ties to the even word (= IEEE round-to-nearest-even)",
+        "saturation_clipping": "|w| > 448 saturates to 448 (the encoder never produces the NaN pattern)",
+        "scale": "none (UNSCALED: weights smaller than 2^-10 round to zero)",
+        "zero_point": "none",
+        "nan_inf": "encoder rejects non-finite input; decoder maps the NaN pattern to NaN",
+        "granularity": "n/a (float format)",
+        "calibration": "none (data-free)",
+        "storage": "actual encoded uint8 words; decoded to FP32 for evaluation (weight-only)",
+        "codec_source": "src/fr/stage2.py (table-based); cross-checked against torch.float8_e4m3fn in the self-tests"
+      },
+      "encoded_file": "quantized_weights/fp8_e4m3fn.npz",
+      "content_sha256": "74f6acc4ae744c0a2ed44b896f01d382ece74a75f190f1a208db01a1fa00c683",
+      "encoded_file_bytes": 2251146,
+      "stored_total_bytes": 2202560,
+      "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+      "global_sqnr_db": 28.050122911687332,
+      "global_rmse": 0.0006913418100048263,
+      "roundtrip": {
+        "file_decode_identical_to_memory_decode": true,
+        "independent_reference_layers_matching": 53,
+        "independent_reference_layers_mismatching": 0,
+        "independent_reference_available": true
+      },
+      "validation": {
+        "val_accuracy_percent": 92.14,
+        "val_correct": 4607,
+        "val_total": 5000,
+        "val_cross_entropy": 0.2556566589355469,
+        "meets_delta_clean": 1
+      }
+    },
+    "fp8_e5m2": {
+      "role": "primary",
+      "config": {
+        "variant": "FP8 E5M2 (bias 15, max 57344)",
+        "bit_layout": "S(1) EEEEE(5) MM(2), word = (s<<7)|(es<<2)|m, uint8",
+        "exponent_bias": 15,
+        "subnormal_behavior": "enabled: es=0 stores m * 2^-16 (smallest nonzero magnitude 2^-16 = 1.526e-05)",
+        "finite_nan_handling": "IEEE-style special codes: es=31,m=0 -> +-inf (0x7C / 0xFC); es=31,m!=0 -> NaN (0x7D-0x7F, 0xFD-0xFF); the other 248 words are finite; max finite 57344 (0x7B); min normal 2^-14",
+        "rounding": "round-to-nearest, ties to the even word (= IEEE round-to-nearest-even)",
+        "saturation_clipping": "|w| > 57344 saturates to +-57344 (the encoder never produces inf or NaN)",
+        "scale": "none (UNSCALED: weights smaller than 2^-17 round to zero)",
+        "zero_point": "none",
+        "nan_inf": "encoder rejects non-finite input; the decoder maps the special codes to inf / NaN (reachable only through bit flips)",
+        "granularity": "n/a (float format)",
+        "calibration": "none (data-free)",
+        "storage": "actual encoded uint8 words; decoded to FP32 for evaluation (weight-only)",
+        "codec_source": "src/fr/stage2.py (table-based); cross-checked against torch.float8_e5m2 in the self-tests"
+      },
+      "encoded_file": "quantized_weights/fp8_e5m2.npz",
+      "content_sha256": "2b4c5d14a0af0c53f3cd4fd0181d2e11e94d4bf7c38fbd32f9caf95fafd4676a",
+      "encoded_file_bytes": 2251146,
+      "stored_total_bytes": 2202560,
+      "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+      "global_sqnr_db": 25.56472786201482,
+      "global_rmse": 0.0009203702557312041,
+      "roundtrip": {
+        "file_decode_identical_to_memory_decode": true,
+        "independent_reference_layers_matching": 53,
+        "independent_reference_layers_mismatching": 0,
+        "independent_reference_available": true
+      },
+      "validation": {
+        "val_accuracy_percent": 90.62,
+        "val_correct": 4531,
+        "val_total": 5000,
+        "val_cross_entropy": 0.2968098770141602,
+        "meets_delta_clean": 0
+      }
+    },
+    "int8_pt": {
+      "role": "primary",
+      "config": {
+        "variant": "INT8 (symmetric, per-tensor)",
+        "bit_layout": "8-bit two's complement signed integer code; one code per byte",
+        "mapping": "symmetric (paper Eq. 3)",
+        "zero_point": "none (symmetric, zero maps to zero)",
+        "scale": "s = max|w| / 127 computed once per tensor (per layer), stored as one float32 (4 bytes); an all-zero tensor gets s = 1",
+        "granularity": "per-tensor (one scale per layer's weight tensor)",
+        "scale_computed": "per layer",
+        "calibration": "max-abs of the weights; data-free (no calibration data)",
+        "rounding": "round-to-nearest, ties to even (np.rint) of w/s computed in float64 with the float32 scale",
+        "signed_range": "[-128, 127] (clip); with s = max|w|/127 the code -128 is not reached",
+        "saturation_clipping": "codes clipped to [-128, 127]",
+        "subnormal_behavior": "n/a",
+        "nan_inf": "encoder rejects non-finite input; no NaN/Inf codes exist; a flipped float32 scale can be non-finite (not touched in Stage 2)",
+        "storage": "actual encoded bytes + float32 scale; decoded to FP32 for evaluation (weight-only)",
+        "codec_source": "src/fr/formats8.py (int_encode / int_decode)"
+      },
+      "encoded_file": "quantized_weights/int8_pt.npz",
+      "content_sha256": "9823a7527fb865272bb9b8a0df0780a0ebfd9a5cb5d4656a039dee3c2f439b5f",
+      "encoded_file_bytes": 2266986,
+      "stored_total_bytes": 2202772,
+      "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+      "global_sqnr_db": 36.14404843402745,
+      "global_rmse": 0.00027226796555176016,
+      "roundtrip": {
+        "file_decode_identical_to_memory_decode": true,
+        "independent_reference_layers_matching": 53,
+        "independent_reference_layers_mismatching": 0,
+        "independent_reference_available": true
+      },
+      "validation": {
+        "val_accuracy_percent": 92.22,
+        "val_correct": 4611,
+        "val_total": 5000,
+        "val_cross_entropy": 0.2524688568115234,
+        "meets_delta_clean": 1
+      }
+    },
+    "int4_pt": {
+      "role": "primary",
+      "config": {
+        "variant": "INT4 (symmetric, per-tensor)",
+        "bit_layout": "4-bit two's complement signed integer code; two codes per byte, element 2j in the LOW nibble (bits 0-3) of byte j, element 2j+1 in the HIGH nibble (bits 4-7); an odd element count is padded with one zero nibble",
+        "mapping": "symmetric (paper Eq. 3)",
+        "zero_point": "none (symmetric, zero maps to zero)",
+        "scale": "s = max|w| / 7 computed once per tensor (per layer), stored as one float32 (4 bytes); an all-zero tensor gets s = 1",
+        "granularity": "per-tensor (one scale per layer's weight tensor)",
+        "scale_computed": "per layer",
+        "calibration": "max-abs of the weights; data-free (no calibration data)",
+        "rounding": "round-to-nearest, ties to even (np.rint) of w/s computed in float64 with the float32 scale",
+        "signed_range": "[-8, 7] (clip); with s = max|w|/7 the code -8 is not reached",
+        "saturation_clipping": "codes clipped to [-8, 7]",
+        "subnormal_behavior": "n/a",
+        "nan_inf": "encoder rejects non-finite input; no NaN/Inf codes exist; a flipped float32 scale can be non-finite (not touched in Stage 2)",
+        "storage": "actual encoded bytes (packed nibbles) + float32 scale; decoded to FP32 for evaluation (weight-only)",
+        "codec_source": "src/fr/formats8.py (int_encode / int_decode) + stage2.pack_nibbles"
+      },
+      "encoded_file": "quantized_weights/int4_pt.npz",
+      "content_sha256": "ae1cf2616aa2384b22eb04b366fbc7ad8495df9edbc892cefb0e10e9ce36a44b",
+      "encoded_file_bytes": 1165706,
+      "stored_total_bytes": 1101492,
+      "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+      "global_sqnr_db": 13.378355820263689,
+      "global_rmse": 0.0037435287851655566,
+      "roundtrip": {
+        "file_decode_identical_to_memory_decode": true,
+        "independent_reference_layers_matching": 53,
+        "independent_reference_layers_mismatching": 0,
+        "independent_reference_available": true
+      },
+      "validation": {
+        "val_accuracy_percent": 84.32,
+        "val_correct": 4216,
+        "val_total": 5000,
+        "val_cross_entropy": 0.53401904296875,
+        "meets_delta_clean": 0
+      }
+    },
+    "int8_pc": {
+      "role": "comparison",
+      "config": {
+        "variant": "INT8 (symmetric, per-output-channel)",
+        "bit_layout": "8-bit two's complement signed integer code; one code per byte",
+        "mapping": "symmetric (paper Eq. 3)",
+        "zero_point": "none (symmetric, zero maps to zero)",
+        "scale": "s_c = max|w_c| / 127 per output channel c, stored as one float32 per channel (4 bytes each); an all-zero channel gets s_c = 1",
+        "granularity": "per-output-channel",
+        "scale_axis": "0 (output channels): Conv2d weight [out, in/groups, kh, kw], Linear weight [out, in]",
+        "scale_computed": "per channel",
+        "calibration": "max-abs of each channel's weights; data-free",
+        "rounding": "round-to-nearest, ties to even (np.rint) of w/s computed in float64 with the float32 scale",
+        "signed_range": "[-128, 127] (clip); with s_c = max|w_c|/127 the code -128 is not reached",
+        "saturation_clipping": "codes clipped to [-128, 127]",
+        "subnormal_behavior": "n/a",
+        "nan_inf": "encoder rejects non-finite input; no NaN/Inf codes exist; a flipped float32 scale can be non-finite",
+        "storage": "actual encoded bytes + one float32 scale per output channel; decoded to FP32 for evaluation (weight-only)",
+        "codec_source": "src/fr/formats8.py (int_encode / int_decode, per_channel=True)"
+      },
+      "encoded_file": "quantized_weights/int8_pc.npz",
+      "content_sha256": "cba4eceeeb480d900eea4e0c4d6e1693a4f0d137079ab41807b207d381dc0ebc",
+      "encoded_file_bytes": 2335038,
+      "stored_total_bytes": 2270824,
+      "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+      "global_sqnr_db": 42.96417794257085,
+      "global_rmse": 0.00012416239201991876,
+      "roundtrip": {
+        "file_decode_identical_to_memory_decode": true,
+        "independent_reference_layers_matching": 53,
+        "independent_reference_layers_mismatching": 0,
+        "independent_reference_available": true
+      },
+      "validation": {
+        "val_accuracy_percent": 92.2,
+        "val_correct": 4610,
+        "val_total": 5000,
+        "val_cross_entropy": 0.2523633575439453,
+        "meets_delta_clean": 1
+      }
+    },
+    "int4_pc": {
+      "role": "comparison",
+      "config": {
+        "variant": "INT4 (symmetric, per-output-channel)",
+        "bit_layout": "4-bit two's complement signed integer code; two codes per byte over the row-major flattened tensor (byte boundaries may fall between channels), element 2j in the LOW nibble (bits 0-3) of byte j, element 2j+1 in the HIGH nibble (bits 4-7); an odd total element count is padded with one zero nibble",
+        "mapping": "symmetric (paper Eq. 3)",
+        "zero_point": "none (symmetric, zero maps to zero)",
+        "scale": "s_c = max|w_c| / 7 per output channel c, stored as one float32 per channel (4 bytes each); an all-zero channel gets s_c = 1",
+        "granularity": "per-output-channel",
+        "scale_axis": "0 (output channels): Conv2d weight [out, in/groups, kh, kw], Linear weight [out, in]",
+        "scale_computed": "per channel",
+        "calibration": "max-abs of each channel's weights; data-free",
+        "rounding": "round-to-nearest, ties to even (np.rint) of w/s computed in float64 with the float32 scale",
+        "signed_range": "[-8, 7] (clip); with s_c = max|w_c|/7 the code -8 is not reached",
+        "saturation_clipping": "codes clipped to [-8, 7]",
+        "subnormal_behavior": "n/a",
+        "nan_inf": "encoder rejects non-finite input; no NaN/Inf codes exist; a flipped float32 scale can be non-finite",
+        "storage": "actual encoded bytes (packed nibbles) + one float32 scale per output channel; decoded to FP32 for evaluation (weight-only)",
+        "codec_source": "src/fr/formats8.py (int_encode / int_decode, per_channel=True) + stage2.pack_nibbles"
+      },
+      "encoded_file": "quantized_weights/int4_pc.npz",
+      "content_sha256": "e2d590644e97a968afa0be444ca55d2b4c38afac9599eb40842424f3c586e248",
+      "encoded_file_bytes": 1233758,
+      "stored_total_bytes": 1169544,
+      "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+      "global_sqnr_db": 18.670550442298865,
+      "global_rmse": 0.002035501589267043,
+      "roundtrip": {
+        "file_decode_identical_to_memory_decode": true,
+        "independent_reference_layers_matching": 53,
+        "independent_reference_layers_mismatching": 0,
+        "independent_reference_available": true
+      },
+      "validation": {
+        "val_accuracy_percent": 87.92,
+        "val_correct": 4396,
+        "val_total": 5000,
+        "val_cross_entropy": 0.41483905029296875,
+        "meets_delta_clean": 0
+      }
+    },
+    "e4m11_ftz": {
+      "role": "comparison",
+      "config": {
+        "variant": "E4M11-FTZ",
+        "bit_layout": "S(1) EEEE(4) M(11), word = (s<<15)|(es<<11)|m, uint16",
+        "exponent_bias": 7,
+        "stored_exponent_range_normals": "1..14 (value (1+m/2^11)*2^(es-7))",
+        "subnormal_behavior": "flush-to-zero: |w| < 2^-7 -> signed zero; [2^-7, 2^-6) rounds up to 2^-6 (paper Algorithm 1)",
+        "rounding": "round-to-nearest, ties to even (np.rint on the integer mantissa); mantissa carry increments the exponent",
+        "saturation_clipping": "|w| clipped to max finite 255.9375 before encoding",
+        "scale": "none",
+        "zero_point": "none",
+        "nan_inf": "encoder rejects non-finite input; decoder reads the reserved all-ones exponent (es=15) as es=14 ('clamp'), reachable only through bit flips",
+        "granularity": "n/a (float format)",
+        "calibration": "none (data-free)",
+        "storage": "actual encoded uint16 words; decoded to FP32 for evaluation (weight-only)",
+        "codec_source": "src/fr/e4m11.py (mode='paper')"
+      },
+      "encoded_file": "quantized_weights/e4m11_ftz.npz",
+      "content_sha256": "b494f96422eed3303cb75d55382a396bcbe8f0ff67ef09e295e58999ac7a4c9f",
+      "encoded_file_bytes": 4453706,
+      "stored_total_bytes": 4405120,
+      "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+      "global_sqnr_db": 15.656831445315937,
+      "global_rmse": 0.002879767298010928,
+      "roundtrip": {
+        "file_decode_identical_to_memory_decode": true,
+        "independent_reference_layers_matching": 0,
+        "independent_reference_layers_mismatching": 0,
+        "independent_reference_available": false
+      },
+      "validation": {
+        "val_accuracy_percent": 91.92,
+        "val_correct": 4596,
+        "val_total": 5000,
+        "val_cross_entropy": 0.24724729614257812,
+        "meets_delta_clean": 1
+      }
+    }
+  },
+  "frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561",
+  "roundtrip_failures": [],
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "8173119046b4a3dffe8ed762f41e5e0fd2c45e23",
+      "dirty": true
+    }
+  },
+  "created_utc": "2026-11-13T16:01:04+00:00"
+}

@@ -1,0 +1,162 @@
+{
+  "checkpoint": {
+    "path": "/home/ssl25/fr_runs/checkpoints/mobilenetv2_cifar10/best.pth",
+    "file_name": "best.pth",
+    "size_bytes": 18200924,
+    "sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+    "file_modified_utc": "2026-11-13T15:52:44+00:00",
+    "supplied_by": "trained in this project",
+    "source_location": "fine-tuned from torchvision ImageNet IMAGENET1K_V1 weights, configs/finetune_mobilenetv2_imagenet.yaml",
+    "top_level_keys": [
+      "epoch",
+      "model_state_dict",
+      "optimizer_state_dict",
+      "scheduler_state_dict",
+      "scaler_state_dict",
+      "rng_state",
+      "config",
+      "git_commit",
+      "train_accuracy",
+      "average_loss",
+      "val_acc",
+      "best_val_acc",
+      "best_val_loss"
+    ],
+    "state_dict_tensors": 314,
+    "epoch": 100,
+    "best_val_acc_during_training": 92.16,
+    "best_val_loss_during_training": 0.2528333465576172,
+    "git_commit_at_training": {
+      "commit": "8173119046b4a3dffe8ed762f41e5e0fd2c45e23",
+      "dirty": true
+    }
+  },
+  "model": {
+    "definition": "fr.model.ARCHS['mobilenetv2_cifar']",
+    "arch": "mobilenetv2_cifar",
+    "arch_in_config": "mobilenetv2_cifar",
+    "constructor": {
+      "num_classes": 10
+    },
+    "num_classes": 10,
+    "stem": "3x3 conv, stride 1, padding 1, no max-pooling",
+    "architecture_note": "torchvision MobileNetV2 (width 1.0, dropout 0.2) with only the first feature convolution's stride changed 2 -> 1",
+    "output_dim": 10
+  },
+  "seeds": {
+    "training_seed": 0,
+    "split_seed": 0
+  },
+  "training_config": {
+    "root": null,
+    "data_dir": null,
+    "run_name": "mobilenetv2_cifar10",
+    "init_checkpoint": null,
+    "arch": "mobilenetv2_cifar",
+    "init": "imagenet",
+    "pretrained_weights": "IMAGENET1K_V1",
+    "normalize": "auto",
+    "epochs": 100,
+    "lr": 0.05,
+    "batch_size": 128,
+    "momentum": 0.9,
+    "nesterov": true,
+    "weight_decay": 0.0005,
+    "warmup_epochs": 3,
+    "label_smoothing": 0.0,
+    "amp": true,
+    "val_size": 5000,
+    "train_subset": null,
+    "test_subset": null,
+    "num_workers": 4,
+    "eval_batch_size": 500,
+    "seed": 0,
+    "device": "auto",
+    "deterministic": false,
+    "resume": false,
+    "normalization": {
+      "mean": [
+        0.4914,
+        0.4822,
+        0.4465
+      ],
+      "std": [
+        0.247,
+        0.2435,
+        0.2616
+      ]
+    },
+    "pretrained_source": {
+      "init": "imagenet",
+      "weights": "IMAGENET1K_V1",
+      "url": "https://download.pytorch.org/models/mobilenet_v2-b0353104.pth",
+      "imagenet_top1_percent": 71.878,
+      "num_tensors_loaded": 312,
+      "classifier_reinitialised": [
+        "classifier.1.bias",
+        "classifier.1.weight"
+      ],
+      "note": "all layers are fine-tuned on CIFAR-10; the stem runs with stride 1 (ImageNet model: stride 2)"
+    },
+    "warmup_iters": 1053,
+    "iters_per_epoch": 351
+  },
+  "environment_at_evaluation": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "8173119046b4a3dffe8ed762f41e5e0fd2c45e23",
+      "dirty": true
+    }
+  },
+  "gpu": {
+    "name": "NVIDIA GeForce RTX 3050 OEM",
+    "total_memory_bytes": 8202813440,
+    "free_memory_bytes_at_start": 7940014080
+  },
+  "evaluation_device": "cuda",
+  "dataset": {
+    "name": "CIFAR-10",
+    "train_pool": 50000,
+    "val_size": 5000,
+    "split_seed": 0,
+    "split_rule": "fr.data.split_indices (generator seed 1234 + split_seed)",
+    "val_indices_sha256": "d2e1ec6587c2c4d4018f6e02e47393b604da05c6ce4d3e2f42e51c8b9f5b7372",
+    "train_indices_sha256": "9e71eb3375dbeffdbd893ba4d931130a04a13c6ac9d570a63ff9603c94154aa7",
+    "test_images": 10000,
+    "test_set": "official CIFAR-10 test split, never used for selection or tuning"
+  },
+  "preprocessing": {
+    "normalization_mean": [
+      0.4914,
+      0.4822,
+      0.4465
+    ],
+    "normalization_std": [
+      0.247,
+      0.2435,
+      0.2616
+    ],
+    "image_size": "32x32",
+    "channel_order": "RGB",
+    "interpolation": "none (no resize)",
+    "evaluation_transform": "Compose(\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+    "training_transform": "Compose(\n    RandomCrop(size=(32, 32), padding=4)\n    RandomHorizontalFlip(p=0.5)\n    ToTensor()\n    Normalize(mean=(0.4914, 0.4822, 0.4465), std=(0.247, 0.2435, 0.2616))\n)",
+    "evaluation_deterministic": true
+  },
+  "evaluation": {
+    "precision": "FP32 (no autocast)",
+    "model_eval_mode": true,
+    "gradients_disabled": true,
+    "batch_size": 500,
+    "timestamp_utc": "2026-11-13T16:00:54+00:00"
+  },
+  "runbook_reference": "none (MobileNetV2: protocol forbids reusing ResNet-18 values)"
+}

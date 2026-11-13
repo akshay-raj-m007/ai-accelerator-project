@@ -1,0 +1,2075 @@
+{
+  "total_parameters": 2236682,
+  "quantizable_weights": 2202560,
+  "non_quantized_parameters": 34122,
+  "quantizable_plus_nonquantized_equals_total": true,
+  "fp32_quantizable_bytes": 8810240,
+  "fp32_quantizable_bytes_equals_4x_weights": true,
+  "module_counts": {
+    "MobileNetV2": 1,
+    "Sequential": 19,
+    "Conv2dNormActivation": 35,
+    "Conv2d": 52,
+    "BatchNorm2d": 52,
+    "ReLU6": 35,
+    "InvertedResidual": 17,
+    "Dropout": 1,
+    "Linear": 1
+  },
+  "non_quantized_tensors": {
+    "features.0.1.weight": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "parameter"
+    },
+    "features.0.1.bias": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "parameter"
+    },
+    "features.1.conv.0.1.weight": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "parameter"
+    },
+    "features.1.conv.0.1.bias": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "parameter"
+    },
+    "features.1.conv.2.weight": {
+      "shape": [
+        16
+      ],
+      "numel": 16,
+      "bytes": 64,
+      "kind": "parameter"
+    },
+    "features.1.conv.2.bias": {
+      "shape": [
+        16
+      ],
+      "numel": 16,
+      "bytes": 64,
+      "kind": "parameter"
+    },
+    "features.2.conv.0.1.weight": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "parameter"
+    },
+    "features.2.conv.0.1.bias": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "parameter"
+    },
+    "features.2.conv.1.1.weight": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "parameter"
+    },
+    "features.2.conv.1.1.bias": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "parameter"
+    },
+    "features.2.conv.3.weight": {
+      "shape": [
+        24
+      ],
+      "numel": 24,
+      "bytes": 96,
+      "kind": "parameter"
+    },
+    "features.2.conv.3.bias": {
+      "shape": [
+        24
+      ],
+      "numel": 24,
+      "bytes": 96,
+      "kind": "parameter"
+    },
+    "features.3.conv.0.1.weight": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "parameter"
+    },
+    "features.3.conv.0.1.bias": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "parameter"
+    },
+    "features.3.conv.1.1.weight": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "parameter"
+    },
+    "features.3.conv.1.1.bias": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "parameter"
+    },
+    "features.3.conv.3.weight": {
+      "shape": [
+        24
+      ],
+      "numel": 24,
+      "bytes": 96,
+      "kind": "parameter"
+    },
+    "features.3.conv.3.bias": {
+      "shape": [
+        24
+      ],
+      "numel": 24,
+      "bytes": 96,
+      "kind": "parameter"
+    },
+    "features.4.conv.0.1.weight": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "parameter"
+    },
+    "features.4.conv.0.1.bias": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "parameter"
+    },
+    "features.4.conv.1.1.weight": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "parameter"
+    },
+    "features.4.conv.1.1.bias": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "parameter"
+    },
+    "features.4.conv.3.weight": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "parameter"
+    },
+    "features.4.conv.3.bias": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "parameter"
+    },
+    "features.5.conv.0.1.weight": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.5.conv.0.1.bias": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.5.conv.1.1.weight": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.5.conv.1.1.bias": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.5.conv.3.weight": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "parameter"
+    },
+    "features.5.conv.3.bias": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "parameter"
+    },
+    "features.6.conv.0.1.weight": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.6.conv.0.1.bias": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.6.conv.1.1.weight": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.6.conv.1.1.bias": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.6.conv.3.weight": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "parameter"
+    },
+    "features.6.conv.3.bias": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "parameter"
+    },
+    "features.7.conv.0.1.weight": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.7.conv.0.1.bias": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.7.conv.1.1.weight": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.7.conv.1.1.bias": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "parameter"
+    },
+    "features.7.conv.3.weight": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "features.7.conv.3.bias": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "features.8.conv.0.1.weight": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.8.conv.0.1.bias": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.8.conv.1.1.weight": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.8.conv.1.1.bias": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.8.conv.3.weight": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "features.8.conv.3.bias": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "features.9.conv.0.1.weight": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.9.conv.0.1.bias": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.9.conv.1.1.weight": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.9.conv.1.1.bias": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.9.conv.3.weight": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "features.9.conv.3.bias": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "features.10.conv.0.1.weight": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.10.conv.0.1.bias": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.10.conv.1.1.weight": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.10.conv.1.1.bias": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.10.conv.3.weight": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "features.10.conv.3.bias": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "parameter"
+    },
+    "features.11.conv.0.1.weight": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.11.conv.0.1.bias": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.11.conv.1.1.weight": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.11.conv.1.1.bias": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "parameter"
+    },
+    "features.11.conv.3.weight": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "parameter"
+    },
+    "features.11.conv.3.bias": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "parameter"
+    },
+    "features.12.conv.0.1.weight": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.12.conv.0.1.bias": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.12.conv.1.1.weight": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.12.conv.1.1.bias": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.12.conv.3.weight": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "parameter"
+    },
+    "features.12.conv.3.bias": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "parameter"
+    },
+    "features.13.conv.0.1.weight": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.13.conv.0.1.bias": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.13.conv.1.1.weight": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.13.conv.1.1.bias": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.13.conv.3.weight": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "parameter"
+    },
+    "features.13.conv.3.bias": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "parameter"
+    },
+    "features.14.conv.0.1.weight": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.14.conv.0.1.bias": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.14.conv.1.1.weight": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.14.conv.1.1.bias": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "parameter"
+    },
+    "features.14.conv.3.weight": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "parameter"
+    },
+    "features.14.conv.3.bias": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "parameter"
+    },
+    "features.15.conv.0.1.weight": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.15.conv.0.1.bias": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.15.conv.1.1.weight": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.15.conv.1.1.bias": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.15.conv.3.weight": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "parameter"
+    },
+    "features.15.conv.3.bias": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "parameter"
+    },
+    "features.16.conv.0.1.weight": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.16.conv.0.1.bias": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.16.conv.1.1.weight": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.16.conv.1.1.bias": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.16.conv.3.weight": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "parameter"
+    },
+    "features.16.conv.3.bias": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "parameter"
+    },
+    "features.17.conv.0.1.weight": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.17.conv.0.1.bias": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.17.conv.1.1.weight": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.17.conv.1.1.bias": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "parameter"
+    },
+    "features.17.conv.3.weight": {
+      "shape": [
+        320
+      ],
+      "numel": 320,
+      "bytes": 1280,
+      "kind": "parameter"
+    },
+    "features.17.conv.3.bias": {
+      "shape": [
+        320
+      ],
+      "numel": 320,
+      "bytes": 1280,
+      "kind": "parameter"
+    },
+    "features.18.1.weight": {
+      "shape": [
+        1280
+      ],
+      "numel": 1280,
+      "bytes": 5120,
+      "kind": "parameter"
+    },
+    "features.18.1.bias": {
+      "shape": [
+        1280
+      ],
+      "numel": 1280,
+      "bytes": 5120,
+      "kind": "parameter"
+    },
+    "classifier.1.bias": {
+      "shape": [
+        10
+      ],
+      "numel": 10,
+      "bytes": 40,
+      "kind": "parameter"
+    },
+    "features.0.1.running_mean": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "buffer"
+    },
+    "features.0.1.running_var": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "buffer"
+    },
+    "features.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.1.conv.0.1.running_mean": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "buffer"
+    },
+    "features.1.conv.0.1.running_var": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "buffer"
+    },
+    "features.1.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.1.conv.2.running_mean": {
+      "shape": [
+        16
+      ],
+      "numel": 16,
+      "bytes": 64,
+      "kind": "buffer"
+    },
+    "features.1.conv.2.running_var": {
+      "shape": [
+        16
+      ],
+      "numel": 16,
+      "bytes": 64,
+      "kind": "buffer"
+    },
+    "features.1.conv.2.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.2.conv.0.1.running_mean": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "buffer"
+    },
+    "features.2.conv.0.1.running_var": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "buffer"
+    },
+    "features.2.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.2.conv.1.1.running_mean": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "buffer"
+    },
+    "features.2.conv.1.1.running_var": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "buffer"
+    },
+    "features.2.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.2.conv.3.running_mean": {
+      "shape": [
+        24
+      ],
+      "numel": 24,
+      "bytes": 96,
+      "kind": "buffer"
+    },
+    "features.2.conv.3.running_var": {
+      "shape": [
+        24
+      ],
+      "numel": 24,
+      "bytes": 96,
+      "kind": "buffer"
+    },
+    "features.2.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.3.conv.0.1.running_mean": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "buffer"
+    },
+    "features.3.conv.0.1.running_var": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "buffer"
+    },
+    "features.3.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.3.conv.1.1.running_mean": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "buffer"
+    },
+    "features.3.conv.1.1.running_var": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "buffer"
+    },
+    "features.3.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.3.conv.3.running_mean": {
+      "shape": [
+        24
+      ],
+      "numel": 24,
+      "bytes": 96,
+      "kind": "buffer"
+    },
+    "features.3.conv.3.running_var": {
+      "shape": [
+        24
+      ],
+      "numel": 24,
+      "bytes": 96,
+      "kind": "buffer"
+    },
+    "features.3.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.4.conv.0.1.running_mean": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "buffer"
+    },
+    "features.4.conv.0.1.running_var": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "buffer"
+    },
+    "features.4.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.4.conv.1.1.running_mean": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "buffer"
+    },
+    "features.4.conv.1.1.running_var": {
+      "shape": [
+        144
+      ],
+      "numel": 144,
+      "bytes": 576,
+      "kind": "buffer"
+    },
+    "features.4.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.4.conv.3.running_mean": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "buffer"
+    },
+    "features.4.conv.3.running_var": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "buffer"
+    },
+    "features.4.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.5.conv.0.1.running_mean": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.5.conv.0.1.running_var": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.5.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.5.conv.1.1.running_mean": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.5.conv.1.1.running_var": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.5.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.5.conv.3.running_mean": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "buffer"
+    },
+    "features.5.conv.3.running_var": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "buffer"
+    },
+    "features.5.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.6.conv.0.1.running_mean": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.6.conv.0.1.running_var": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.6.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.6.conv.1.1.running_mean": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.6.conv.1.1.running_var": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.6.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.6.conv.3.running_mean": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "buffer"
+    },
+    "features.6.conv.3.running_var": {
+      "shape": [
+        32
+      ],
+      "numel": 32,
+      "bytes": 128,
+      "kind": "buffer"
+    },
+    "features.6.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.7.conv.0.1.running_mean": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.7.conv.0.1.running_var": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.7.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.7.conv.1.1.running_mean": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.7.conv.1.1.running_var": {
+      "shape": [
+        192
+      ],
+      "numel": 192,
+      "bytes": 768,
+      "kind": "buffer"
+    },
+    "features.7.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.7.conv.3.running_mean": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "features.7.conv.3.running_var": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "features.7.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.8.conv.0.1.running_mean": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.8.conv.0.1.running_var": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.8.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.8.conv.1.1.running_mean": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.8.conv.1.1.running_var": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.8.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.8.conv.3.running_mean": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "features.8.conv.3.running_var": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "features.8.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.9.conv.0.1.running_mean": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.9.conv.0.1.running_var": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.9.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.9.conv.1.1.running_mean": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.9.conv.1.1.running_var": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.9.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.9.conv.3.running_mean": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "features.9.conv.3.running_var": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "features.9.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.10.conv.0.1.running_mean": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.10.conv.0.1.running_var": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.10.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.10.conv.1.1.running_mean": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.10.conv.1.1.running_var": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.10.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.10.conv.3.running_mean": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "features.10.conv.3.running_var": {
+      "shape": [
+        64
+      ],
+      "numel": 64,
+      "bytes": 256,
+      "kind": "buffer"
+    },
+    "features.10.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.11.conv.0.1.running_mean": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.11.conv.0.1.running_var": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.11.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.11.conv.1.1.running_mean": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.11.conv.1.1.running_var": {
+      "shape": [
+        384
+      ],
+      "numel": 384,
+      "bytes": 1536,
+      "kind": "buffer"
+    },
+    "features.11.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.11.conv.3.running_mean": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "buffer"
+    },
+    "features.11.conv.3.running_var": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "buffer"
+    },
+    "features.11.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.12.conv.0.1.running_mean": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.12.conv.0.1.running_var": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.12.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.12.conv.1.1.running_mean": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.12.conv.1.1.running_var": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.12.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.12.conv.3.running_mean": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "buffer"
+    },
+    "features.12.conv.3.running_var": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "buffer"
+    },
+    "features.12.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.13.conv.0.1.running_mean": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.13.conv.0.1.running_var": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.13.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.13.conv.1.1.running_mean": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.13.conv.1.1.running_var": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.13.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.13.conv.3.running_mean": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "buffer"
+    },
+    "features.13.conv.3.running_var": {
+      "shape": [
+        96
+      ],
+      "numel": 96,
+      "bytes": 384,
+      "kind": "buffer"
+    },
+    "features.13.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.14.conv.0.1.running_mean": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.14.conv.0.1.running_var": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.14.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.14.conv.1.1.running_mean": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.14.conv.1.1.running_var": {
+      "shape": [
+        576
+      ],
+      "numel": 576,
+      "bytes": 2304,
+      "kind": "buffer"
+    },
+    "features.14.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.14.conv.3.running_mean": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "buffer"
+    },
+    "features.14.conv.3.running_var": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "buffer"
+    },
+    "features.14.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.15.conv.0.1.running_mean": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.15.conv.0.1.running_var": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.15.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.15.conv.1.1.running_mean": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.15.conv.1.1.running_var": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.15.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.15.conv.3.running_mean": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "buffer"
+    },
+    "features.15.conv.3.running_var": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "buffer"
+    },
+    "features.15.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.16.conv.0.1.running_mean": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.16.conv.0.1.running_var": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.16.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.16.conv.1.1.running_mean": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.16.conv.1.1.running_var": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.16.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.16.conv.3.running_mean": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "buffer"
+    },
+    "features.16.conv.3.running_var": {
+      "shape": [
+        160
+      ],
+      "numel": 160,
+      "bytes": 640,
+      "kind": "buffer"
+    },
+    "features.16.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.17.conv.0.1.running_mean": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.17.conv.0.1.running_var": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.17.conv.0.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.17.conv.1.1.running_mean": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.17.conv.1.1.running_var": {
+      "shape": [
+        960
+      ],
+      "numel": 960,
+      "bytes": 3840,
+      "kind": "buffer"
+    },
+    "features.17.conv.1.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.17.conv.3.running_mean": {
+      "shape": [
+        320
+      ],
+      "numel": 320,
+      "bytes": 1280,
+      "kind": "buffer"
+    },
+    "features.17.conv.3.running_var": {
+      "shape": [
+        320
+      ],
+      "numel": 320,
+      "bytes": 1280,
+      "kind": "buffer"
+    },
+    "features.17.conv.3.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    },
+    "features.18.1.running_mean": {
+      "shape": [
+        1280
+      ],
+      "numel": 1280,
+      "bytes": 5120,
+      "kind": "buffer"
+    },
+    "features.18.1.running_var": {
+      "shape": [
+        1280
+      ],
+      "numel": 1280,
+      "bytes": 5120,
+      "kind": "buffer"
+    },
+    "features.18.1.num_batches_tracked": {
+      "shape": [],
+      "numel": 1,
+      "bytes": 8,
+      "kind": "buffer"
+    }
+  },
+  "reconciliation": {
+    "sum_layer_weights_equals_global": true,
+    "sum_layer_bytes_equals_4x_global": true,
+    "every_conv_linear_listed": true
+  },
+  "runbook_reference_check": null,
+  "by_layer_role": {
+    "stem": {
+      "layers": 1,
+      "weights": 864
+    },
+    "depthwise": {
+      "layers": 17,
+      "weights": 64224
+    },
+    "pointwise": {
+      "layers": 34,
+      "weights": 2124672
+    },
+    "classifier": {
+      "layers": 1,
+      "weights": 12800
+    }
+  },
+  "by_layer_group": {
+    "stem": {
+      "layers": 1,
+      "weights": 864
+    },
+    "stage1": {
+      "layers": 2,
+      "weights": 800
+    },
+    "stage2": {
+      "layers": 6,
+      "weights": 12912
+    },
+    "stage3": {
+      "layers": 9,
+      "weights": 37392
+    },
+    "stage4": {
+      "layers": 12,
+      "weights": 177984
+    },
+    "stage5": {
+      "layers": 9,
+      "weights": 296448
+    },
+    "stage6": {
+      "layers": 9,
+      "weights": 784320
+    },
+    "stage7": {
+      "layers": 3,
+      "weights": 469440
+    },
+    "head": {
+      "layers": 1,
+      "weights": 409600
+    },
+    "classifier": {
+      "layers": 1,
+      "weights": 12800
+    }
+  },
+  "per_output_channel_scale_words": {
+    "output_channels_total": 17066,
+    "float32_scale_bytes_if_per_channel": 68264
+  }
+}

@@ -1,0 +1,675 @@
+{
+  "manifest": "jfamp-quantizer-manifest-1",
+  "codec_version": "jfamp-codecs-2.0",
+  "format_key": "fp8_e5m2",
+  "architecture": "mobilenetv2_cifar",
+  "checkpoint_sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+  "scope": "weight-only: Conv2d/Linear weights (53 tensors, 2202560 weights) are quantized; biases, BatchNorm parameters, running statistics and activations stay FP32",
+  "role": "primary",
+  "config": {
+    "variant": "FP8 E5M2 (bias 15, max 57344)",
+    "bit_layout": "S(1) EEEEE(5) MM(2), word = (s<<7)|(es<<2)|m, uint8",
+    "exponent_bias": 15,
+    "subnormal_behavior": "enabled: es=0 stores m * 2^-16 (smallest nonzero magnitude 2^-16 = 1.526e-05)",
+    "finite_nan_handling": "IEEE-style special codes: es=31,m=0 -> +-inf (0x7C / 0xFC); es=31,m!=0 -> NaN (0x7D-0x7F, 0xFD-0xFF); the other 248 words are finite; max finite 57344 (0x7B); min normal 2^-14",
+    "rounding": "round-to-nearest, ties to the even word (= IEEE round-to-nearest-even)",
+    "saturation_clipping": "|w| > 57344 saturates to +-57344 (the encoder never produces inf or NaN)",
+    "scale": "none (UNSCALED: weights smaller than 2^-17 round to zero)",
+    "zero_point": "none",
+    "nan_inf": "encoder rejects non-finite input; the decoder maps the special codes to inf / NaN (reachable only through bit flips)",
+    "granularity": "n/a (float format)",
+    "calibration": "none (data-free)",
+    "storage": "actual encoded uint8 words; decoded to FP32 for evaluation (weight-only)",
+    "codec_source": "src/fr/stage2.py (table-based); cross-checked against torch.float8_e5m2 in the self-tests"
+  },
+  "encoded_file": "quantized_weights/fp8_e5m2.npz",
+  "content_sha256": "2b4c5d14a0af0c53f3cd4fd0181d2e11e94d4bf7c38fbd32f9caf95fafd4676a",
+  "encoded_file_bytes": 2251146,
+  "stored_total_bytes": 2202560,
+  "quantization_simulated_or_packed": "stored in the actual encoded representation (uint16 / uint8 words, INT4 packed two per byte); evaluation decodes them to FP32",
+  "global_sqnr_db": 25.56472786201482,
+  "global_rmse": 0.0009203702557312041,
+  "roundtrip": {
+    "file_decode_identical_to_memory_decode": true,
+    "independent_reference_layers_matching": 53,
+    "independent_reference_layers_mismatching": 0,
+    "independent_reference_available": true
+  },
+  "per_layer_scales": [
+    {
+      "tensor": "features.0.0.weight",
+      "shape": [
+        32,
+        3,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.1.conv.0.0.weight",
+      "shape": [
+        32,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.1.conv.1.weight",
+      "shape": [
+        16,
+        32,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.2.conv.0.0.weight",
+      "shape": [
+        96,
+        16,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.2.conv.1.0.weight",
+      "shape": [
+        96,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.2.conv.2.weight",
+      "shape": [
+        24,
+        96,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.3.conv.0.0.weight",
+      "shape": [
+        144,
+        24,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.3.conv.1.0.weight",
+      "shape": [
+        144,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.3.conv.2.weight",
+      "shape": [
+        24,
+        144,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.4.conv.0.0.weight",
+      "shape": [
+        144,
+        24,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.4.conv.1.0.weight",
+      "shape": [
+        144,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.4.conv.2.weight",
+      "shape": [
+        32,
+        144,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.5.conv.0.0.weight",
+      "shape": [
+        192,
+        32,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.5.conv.1.0.weight",
+      "shape": [
+        192,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.5.conv.2.weight",
+      "shape": [
+        32,
+        192,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.6.conv.0.0.weight",
+      "shape": [
+        192,
+        32,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.6.conv.1.0.weight",
+      "shape": [
+        192,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.6.conv.2.weight",
+      "shape": [
+        32,
+        192,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.7.conv.0.0.weight",
+      "shape": [
+        192,
+        32,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.7.conv.1.0.weight",
+      "shape": [
+        192,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.7.conv.2.weight",
+      "shape": [
+        64,
+        192,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.8.conv.0.0.weight",
+      "shape": [
+        384,
+        64,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.8.conv.1.0.weight",
+      "shape": [
+        384,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.8.conv.2.weight",
+      "shape": [
+        64,
+        384,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.9.conv.0.0.weight",
+      "shape": [
+        384,
+        64,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.9.conv.1.0.weight",
+      "shape": [
+        384,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.9.conv.2.weight",
+      "shape": [
+        64,
+        384,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.10.conv.0.0.weight",
+      "shape": [
+        384,
+        64,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.10.conv.1.0.weight",
+      "shape": [
+        384,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.10.conv.2.weight",
+      "shape": [
+        64,
+        384,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.11.conv.0.0.weight",
+      "shape": [
+        384,
+        64,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.11.conv.1.0.weight",
+      "shape": [
+        384,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.11.conv.2.weight",
+      "shape": [
+        96,
+        384,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.12.conv.0.0.weight",
+      "shape": [
+        576,
+        96,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.12.conv.1.0.weight",
+      "shape": [
+        576,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.12.conv.2.weight",
+      "shape": [
+        96,
+        576,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.13.conv.0.0.weight",
+      "shape": [
+        576,
+        96,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.13.conv.1.0.weight",
+      "shape": [
+        576,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.13.conv.2.weight",
+      "shape": [
+        96,
+        576,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.14.conv.0.0.weight",
+      "shape": [
+        576,
+        96,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.14.conv.1.0.weight",
+      "shape": [
+        576,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.14.conv.2.weight",
+      "shape": [
+        160,
+        576,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.15.conv.0.0.weight",
+      "shape": [
+        960,
+        160,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.15.conv.1.0.weight",
+      "shape": [
+        960,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.15.conv.2.weight",
+      "shape": [
+        160,
+        960,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.16.conv.0.0.weight",
+      "shape": [
+        960,
+        160,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.16.conv.1.0.weight",
+      "shape": [
+        960,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.16.conv.2.weight",
+      "shape": [
+        160,
+        960,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.17.conv.0.0.weight",
+      "shape": [
+        960,
+        160,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.17.conv.1.0.weight",
+      "shape": [
+        960,
+        1,
+        3,
+        3
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.17.conv.2.weight",
+      "shape": [
+        320,
+        960,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "features.18.0.weight",
+      "shape": [
+        1280,
+        320,
+        1,
+        1
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    },
+    {
+      "tensor": "classifier.1.weight",
+      "shape": [
+        10,
+        1280
+      ],
+      "num_scales": 0,
+      "scale_axis": null
+    }
+  ],
+  "validation": {
+    "val_accuracy_percent": 90.62,
+    "val_correct": 4531,
+    "val_total": 5000,
+    "val_cross_entropy": 0.2968098770141602,
+    "meets_delta_clean": 0
+  },
+  "selftests": [
+    {
+      "test": "fp8_e5m2: 6 NaN words, 2 infinities (0x7C, 0xFC), max finite 57344, min positive 2^-16, min normal 2^-14",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e5m2: decode->encode returns the same word for all 248 finite words",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e5m2: values above 57344 saturate to +-57344 (0x7B / 0xFB), never to inf or NaN",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e5m2: all 256 decoded values equal torch.float8_e5m2",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "fp8_e5m2: encoder rounding equals torch.float8_e5m2 casting (200k random values + all exact ties)",
+      "passed": true,
+      "detail": "0 mismatches"
+    }
+  ],
+  "selftests_all_passed": true,
+  "int_scale_policy": {
+    "primary": "per_tensor",
+    "comparison": "per_channel",
+    "note": "per-tensor and per-output-channel results are never mixed: every table row carries the granularity in its variant label and a role (primary | comparison). Protocol rule: if the previous JFAMP implementation used another policy than per-output-channel it is retained for both datasets and documented; the ResNet-18 implementation used per-tensor."
+  },
+  "source_sha256": {
+    "src/fr/e4m11.py": "1d7f1c7389e6641c6ddaf234abd1369189be87ce3e090e801760677d683d9ece",
+    "src/fr/formats8.py": "4fdbbc0c403e9fc7b029013eaceb532dbbfad6b959a0d04adfde376765686acd",
+    "src/fr/stage2.py": "2c9e4ce88a69a3625ddae68a4d42b512e0e56cc6497a84ca83f44510b2921fe9",
+    "src/fr/sqnr.py": "a57a93edc3680230ac6c5ff702b24da12008761804f07b8b17f49ac723ebec3d",
+    "src/fr/model.py": "d81194d80afdb53cfe1f49c57e54033e5f759c1a2b5f52c3f74d2078868d6937",
+    "src/fr/baseline_profile.py": "3bced5d412d0a8ce99a8a15d7e7e3c535ef2776dd69d38852fc81e21600506ee",
+    "scripts/stage2_quantize.py": "23988e036b87fffa23110fc865539e893a1bb8e4fa69cb16b4f2954bc0c13b00"
+  },
+  "git": {
+    "commit": "8173119046b4a3dffe8ed762f41e5e0fd2c45e23",
+    "dirty": true
+  },
+  "frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561"
+}
