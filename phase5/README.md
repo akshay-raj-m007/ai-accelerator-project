@@ -4,7 +4,7 @@ Reference: `JFAMP_ResNet18_CIFAR10_Experimental_Flow.pdf` Section 7 and the J-FA
 [phase3](../phase3/README.md), [phase4](../phase4/README.md). Decisions that fix the open points: [DECISIONS.md](DECISIONS.md). Analysis of the quantization penalty: [Q_ANALYSIS.md](Q_ANALYSIS.md).
 
 Status: **round 1** (datatype-only, first R definition) is complete and in `reports/scratch/jfamp/optimization_round1/` ([RESULTS.md](RESULTS.md)). **Round 2** (declared fault distribution,
-exposure-weighted R, scale-word second metric, measured protection `scale_tmr`, agreed constraints) is implemented, unit-tested and dry-run locally; **its GPU runs are pending**.
+exposure-weighted R, scale-word second metric, measured protection `scale_tmr`, agreed constraints) was run on the GPU machine (2026-11-12) and is in `reports/scratch/jfamp/optimization/` ([RESULTS_ROUND2.md](RESULTS_ROUND2.md)). **Not yet done:** freezing one assignment (`--finalize`) and the single test-set evaluation.
 
 **Labelling rule.** The `p = none` subset of the candidate table is the DATATYPE-ONLY reliability-aware analysis. A result is called a measured joint datatype-protection result only if the
 frozen assignment contains the implemented and measured protection `scale_tmr` (INT scale word stored 3x, bit-wise majority vote). No other protection is claimed.
