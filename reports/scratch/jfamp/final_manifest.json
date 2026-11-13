@@ -1,7 +1,7 @@
 {
  "model_tag": "resnet18_cifar10",
  "base": "reports/scratch/jfamp",
- "git_commit_of_this_script": "b3ad65095d2154050dac3b424e5354e6466c48f8",
+ "git_commit_of_this_script": "90367b9dee8d513b8fa02e56ba5536c5c71c92ea",
  "inputs_sha256": {
   "baseline/baseline_manifest.json": "dd88b76e6ec61acf5b85cf5bae012501ec4671c9466a432322b5787e21c5ef5b",
   "baseline/baseline_metrics.json": "8a86dca0126bb1e7c2a6ffcd0d0c04e77fea3830170b3e83a1b220829096ac73",
@@ -53,14 +53,14 @@
   "quantization/storage_summary.csv": "b8e328c24e2360924f4c922e5be732a01bb69549721834752fd380366e8e8c2f"
  },
  "outputs_sha256": {
-  "final_tables/resnet18_cifar10_format_comparison.csv": "744b5f4cfa0d1f0a7a4a6d0828acc31741d39f155b8d3b21ad52250a0595ba4b",
-  "final_tables/resnet18_cifar10_fault_robustness.csv": "bb5ec5bc2e4ab12471ea9a69f527acdb1ea5deee3eb1a9143e20e0f440564235",
-  "final_tables/resnet18_cifar10_layer_sensitivity.csv": "f46c0bc6fae4fcb8ecd4259f174d1718d4e04d3809a430f3214b63618ae1c21e",
-  "final_tables/resnet18_cifar10_risk_alignment.csv": "7cd2f1d9c9bd631d0eab7e84a2305c31d7dc9adbd5d20957bc1fd7417f7834c9",
-  "final_tables/resnet18_cifar10_protection_pairs.csv": "88f0981eb7f976c0e4c62dc567991cd6241196ee4a36d3ab016ebbea5871ef4f",
-  "final_tables/resnet18_cifar10_validation_vs_test.csv": "acb4d97b88b992bf5ac4d1ac01a5d2d733461bd30deb63d5582a680a7eb4e4a1",
-  "final_tables/resnet18_cifar10_tradeoff_assignments.csv": "3eef9068fe80b010fb1041f8fde2b6c8a4711e99a66101dc6621bec776787dc8",
-  "final_summary.md": "35731dd7489bfbef25b54aed465e2f94199551bb9207cc07a868568012bfc2fb"
+  "final_tables/resnet18_cifar10_format_comparison.csv": "734c0f749b91d72af63a0a6df76f60369be2a60033dde8846ba20067889afb45",
+  "final_tables/resnet18_cifar10_fault_robustness.csv": "49c0102098722c9165048b09536f6d8803e0b3e299114ce9d902063df4791c50",
+  "final_tables/resnet18_cifar10_layer_sensitivity.csv": "33962de36a5fa433fbcb504c15d5305cf790c7a94754f73c81137b9917fd4cf8",
+  "final_tables/resnet18_cifar10_risk_alignment.csv": "8a5153b0d06c2d6b2ada6f738d40e697a42f3e4c343aaf8b5ecb1db8c65f87d2",
+  "final_tables/resnet18_cifar10_protection_pairs.csv": "fd919703b4f9a9824317c1f27209d5c4f53e639798fbd8a29571412c6d7db690",
+  "final_tables/resnet18_cifar10_validation_vs_test.csv": "f0e891cf9de3c52d6088afce7f668540b093dba9addbfb4d45546cba978b455d",
+  "final_tables/resnet18_cifar10_tradeoff_assignments.csv": "676d877177cb46b885b9f77bf2a1b46ea15150b4c58fbf607ff1084fea87ecd0",
+  "final_summary.md": "1818b67e990b2d18bdc2e6ab0f565372d8392526675b6b98a3fd9695519badc1"
  },
  "note": "figure PNGs are listed in final_summary.md; byte-identical PNGs are not guaranteed across matplotlib versions, the tables and the summary are"
 }

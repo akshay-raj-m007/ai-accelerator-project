@@ -60,7 +60,7 @@ def wcsv(path, rows, fields=None):
     path.parent.mkdir(parents=True, exist_ok=True)
     fields = fields or list(rows[0])
     with open(path, "w", newline="", encoding="utf8") as fh:
-        w = csv.DictWriter(fh, fieldnames=fields)
+        w = csv.DictWriter(fh, fieldnames=fields, lineterminator="\n")
         w.writeheader()
         w.writerows(rows)
     print("wrote", path)
@@ -793,7 +793,8 @@ def main():
 
     md = summary(D, TAG, T1, FT, A, P, V, TR, outs)
     sp = base / "final_summary.md"
-    sp.write_text(md, encoding="utf8")
+    with open(sp, "w", encoding="utf8", newline="\n") as fh:
+        fh.write(md)
     print("wrote", sp)
 
     inputs = sorted(p for sub in ("baseline", "layer_profile", "quantization", "fault_injection", "fault_screening", "optimization") for p in (base / sub).glob("*") if p.is_file())
@@ -805,7 +806,8 @@ def main():
                 "inputs_sha256": {p.relative_to(base).as_posix(): sha256(p) for p in inputs},
                 "outputs_sha256": {p.relative_to(base).as_posix(): sha256(p) for p in tab_paths + [sp]},
                 "note": "figure PNGs are listed in final_summary.md; byte-identical PNGs are not guaranteed across matplotlib versions, the tables and the summary are"}
-    (base / "final_manifest.json").write_text(json.dumps(manifest, indent=1), encoding="utf8")
+    with open(base / "final_manifest.json", "w", encoding="utf8", newline="\n") as fh:
+        fh.write(json.dumps(manifest, indent=1) + "\n")
     print("wrote", base / "final_manifest.json")
 
 
