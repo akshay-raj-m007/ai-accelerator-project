@@ -26,7 +26,7 @@ import torch.nn as nn
 from . import data as fdata
 from .config import Config
 from .evaluate import evaluate
-from .model import build_resnet18_cifar, load_checkpoint, state_dict_of
+from .model import build_model, load_checkpoint, load_imagenet_weights, state_dict_of
 from .utils import dump_json, env_info, git_info, resolve_device, seed_everything
 
 log = logging.getLogger("fr.train")
@@ -102,6 +102,8 @@ def _config_from_saved(saved: dict, current: Config) -> Config:
 
 def train(cfg: Config) -> dict:
     device = resolve_device(cfg.device)
+    if cfg.init == "imagenet" and cfg.arch != "mobilenetv2_cifar":
+        raise ValueError("init=imagenet is implemented for arch=mobilenetv2_cifar only")
     ckpt_dir, res_dir = cfg.ckpt_dir(), cfg.results_dir()
     ckpt_dir.mkdir(parents=True, exist_ok=True)
     _setup_logging(res_dir)
@@ -137,10 +139,14 @@ def train(cfg: Config) -> dict:
     if iters_per_epoch == 0:
         raise ValueError("Training loader is empty (train_subset < batch_size?)")
 
-    model = build_resnet18_cifar(10)
+    model = build_model(cfg.arch, 10)
+    pretrained_source = None
     if resume_ckpt is None and cfg.init == "checkpoint":
         model.load_state_dict(state_dict_of(init_ckpt), strict=True)
         log.info("Initialised from %s (fine-tuning)", cfg.init_ckpt_path())
+    elif resume_ckpt is None and cfg.init == "imagenet":
+        pretrained_source = load_imagenet_weights(model, cfg.pretrained_weights, cfg.init_checkpoint)
+        log.info("Initialised from ImageNet weights (fine-tuning, classifier re-initialised): %s", pretrained_source)
     model.to(device)
 
     optimizer = torch.optim.SGD(model.parameters(), lr=cfg.lr, momentum=cfg.momentum,
@@ -153,7 +159,7 @@ def train(cfg: Config) -> dict:
     criterion = nn.CrossEntropyLoss(label_smoothing=cfg.label_smoothing)
 
     config_blob = {**cfg.to_dict(), "normalization": fdata.normalization_to_config(norm),
-                   "arch": "resnet18_cifar", "warmup_iters": warm_iters,
+                   "arch": cfg.arch, "pretrained_source": pretrained_source, "warmup_iters": warm_iters,
                    "iters_per_epoch": iters_per_epoch}
     start_epoch, best_val, best_loss = 0, -1.0, math.inf
     rows = []
@@ -227,7 +233,7 @@ def train(cfg: Config) -> dict:
     test_loader = fdata.get_test_loader(cfg.data_path(), norm, cfg.eval_batch_size,
                                         cfg.num_workers, cfg.test_subset, pin)
     final = evaluate(model, test_loader, device)
-    best_model = build_resnet18_cifar(10)
+    best_model = build_model(cfg.arch, 10)
     best_ckpt = load_checkpoint(best_path)
     best_model.load_state_dict(best_ckpt["model_state_dict"], strict=True)
     best = evaluate(best_model, test_loader, device)

@@ -107,3 +107,97 @@ def test_fp8_e4m3fn_flushes_tiny_weights_and_reports_it():
     w = np.array([1e-4, -1e-4, 0.5, 0.0], dtype=np.float32)      # 1e-4 < 2^-10 / ... rounds to zero
     r = S2.roundtrip_row(w, c.decode(c.encode(w)))
     assert r["zeroed_from_nonzero"] == 2
+
+
+# ------------------------------------------------------------------------------------ MobileNetV2 protocol additions
+def test_protocol_format_set_order_roles_and_policy():
+    c = S2.make_codecs_protocol("per_tensor")
+    assert list(c) == ["fp16", "bf16", "e4m11_sn", "fp8_e4m3fn", "fp8_e5m2", "int8_pt", "int4_pt", "int8_pc", "int4_pc", "e4m11_ftz"]
+    assert [k for k, v in c.items() if v.role == "primary"] == list(c)[:7]
+    assert [k for k, v in c.items() if v.role == "comparison"] == ["int8_pc", "int4_pc", "e4m11_ftz"]
+    p = S2.make_codecs_protocol("per_channel", include_comparison=False)
+    assert list(p) == ["fp16", "bf16", "e4m11_sn", "fp8_e4m3fn", "fp8_e5m2", "int8_pc", "int4_pc"] and all(v.role == "primary" for v in p.values())
+    assert set(S2.codec_registry()) >= set(c)
+    with pytest.raises(ValueError):
+        S2.make_codecs_protocol("per_row")
+    assert list(S2.make_codecs()) == ["e4m11_sn", "fp16", "fp8_e4m3fn", "int8_pt", "int4_pt", "e4m11_ftz"]    # ResNet-18 set unchanged
+
+
+@pytest.fixture(scope="module")
+def mw():
+    """A few real MobileNetV2 weight tensors: stem, depthwise, pointwise, classifier."""
+    from fr.model import build_mobilenetv2_cifar
+    torch.manual_seed(0)
+    net = build_mobilenetv2_cifar(10).eval()
+    names = ["features.0.0", "features.2.conv.1.0", "features.2.conv.2", "features.18.0", "classifier.1"]
+    mods = dict(quantizable_modules(net))
+    return {f"{n}.weight": mods[n].weight.detach().numpy().astype(np.float32) for n in names}
+
+
+def test_all_seven_formats_roundtrip_and_sizes(mw):
+    codecs = S2.make_codecs_protocol("per_channel")
+    for name, w in mw.items():
+        for key, c in codecs.items():
+            enc = c.encode(w)
+            dec = c.decode(enc)
+            assert dec.shape == w.shape and dec.dtype == np.float32 and np.isfinite(dec).all(), (name, key)
+            assert S2.roundtrip_row(w, dec)["sqnr_db"] > 3.0, (name, key)
+    w = mw["features.2.conv.1.0.weight"]                                    # depthwise [144, 1, 3, 3] -> 144 channels of 9 weights
+    n, ch = w.size, w.shape[0]
+    sizes = {k: (c.encode(w)["words"].nbytes, 0 if c.encode(w)["scale"] is None else c.encode(w)["scale"].nbytes) for k, c in codecs.items()}
+    assert sizes["bf16"] == (2 * n, 0) and sizes["fp8_e5m2"] == (n, 0) and sizes["fp16"] == (2 * n, 0)
+    assert sizes["int8_pc"] == (n, 4 * ch) and sizes["int4_pc"] == ((n + 1) // 2, 4 * ch)
+
+
+def test_per_channel_scales_follow_axis_0(mw):
+    c = S2.IntPerChannel(8)
+    w = mw["features.2.conv.1.0.weight"]
+    enc = c.encode(w)
+    assert enc["scale"].shape == (w.shape[0],)
+    np.testing.assert_allclose(enc["scale"], np.abs(w.reshape(w.shape[0], -1)).max(axis=1) / 127, rtol=1e-6)
+    # a per-channel scale never loses to the per-tensor one on a tensor whose channels have very different ranges
+    w2 = w.copy()
+    w2[0] *= 50.0
+    pc = S2.roundtrip_row(w2, c.decode(c.encode(w2)))["sqnr_db"]
+    pt = S2.roundtrip_row(w2, S2.IntPerTensor(8).decode(S2.IntPerTensor(8).encode(w2)))["sqnr_db"]
+    assert pc > pt
+    # flipping one bit of channel k's scale only changes channel k's decoded weights
+    bad = dict(enc, scale=enc["scale"].copy())
+    bad["scale"].view(np.uint32)[3] ^= np.uint32(1 << 22)
+    diff = (c.decode(bad) != c.decode(enc)).reshape(w.shape[0], -1).any(axis=1)
+    assert np.flatnonzero(diff).tolist() == [3]
+
+
+def test_reference_decode_matches_codecs_exactly(mw):
+    for key, c in S2.make_codecs_protocol("per_channel").items():
+        for name, w in mw.items():
+            ref = S2.reference_decode(key, w)
+            if key.startswith("e4m11"):
+                assert ref is None
+            else:
+                assert np.array_equal(ref, c.decode(c.encode(w))), (key, name)
+    w = mw["features.18.0.weight"]
+    for key in ("int8_pt", "int4_pt"):
+        c = S2.codec_registry()[key]
+        assert np.array_equal(S2.reference_decode(key, w), c.decode(c.encode(w)))
+
+
+def test_zero_rate_fields_and_pooling():
+    w = np.array([0.0, 1e-9, 0.5, -0.25], dtype=np.float32)
+    c = S2.FP8E5M2()                                         # 1e-9 < 2^-17 -> flushed to zero
+    row = S2.roundtrip_row(w, c.decode(c.encode(w)))
+    assert row["zero_count"] == 2 and row["fp32_zero_count"] == 1 and row["zeroed_from_nonzero"] == 1 and row["zero_fraction"] == 0.5
+    g = S2.pooled_row([row, row])
+    assert g["zero_count"] == 4 and g["zero_fraction"] == 0.5 and g["fp32_zero_count"] == 2
+
+
+def test_special_codes_are_reachable_only_through_decode():
+    b = S2.BF16()
+    dec = b.decode({"words": np.array([0x7F80, 0xFF80, 0x7FC0], dtype=np.uint16), "shape": (3,)})
+    assert np.isposinf(dec[0]) and np.isneginf(dec[1]) and np.isnan(dec[2])
+    e = S2.FP8E5M2().decode({"words": np.array([0x7C, 0xFC, 0x7D, 0x7B], dtype=np.uint8), "shape": (4,)})
+    assert np.isposinf(e[0]) and np.isneginf(e[1]) and np.isnan(e[2]) and e[3] == 57344.0
+    with pytest.raises(ValueError):
+        b.encode(np.array([np.inf], dtype=np.float32))
+    with pytest.raises(ValueError):
+        S2.FP8E5M2().encode(np.array([np.nan], dtype=np.float32))

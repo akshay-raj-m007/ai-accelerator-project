@@ -14,7 +14,7 @@ import numpy as np
 import torch
 import torch.nn as nn
 
-from .model import quantizable_modules
+from .model import classifier_linear, quantizable_modules, stem_conv
 
 PERCENTILES = (50.0, 90.0, 99.0, 99.9)
 
@@ -32,13 +32,38 @@ def sha256_ints(values: Sequence[int]) -> str:
     return hashlib.sha256(np.asarray(list(values), dtype=np.int64).tobytes()).hexdigest()
 
 
+# torchvision MobileNetV2 (width 1.0): blocks features.1 .. features.17 form 7 stages (t, c, n, s) of 1,2,3,4,3,3,1 blocks
+_MBV2_STAGE_OF_BLOCK = {1: 1, 2: 2, 3: 2, 4: 3, 5: 3, 6: 3, 7: 4, 8: 4, 9: 4, 10: 4, 11: 5, 12: 5, 13: 5,
+                        14: 6, 15: 6, 16: 6, 17: 7}
+
+
 def layer_group(name: str) -> str:
-    """Stem / layer1..layer4 / classifier for ResNet-18 module paths."""
+    """Architectural group of a module path.
+
+    ResNet-18: stem / layer1..layer4 / classifier.  MobileNetV2 (torchvision names): stem (features.0), stage1..stage7
+    (inverted-residual blocks features.1..17 in the 7 torchvision stages), head (features.18, the final 1x1 conv),
+    classifier."""
     if name.startswith("layer"):
         return name.split(".")[0]
-    if name.startswith("fc") or name.startswith("linear"):
+    if name.startswith("fc") or name.startswith("linear") or name.startswith("classifier"):
         return "classifier"
+    if name.startswith("features."):
+        idx = int(name.split(".")[1])
+        if idx == 0:
+            return "stem"
+        return f"stage{_MBV2_STAGE_OF_BLOCK[idx]}" if idx in _MBV2_STAGE_OF_BLOCK else "head"
     return "stem"
+
+
+def layer_role(name: str, m: nn.Module) -> str:
+    """Kind of layer: stem | depthwise | pointwise | conv3x3 | classifier (depthwise: groups == in_channels > 1)."""
+    if isinstance(m, nn.Linear):
+        return "classifier"
+    if layer_group(name) == "stem":
+        return "stem"
+    if m.groups > 1 and m.groups == m.in_channels:
+        return "depthwise"
+    return "pointwise" if tuple(m.kernel_size) == (1, 1) else "conv3x3"
 
 
 # ------------------------------------------------------------------------------------------ Stage 0
@@ -80,9 +105,9 @@ def checkpoint_checks(model: nn.Module, ckpt: dict, state_dict: dict, expected: 
     mods = quantizable_modules(model)
     n_quant = sum(m.weight.numel() for _, m in mods)
     n_total = sum(p.numel() for p in model.parameters())
-    out_dim = model.fc.out_features if hasattr(model, "fc") else None
+    out_dim = classifier_linear(model).out_features
     maxpool = getattr(model, "maxpool", None)
-    stem = model.conv1
+    stem = stem_conv(model)
     c = {"strict_load": not (missing or unexpected or mismatched),
          "missing_keys": missing, "unexpected_keys": unexpected, "shape_mismatches": mismatched,
          "output_dim": out_dim, "output_dim_is_10": out_dim == 10,
@@ -119,7 +144,9 @@ def layer_inventory(model: nn.Module) -> List[dict]:
                "weight_abs_max": float(a.max()),
                "fp32_bytes": int(m.weight.numel() * m.weight.element_size()),
                "bias_bytes": int(m.bias.numel() * m.bias.element_size()) if m.bias is not None else 0,
-               "layer_group": layer_group(name)}
+               "layer_group": layer_group(name), "layer_role": layer_role(name, m),
+               "out_channels": int(m.weight.shape[0]), "groups": int(getattr(m, "groups", 1)),
+               "zero_weights_fp32": int((w == 0).sum())}
         for p in PERCENTILES:
             row[f"abs_p{p:g}"] = float(np.percentile(a, p))
         rows.append(row)

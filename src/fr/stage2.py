@@ -10,6 +10,12 @@ Primary formats (INT3 is deferred, runbook 4.1):
   int4_pt    INT4       symmetric, per-tensor, packed two codes per byte
 Comparison only (supported by the existing codec, runbook 4.2):
   e4m11_ftz  E4M11-FTZ  same layout, subnormals flushed to zero (``e4m11`` mode "paper")
+Added for the MobileNetV2 protocol (JFAMP_MobileNetV2_CIFAR10_CIFAR100_Experimental_Protocol, Section 3):
+  bf16       BF16       bfloat16, 1+8+7 bits, bias 127, round-to-nearest-even, saturating
+  fp8_e5m2   FP8 E5M2   1+5+2 bits, bias 15, subnormals enabled, IEEE-style inf/NaN codes (never produced), saturating
+  int8_pc    INT8-PC    symmetric, one float32 scale per OUTPUT channel (axis 0 of the weight tensor)
+  int4_pc    INT4-PC    same, packed two codes per byte
+  (int8_pt / int4_pt are the per-tensor variants above; which policy is the primary one is a manifest field.)
 
 Every codec encodes ONE tensor independently from the original FP32 weights and decodes from the stored words only:
 
@@ -32,8 +38,12 @@ import numpy as np
 from . import e4m11, formats8
 from .sqnr import sqnr_db
 
+CODEC_VERSION = "jfamp-codecs-2.0"            # 1.x: ResNet-18 run (5 formats + FTZ); 2.0: + BF16, FP8 E5M2, per-channel INT
+
 FP16_MAX = 65504.0
 FP8FN_MAX = 448.0
+BF16_MAX = float(np.float32((2.0 - 2.0 ** -7) * 2.0 ** 127))     # 3.3895313892515355e+38, word 0x7F7F
+FP8E5M2_MAX = 57344.0                                           # 1.75 * 2^15, word 0x7B
 
 
 # ---------------------------------------------------------------------------------------------- packing (INT4)
@@ -148,6 +158,81 @@ class FP16(Codec):
                 "codec_source": "src/fr/stage2.py (NumPy float16)"}
 
 
+class BF16(Codec):
+    key, label, bits = "bf16", "BF16 (bfloat16, E8M7)", 16
+
+    def encode(self, w):
+        w = _finite(w, self.key)
+        clipped = int((np.abs(w) > BF16_MAX).sum())
+        x = np.ascontiguousarray(np.clip(w, -BF16_MAX, BF16_MAX).astype(np.float32).reshape(-1))
+        u = x.view(np.uint32)
+        # round-to-nearest-even on the 16 discarded bits: add 0x7FFF plus the lowest kept bit, then truncate.
+        # |x| <= BF16_MAX (word 0x7F7F) so the addition cannot carry into the all-ones exponent.
+        words = ((u + (((u >> np.uint32(16)) & np.uint32(1)) + np.uint32(0x7FFF))) >> np.uint32(16)).astype(np.uint16)
+        return {"words": words, "scale": None, "shape": tuple(w.shape), "n": int(w.size), "n_clipped": clipped}
+
+    def decode(self, enc):
+        u = np.ascontiguousarray(enc["words"], dtype=np.uint16).astype(np.uint32) << np.uint32(16)
+        return u.view(np.float32).reshape(enc["shape"])
+
+    def config(self):
+        return {"variant": self.label, "bit_layout": "S(1) EEEEEEEE(8) M(7), uint16 = upper half of the IEEE float32 word",
+                "exponent_bias": 127,
+                "subnormal_behavior": "enabled: es=0 stores m * 2^-133 (same exponent range as float32)",
+                "rounding": "round-to-nearest, ties to even (on the 16 discarded float32 mantissa bits)",
+                "saturation_clipping": f"|w| clipped to +-{BF16_MAX:.7e} (word 0x7F7F) before rounding (no overflow to inf)",
+                "scale": "none", "zero_point": "none",
+                "nan_inf": "encoder rejects non-finite input; the all-ones exponent (inf/NaN) is IEEE-reserved and is decoded "
+                           "as inf/NaN (reachable only through bit flips)",
+                "granularity": "n/a (float format)", "calibration": "none (data-free)",
+                "storage": "actual encoded uint16 words; decoded to FP32 for evaluation (weight-only)",
+                "codec_source": "src/fr/stage2.py (integer rounding of the float32 bit pattern); cross-checked against "
+                                "torch.bfloat16 in the self-tests"}
+
+
+def _fp8e5m2_magnitudes() -> np.ndarray:
+    w = np.arange(124)                                    # words 0..123 (es 0..30); 124 = inf, 125..127 = NaN
+    e, m = w >> 2, w & 3
+    return np.where(e == 0, m * 2.0 ** -16, (1.0 + m / 4.0) * 2.0 ** (e - 15.0))
+
+
+_T_E5M2 = _fp8e5m2_magnitudes()
+_DEC_E5M2 = np.concatenate([_T_E5M2, [np.inf, np.nan, np.nan, np.nan]])           # index = word & 127
+
+
+class FP8E5M2(Codec):
+    key, label, bits = "fp8_e5m2", "FP8 E5M2 (bias 15, max 57344)", 8
+
+    def encode(self, w):
+        w = _finite(w, self.key)
+        x = w.astype(np.float64).reshape(-1)
+        idx = formats8.fp_encode_magnitude(x, _T_E5M2)
+        words = ((np.signbit(x).astype(np.uint8) << 7) | idx.astype(np.uint8)).astype(np.uint8)
+        return {"words": words, "scale": None, "shape": tuple(w.shape), "n": int(w.size),
+                "n_clipped": int((np.abs(x) > FP8E5M2_MAX).sum())}
+
+    def decode(self, enc):
+        u = np.asarray(enc["words"]).astype(np.int64)
+        val = _DEC_E5M2[u & 127]
+        return np.where(u >> 7 == 1, -val, val).astype(np.float32).reshape(enc["shape"])
+
+    def config(self):
+        return {"variant": self.label, "bit_layout": "S(1) EEEEE(5) MM(2), word = (s<<7)|(es<<2)|m, uint8",
+                "exponent_bias": 15,
+                "subnormal_behavior": "enabled: es=0 stores m * 2^-16 (smallest nonzero magnitude 2^-16 = 1.526e-05)",
+                "finite_nan_handling": "IEEE-style special codes: es=31,m=0 -> +-inf (0x7C / 0xFC); es=31,m!=0 -> NaN "
+                                       "(0x7D-0x7F, 0xFD-0xFF); the other 248 words are finite; max finite 57344 (0x7B); "
+                                       "min normal 2^-14",
+                "rounding": "round-to-nearest, ties to the even word (= IEEE round-to-nearest-even)",
+                "saturation_clipping": "|w| > 57344 saturates to +-57344 (the encoder never produces inf or NaN)",
+                "scale": "none (UNSCALED: weights smaller than 2^-17 round to zero)", "zero_point": "none",
+                "nan_inf": "encoder rejects non-finite input; the decoder maps the special codes to inf / NaN (reachable "
+                           "only through bit flips)",
+                "granularity": "n/a (float format)", "calibration": "none (data-free)",
+                "storage": "actual encoded uint8 words; decoded to FP32 for evaluation (weight-only)",
+                "codec_source": "src/fr/stage2.py (table-based); cross-checked against torch.float8_e5m2 in the self-tests"}
+
+
 def _fp8fn_magnitudes() -> np.ndarray:
     w = np.arange(127)                                    # words 0..126 (127 = NaN)
     e, m = w >> 3, w & 7
@@ -233,11 +318,94 @@ class IntPerTensor(Codec):
         return c
 
 
+class IntPerChannel(Codec):
+    """Symmetric INT with one float32 scale per OUTPUT channel: axis 0 of the weight tensor
+    (Conv2d [out, in/groups, kh, kw]; Linear [out, in]). For a depthwise convolution [C, 1, kh, kw] a "channel" is
+    one filter (kh*kw weights)."""
+    has_scale = True
+
+    def __init__(self, bits: int):
+        self.bits = bits
+        self.key = f"int{bits}_pc"
+        self.label = f"INT{bits} (symmetric, per-output-channel)"
+
+    def encode(self, w):
+        w = _finite(w, self.key)
+        if w.ndim < 2:
+            raise ValueError("per-output-channel INT needs a weight tensor with a leading output-channel axis")
+        words, scale = formats8.int_encode(w, self.bits, per_channel=True)
+        raw = np.rint(w.reshape(w.shape[0], -1).astype(np.float64) / scale.astype(np.float64)[:, None])
+        clipped = int(((raw < -(1 << (self.bits - 1))) | (raw > (1 << (self.bits - 1)) - 1)).sum())
+        stored = pack_nibbles(words) if self.bits == 4 else words
+        return {"words": stored, "scale": np.asarray(scale, dtype=np.float32).reshape(-1), "shape": tuple(w.shape),
+                "n": int(w.size), "n_clipped": clipped}
+
+    def decode(self, enc):
+        words = unpack_nibbles(enc["words"], enc["n"]) if self.bits == 4 else enc["words"]
+        return formats8.int_decode(words, enc["scale"], enc["shape"], self.bits)
+
+    def config(self):
+        b = self.bits
+        qmax = (1 << (b - 1)) - 1
+        return {"variant": self.label,
+                "bit_layout": f"{b}-bit two's complement signed integer code" + (
+                    "; two codes per byte over the row-major flattened tensor (byte boundaries may fall between channels), "
+                    "element 2j in the LOW nibble (bits 0-3) of byte j, element 2j+1 in the HIGH nibble (bits 4-7); an odd "
+                    "total element count is padded with one zero nibble" if b == 4 else "; one code per byte"),
+                "mapping": "symmetric (paper Eq. 3)", "zero_point": "none (symmetric, zero maps to zero)",
+                "scale": f"s_c = max|w_c| / {qmax} per output channel c, stored as one float32 per channel (4 bytes each); "
+                         "an all-zero channel gets s_c = 1",
+                "granularity": "per-output-channel", "scale_axis": "0 (output channels): Conv2d weight [out, in/groups, kh, kw], "
+                                                                   "Linear weight [out, in]",
+                "scale_computed": "per channel", "calibration": "max-abs of each channel's weights; data-free",
+                "rounding": "round-to-nearest, ties to even (np.rint) of w/s computed in float64 with the float32 scale",
+                "signed_range": f"[{-(1 << (b - 1))}, {qmax}] (clip); with s_c = max|w_c|/{qmax} the code -{1 << (b - 1)} is not reached",
+                "saturation_clipping": f"codes clipped to [{-(1 << (b - 1))}, {qmax}]",
+                "subnormal_behavior": "n/a", "nan_inf": "encoder rejects non-finite input; no NaN/Inf codes exist; a flipped "
+                                                       "float32 scale can be non-finite",
+                "storage": "actual encoded bytes" + (" (packed nibbles)" if b == 4 else "") +
+                           " + one float32 scale per output channel; decoded to FP32 for evaluation (weight-only)",
+                "codec_source": "src/fr/formats8.py (int_encode / int_decode, per_channel=True)" + (" + stage2.pack_nibbles" if b == 4 else "")}
+
+
 def make_codecs(include_comparison: bool = True) -> "OrderedDict[str, Codec]":
+    """The ResNet-18 run's format set (unchanged): E4M11-SN, FP16, FP8 E4M3FN, INT8-PT, INT4-PT (+ E4M11-FTZ)."""
     cs = [E4M11("subnormal"), FP16(), FP8E4M3FN(), IntPerTensor(8), IntPerTensor(4)]
     if include_comparison:
         cs.append(E4M11("paper"))
     return OrderedDict((c.key, c) for c in cs)
+
+
+PROTOCOL_PRIMARY_ORDER = ("fp16", "bf16", "e4m11_sn", "fp8_e4m3fn", "fp8_e5m2")
+INT_POLICIES = {"per_tensor": "pt", "per_channel": "pc"}
+
+
+def codec_registry() -> "OrderedDict[str, Codec]":
+    """Every codec this module knows, by key (used to rebuild the codecs named in a frozen manifest)."""
+    cs = [FP16(), BF16(), E4M11("subnormal"), FP8E4M3FN(), FP8E5M2(), IntPerTensor(8), IntPerTensor(4),
+          IntPerChannel(8), IntPerChannel(4), E4M11("paper")]
+    return OrderedDict((c.key, c) for c in cs)
+
+
+def make_codecs_protocol(int_policy: str = "per_tensor", include_comparison: bool = True) -> "OrderedDict[str, Codec]":
+    """The MobileNetV2 protocol's seven candidate formats in protocol order (FP16, BF16, E4M11-SN, FP8 E4M3FN, FP8 E5M2,
+    INT8, INT4); the INT scale granularity ``int_policy`` (per_tensor | per_channel) decides which INT pair is primary.
+    With ``include_comparison`` the other INT granularity (role "comparison", clearly labelled in every table) and
+    E4M11-FTZ are generated as well. Roles are set on the returned instances only."""
+    if int_policy not in INT_POLICIES:
+        raise ValueError(f"int_policy must be one of {sorted(INT_POLICIES)}")
+    reg = codec_registry()
+    sfx = INT_POLICIES[int_policy]
+    other = "pc" if sfx == "pt" else "pt"
+    keys = list(PROTOCOL_PRIMARY_ORDER) + [f"int8_{sfx}", f"int4_{sfx}"]
+    if include_comparison:
+        keys += [f"int8_{other}", f"int4_{other}", "e4m11_ftz"]
+    out = OrderedDict()
+    for k in keys:
+        c = reg[k]
+        c.role = "primary" if k in keys[:7] else "comparison"
+        out[k] = c
+    return out
 
 
 # ---------------------------------------------------------------------------------------------- round trip
@@ -253,7 +421,9 @@ def roundtrip_row(w: np.ndarray, w_hat: np.ndarray) -> dict:
             "max_abs_error": float(np.abs(e).max()), "relative_l2": math.sqrt(noise / sig) if sig > 0 else float("nan"),
             "sqnr_db": sqnr_db(sig, noise), "signal_power_sum": sig, "noise_power_sum": noise, "n": n,
             "decoded_nonfinite": nonfinite,
-            "zeroed_from_nonzero": int(((h64 == 0) & (w64 != 0)).sum())}
+            "zeroed_from_nonzero": int(((h64 == 0) & (w64 != 0)).sum()),
+            "zero_count": int((h64 == 0).sum()), "zero_fraction": float((h64 == 0).mean()),
+            "fp32_zero_count": int((w64 == 0).sum())}
 
 
 def pooled_row(parts: List[dict]) -> dict:
@@ -266,7 +436,9 @@ def pooled_row(parts: List[dict]) -> dict:
             "max_abs_error": max(p["max_abs_error"] for p in parts),
             "relative_l2": math.sqrt(noise / sig), "sqnr_db": sqnr_db(sig, noise), "signal_power_sum": sig,
             "noise_power_sum": noise, "n": n, "decoded_nonfinite": sum(p["decoded_nonfinite"] for p in parts),
-            "zeroed_from_nonzero": sum(p["zeroed_from_nonzero"] for p in parts)}
+            "zeroed_from_nonzero": sum(p["zeroed_from_nonzero"] for p in parts),
+            "zero_count": sum(p["zero_count"] for p in parts), "zero_fraction": sum(p["zero_count"] for p in parts) / n,
+            "fp32_zero_count": sum(p["fp32_zero_count"] for p in parts)}
 
 
 # ---------------------------------------------------------------------------------------------- storage
@@ -420,4 +592,108 @@ def run_codec_selftests() -> List[dict]:
     e4 = c4.encode(w4)
     R.append(_t("int4_pt: two's complement nibbles (-7 -> 0x9, 7 -> 0x7, 1 -> 0x1) packed as [0x79, 0x01]",
                 [int(v) for v in e4["words"]] == [0x79, 0x01], str([hex(int(v)) for v in e4["words"]])))
+
+    # ---- BF16
+    cb = BF16()
+    eb = cb.encode(np.array([1.0, -2.0, 3.4028235e38, 2.0 ** -133, 2.0 ** -149, -0.0], dtype=np.float32))
+    R.append(_t("bf16: 1.0 -> 0x3F80, -2.0 -> 0xC000, float32 max saturates to 0x7F7F, 2^-133 -> 0x0001 (smallest subnormal), "
+                "2^-149 rounds to 0, -0.0 -> 0x8000",
+                [int(v) for v in eb["words"]] == [0x3F80, 0xC000, 0x7F7F, 0x0001, 0x0000, 0x8000], str([hex(int(v)) for v in eb["words"]])))
+    tb = cb.encode(np.array([1 + 2.0 ** -8, 1 + 3 * 2.0 ** -8], dtype=np.float32))["words"]
+    R.append(_t("bf16: round-to-nearest-even on exact ties (1+2^-8 -> 0x3F80, 1+3*2^-8 -> 0x3F82)", [int(v) for v in tb] == [0x3F80, 0x3F82]))
+    allw16 = np.arange(65536, dtype=np.uint16)
+    finb = ((allw16 >> 7) & 0xFF) != 0xFF
+    decb = cb.decode({"words": allw16, "shape": (65536,)})
+    R.append(_t("bf16: the all-ones exponent gives 256 inf/NaN words (2 infinities, 254 NaN); the other 65,280 words are finite",
+                int((~finb).sum()) == 256 and int(np.isfinite(decb).sum()) == 65280 and int(np.isinf(decb).sum()) == 2))
+    R.append(_t("bf16: decode->encode returns the same word for every finite word (-0 and +0 included)",
+                np.array_equal(cb.encode(decb[finb])["words"], allw16[finb])))
+
+    # ---- FP8 E5M2
+    c5 = FP8E5M2()
+    dec5 = c5.decode({"words": allb, "shape": (256,)})
+    R.append(_t("fp8_e5m2: 6 NaN words, 2 infinities (0x7C, 0xFC), max finite 57344, min positive 2^-16, min normal 2^-14",
+                int(np.isnan(dec5).sum()) == 6 and set(np.where(np.isinf(dec5))[0].tolist()) == {0x7C, 0xFC}
+                and float(np.nanmax(dec5[np.isfinite(dec5)])) == 57344.0 and float(dec5[1]) == 2.0 ** -16 and float(dec5[4]) == 2.0 ** -14))
+    fin5 = np.isfinite(dec5)
+    R.append(_t("fp8_e5m2: decode->encode returns the same word for all 248 finite words",
+                np.array_equal(c5.encode(dec5[fin5])["words"], allb[fin5]) and int(fin5.sum()) == 248))
+    sat5 = c5.encode(np.array([1e9, -1e9], dtype=np.float32))["words"]
+    R.append(_t("fp8_e5m2: values above 57344 saturate to +-57344 (0x7B / 0xFB), never to inf or NaN", [int(v) for v in sat5] == [0x7B, 0xFB]))
+    try:
+        import torch
+        t5 = getattr(torch, "float8_e5m2", None)
+        tb16 = getattr(torch, "bfloat16", None)
+        if t5 is None or tb16 is None:
+            raise AttributeError
+        ref5 = torch.tensor(allb.astype(np.uint8)).view(t5).float().numpy()
+        R.append(_t("fp8_e5m2: all 256 decoded values equal torch.float8_e5m2",
+                    np.array_equal(np.nan_to_num(ref5, nan=-1.0, posinf=1e30, neginf=-1e30), np.nan_to_num(dec5, nan=-1.0, posinf=1e30, neginf=-1e30))))
+        x = np.exp(rng.uniform(math.log(2.0 ** -18), math.log(57344.0), 200000)).astype(np.float32) * rng.choice([-1, 1], 200000)
+        mids = (_T_E5M2[:-1] + _T_E5M2[1:]) / 2.0
+        x = np.concatenate([x, mids.astype(np.float32), -mids.astype(np.float32)])
+        mine = c5.encode(x)["words"]
+        theirs = torch.tensor(x).to(t5).view(torch.uint8).numpy()
+        R.append(_t("fp8_e5m2: encoder rounding equals torch.float8_e5m2 casting (200k random values + all exact ties)",
+                    np.array_equal(mine, theirs), f"{int((mine != theirs).sum())} mismatches"))
+        xb = np.concatenate([(rng.standard_normal(100000) * 0.01).astype(np.float32),
+                             np.exp(rng.uniform(math.log(1e-30), math.log(1e30), 100000)).astype(np.float32)])
+        R.append(_t("bf16: encoder equals torch.bfloat16 casting on 200k values (N(0, 0.01) and log-uniform 1e-30..1e30)",
+                    np.array_equal(cb.encode(xb)["words"], torch.tensor(xb).to(tb16).view(torch.int16).numpy().view(np.uint16))
+                    and np.array_equal(cb.decode(cb.encode(xb)), torch.tensor(xb).to(tb16).float().numpy())))
+    except (ImportError, AttributeError):
+        R.append(_t("fp8_e5m2 / bf16: cross-check with torch", False, "torch.float8_e5m2 / torch.bfloat16 not available"))
+
+    # ---- per-output-channel INT8 / INT4
+    for bits in (8, 4):
+        cp = IntPerChannel(bits)
+        qmax = (1 << (bits - 1)) - 1
+        w = (rng.standard_normal((6, 5, 1, 1)) * np.array([0.5, 0.01, 0.2, 1.0, 0.05, 0.3], dtype=np.float64)[:, None, None, None]).astype(np.float32)
+        w[2] = 0.0                                                    # an all-zero channel
+        ep = cp.encode(w)
+        s_ref = np.abs(w.reshape(6, -1)).max(axis=1) / qmax
+        s_ref[2] = 1.0
+        R.append(_t(f"int{bits}_pc: one float32 scale per output channel (axis 0) = max|w_c|/{qmax}; all-zero channel -> scale 1",
+                    ep["scale"].dtype == np.float32 and ep["scale"].shape == (6,) and np.allclose(ep["scale"], s_ref, rtol=1e-6, atol=0)
+                    and float(ep["scale"][2]) == 1.0))
+        q = np.clip(np.rint(w.reshape(6, -1).astype(np.float64) / ep["scale"].astype(np.float64)[:, None]), -(1 << (bits - 1)), qmax)
+        R.append(_t(f"int{bits}_pc: decode equals round(w/s_c)*s_c with codes in [{-(1 << (bits - 1))}, {qmax}]",
+                    np.allclose(cp.decode(ep).reshape(6, -1), q * ep["scale"][:, None], rtol=0, atol=1e-7) and q.min() >= -(1 << (bits - 1))))
+        R.append(_t(f"int{bits}_pc: every channel reaches the code +-{qmax} (its own maximum maps to full range)",
+                    all(np.abs(q[c]).max() == qmax for c in (0, 1, 3, 4, 5))))
+    ep3 = IntPerChannel(4).encode(np.linspace(-1, 1, 9, dtype=np.float32).reshape(3, 3))
+    R.append(_t("int4_pc: 9 elements -> 5 packed bytes (one zero padding nibble), 3 float32 scales (12 bytes)",
+                ep3["words"].nbytes == 5 and ep3["scale"].nbytes == 12))
     return R
+
+
+# ---------------------------------------------------------------------------------------------- independent reference
+def reference_decode(key: str, w: np.ndarray):
+    """Independent "simulated quantization" of one FP32 tensor (torch casts / plain NumPy integer arithmetic, no codec code).
+    Returns the decoded float32 array, or None when no independent reference exists (E4M11: covered by the exhaustive
+    word round-trip self-test)."""
+    import torch
+    w = np.asarray(w, dtype=np.float32)
+    t = torch.from_numpy(np.ascontiguousarray(w))
+    casts = {"fp16": (torch.float16, FP16_MAX), "bf16": (torch.bfloat16, BF16_MAX),
+             "fp8_e4m3fn": (getattr(torch, "float8_e4m3fn", None), FP8FN_MAX),
+             "fp8_e5m2": (getattr(torch, "float8_e5m2", None), FP8E5M2_MAX)}
+    if key in casts:
+        dt, mx = casts[key]
+        if dt is None:
+            return None
+        return t.clamp(-mx, mx).to(dt).to(torch.float32).numpy()
+    if key.startswith("int") and key[-3:] in ("_pt", "_pc"):
+        bits = int(key[3:key.index("_")])
+        qmax = (1 << (bits - 1)) - 1
+        if key.endswith("_pt"):
+            am = np.float32(np.abs(w).max(initial=0.0))
+            s = np.float32(1.0) if am == 0 else np.float32(am / np.float32(qmax))
+            q = np.clip(np.rint(w.astype(np.float64) / np.float64(s)), -(1 << (bits - 1)), qmax)
+            return (q.astype(np.float32) * s).astype(np.float32)
+        flat = w.reshape(w.shape[0], -1)
+        am = np.abs(flat).max(axis=1).astype(np.float32)
+        s = np.where(am == 0, np.float32(1.0), am / np.float32(qmax)).astype(np.float32)
+        q = np.clip(np.rint(flat.astype(np.float64) / s.astype(np.float64)[:, None]), -(1 << (bits - 1)), qmax)
+        return (q.astype(np.float32) * s[:, None]).astype(np.float32).reshape(w.shape)
+    return None

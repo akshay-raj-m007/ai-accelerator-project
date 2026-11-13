@@ -1,12 +1,17 @@
 #!/usr/bin/env python
 """J-FAMP runbook Stage 0 (baseline intake) + Stage 1 (layer inventory) for the supplied FP32 checkpoint.
 
+Architecture-aware (ResNet-18 or MobileNetV2, read from checkpoint['config']['arch']). The ResNet-18 run compares its numbers with
+the runbook reference values; for MobileNetV2 there is NO reference (protocol: "compute layer counts, weight counts, clean metrics
+and storage from each actual model; do not reuse ResNet-18 counts or baseline values"), so only the structural gates apply.
+
 Inference only (no training, no gradients). Evaluates the checkpoint in FP32 on the 5,000-image validation holdout and on
 the official 10,000-image test set, and writes (under results/<run>/jfamp/):
 
-  baseline/        baseline_manifest.json  baseline_metrics.json  confusion_matrix.csv  per_class_metrics.csv
+  baseline/        baseline_manifest.json  baseline_metrics.json  confusion_matrix.csv  per_class_metrics.csv  split_indices.npz
                    checkpoint_validation.txt
   layer_profile/   layer_inventory.csv  layer_inventory.json  layer_storage_summary.csv  parameter_summary.json
+                   (--inventory-dirname inventory writes them to inventory/ instead, the MobileNetV2 protocol's folder name)
 
   python scripts/stage01_baseline.py --checkpoint $FR_ROOT/checkpoints/scratch/best.pth --run-name scratch \
       --supplied-by "<name>" --source-location "<where the checkpoint came from>"
@@ -32,13 +37,15 @@ from fr.baseline_profile import (checkpoint_checks, evaluate_full, layer_invento
 from fr.config import add_config_args, config_from_args
 from fr.faults import load_tensors
 from fr.mixed_run import split_params
-from fr.model import load_checkpoint, load_model, state_dict_of
+from fr.model import arch_of_checkpoint, classifier_linear, load_checkpoint, load_model, state_dict_of, stem_conv
 from fr.utils import dump_json, env_info, resolve_device
 
 CIFAR10_CLASSES = ["airplane", "automobile", "bird", "cat", "deer", "dog", "frog", "horse", "ship", "truck"]
-RUNBOOK_REFERENCE = {"test_accuracy_percent": 95.11, "test_correct": 9511, "test_total": 10000,
-                     "n_quantizable_layers": 21, "n_quantizable_weights": 11164352, "n_parameters_total": 11173962,
-                     "fp32_quantizable_bytes": 44657408}
+RUNBOOK_REFERENCES = {   # ResNet-18 only; MobileNetV2 has no reference values by protocol
+    "resnet18_cifar": {"test_accuracy_percent": 95.11, "test_correct": 9511, "test_total": 10000,
+                       "n_quantizable_layers": 21, "n_quantizable_weights": 11164352, "n_parameters_total": 11173962,
+                       "fp32_quantizable_bytes": 44657408},
+    "mobilenetv2_cifar": None}
 
 
 def write_csv(path, rows, fields=None):
@@ -59,13 +66,14 @@ def main():
                     help="person who supplied the checkpoint (runbook 2.1)")
     ap.add_argument("--source-location", default="not recorded", help="where the checkpoint came from")
     ap.add_argument("--tolerance-pp", type=float, default=0.05,
-                    help="Gate 0: allowed |test accuracy - reference| in percentage points (reference 95.11)")
+                    help="Gate 0 (ResNet-18 only): allowed |test accuracy - reference| in percentage points (reference 95.11)")
+    ap.add_argument("--inventory-dirname", default="layer_profile", help="folder for the layer inventory (protocol name: inventory)")
     args = ap.parse_args()
     logging.basicConfig(level=logging.INFO, format="%(message)s")
     cfg = config_from_args(args)
     device = resolve_device(cfg.device)
     out = Path(args.out_dir) if args.out_dir else cfg.results_dir() / "jfamp"
-    base, prof = out / "baseline", out / "layer_profile"
+    base, prof = out / "baseline", out / args.inventory_dirname
     base.mkdir(parents=True, exist_ok=True)
     prof.mkdir(parents=True, exist_ok=True)
     torch.backends.cudnn.benchmark = False
@@ -74,6 +82,8 @@ def main():
     # ------------------------------------------------------------------ Stage 0: identity
     ckpt = load_checkpoint(ck_path)
     sd = state_dict_of(ckpt)
+    arch = arch_of_checkpoint(ckpt)
+    RUNBOOK_REFERENCE = RUNBOOK_REFERENCES[arch]
     model, _ = load_model(ck_path)                                   # strict=True: raises if keys / shapes differ
     model.to(device).eval()
     for p in model.parameters():
@@ -103,13 +113,14 @@ def main():
     stamp = dt.datetime.now(dt.timezone.utc).isoformat(timespec="seconds")
 
     # ------------------------------------------------------------------ Stage 0: checks
-    checks = checkpoint_checks(model, ckpt, sd, RUNBOOK_REFERENCE)
-    diff = test["accuracy_percent"] - RUNBOOK_REFERENCE["test_accuracy_percent"]
+    checks = checkpoint_checks(model, ckpt, sd, RUNBOOK_REFERENCE or {})
+    diff = test["accuracy_percent"] - RUNBOOK_REFERENCE["test_accuracy_percent"] if RUNBOOK_REFERENCE else None
     gate0 = {"checkpoint_loads_strictly": checks["strict_load"], "output_dim_is_10": checks["output_dim_is_10"],
              "stem_3x3_stride1_no_maxpool": checks["stem_is_3x3_stride1"] and checks["no_maxpool"],
              "parameters_finite": checks["all_parameters_finite"], "logits_finite": test["all_logits_finite"] and val["all_logits_finite"],
-             "test_matches_reference_within_tolerance": abs(diff) <= args.tolerance_pp,
              "preprocessing_known": True}
+    if RUNBOOK_REFERENCE:
+        gate0["test_matches_reference_within_tolerance"] = abs(diff) <= args.tolerance_pp
     gate0["PASS"] = all(gate0.values())
 
     manifest = {
@@ -119,9 +130,15 @@ def main():
                        "top_level_keys": list(ckpt.keys()), "state_dict_tensors": len(sd),
                        "epoch": ckpt.get("epoch"), "best_val_acc_during_training": ckpt.get("best_val_acc"),
                        "best_val_loss_during_training": ckpt.get("best_val_loss"), "git_commit_at_training": ckpt.get("git_commit")},
-        "model": {"definition": "fr.model.build_resnet18_cifar", "arch_in_config": (ckpt.get("config") or {}).get("arch"),
-                  "constructor": {"num_classes": 10}, "stem": "3x3 conv, stride 1, padding 1, no max-pooling",
+        "model": {"definition": f"fr.model.ARCHS['{arch}']", "arch": arch, "arch_in_config": (ckpt.get("config") or {}).get("arch"),
+                  "constructor": {"num_classes": 10}, "num_classes": checks["output_dim"],
+                  "stem": (f"{stem_conv(model).kernel_size[0]}x{stem_conv(model).kernel_size[1]} conv, stride {stem_conv(model).stride[0]}, "
+                           f"padding {stem_conv(model).padding[0]}, no max-pooling"),
+                  "architecture_note": ("torchvision MobileNetV2 (width 1.0, dropout 0.2) with only the first feature convolution's stride "
+                                        "changed 2 -> 1" if arch == "mobilenetv2_cifar" else
+                                        "torchvision ResNet-18, 3x3/s1 stem, max-pool removed"),
                   "output_dim": checks["output_dim"]},
+        "seeds": {"training_seed": (ckpt.get("config") or {}).get("seed"), "split_seed": split_seed},
         "training_config": ckpt.get("config"),
         "environment_at_evaluation": env_info(), "gpu": gpu, "evaluation_device": str(device),
         "dataset": {"name": "CIFAR-10", "train_pool": n_train_all, "val_size": val_size, "split_seed": split_seed,
@@ -136,17 +153,20 @@ def main():
                           "evaluation_deterministic": True},
         "evaluation": {"precision": "FP32 (no autocast)", "model_eval_mode": True, "gradients_disabled": True,
                        "batch_size": cfg.eval_batch_size, "timestamp_utc": stamp},
-        "runbook_reference": RUNBOOK_REFERENCE,
+        "runbook_reference": RUNBOOK_REFERENCE if RUNBOOK_REFERENCE else "none (MobileNetV2: protocol forbids reusing ResNet-18 values)",
     }
     dump_json(manifest, base / "baseline_manifest.json")
+    np.savez_compressed(base / "split_indices.npz", train=np.asarray(tr_idx, dtype=np.int64),
+                        validation=np.asarray(va_idx, dtype=np.int64))      # exact split (protocol Section 2); hashes are in the manifest
 
     def split_block(r):
         return {"accuracy_percent": r["accuracy_percent"], "correct": r["correct"], "total": r["total"],
                 "cross_entropy": r["cross_entropy"], "per_class": r["per_class"]}
     metrics = {"timestamp_utc": stamp, "checkpoint_sha256": sha, "validation": split_block(val), "test": split_block(test),
-               "test_vs_runbook_reference": {"reference_percent": RUNBOOK_REFERENCE["test_accuracy_percent"],
-                                             "reference_correct": RUNBOOK_REFERENCE["test_correct"],
-                                             "difference_pp": diff, "within_tolerance_pp": args.tolerance_pp},
+               "test_vs_runbook_reference": ({"reference_percent": RUNBOOK_REFERENCE["test_accuracy_percent"],
+                                              "reference_correct": RUNBOOK_REFERENCE["test_correct"],
+                                              "difference_pp": diff, "within_tolerance_pp": args.tolerance_pp}
+                                             if RUNBOOK_REFERENCE else None),
                "class_names": list(classes)}
     for r in metrics["validation"]["per_class"] + metrics["test"]["per_class"]:
         r["class_name"] = classes[r["class_id"]]
@@ -165,21 +185,27 @@ def main():
              f"strict load of the state dict: {'PASS' if checks['strict_load'] else 'FAIL'}",
              f"  missing keys: {checks['missing_keys']}  unexpected keys: {checks['unexpected_keys']}  "
              f"shape mismatches: {checks['shape_mismatches']}",
+             f"architecture: {arch}",
              f"output dimension {checks['output_dim']} (must be 10): {'PASS' if checks['output_dim_is_10'] else 'FAIL'}",
-             f"stem kernel {checks['stem_kernel']} stride {checks['stem_stride']}, no max-pooling: "
+             f"first conv kernel {checks['stem_kernel']} stride {checks['stem_stride']}, no max-pooling: "
              f"{'PASS' if checks['stem_is_3x3_stride1'] and checks['no_maxpool'] else 'FAIL'}",
              f"NaN/Inf parameters: {checks['nonfinite_parameters'] or 'none'}",
              f"NaN/Inf logits on validation / test: {not val['all_logits_finite']} / {not test['all_logits_finite']}",
              f"model.eval(): {checks['model_in_eval_mode']}; gradients disabled during evaluation (requires_grad False, inference_mode)",
-             "", "Comparison with the runbook reference values:"]
-    for k, v in checks["comparison_with_runbook_reference"].items():
-        lines.append(f"  {k}: expected {v['expected']}, got {v['got']} -> {'match' if v['matches'] else 'DEVIATION'}")
-    lines += [f"  test accuracy: reference {RUNBOOK_REFERENCE['test_accuracy_percent']:.2f} %, got "
-              f"{test['accuracy_percent']:.2f} % ({test['correct']}/{test['total']}), difference {diff:+.3f} pp "
-              f"(tolerance {args.tolerance_pp} pp)",
-              f"  validation accuracy (5,000 held-out images): {val['accuracy_percent']:.2f} % ({val['correct']}/{val['total']}); "
+             ""]
+    if RUNBOOK_REFERENCE:
+        lines.append("Comparison with the runbook reference values:")
+        for k, v in checks["comparison_with_runbook_reference"].items():
+            lines.append(f"  {k}: expected {v['expected']}, got {v['got']} -> {'match' if v['matches'] else 'DEVIATION'}")
+        lines.append(f"  test accuracy: reference {RUNBOOK_REFERENCE['test_accuracy_percent']:.2f} %, got "
+                     f"{test['accuracy_percent']:.2f} % ({test['correct']}/{test['total']}), difference {diff:+.3f} pp "
+                     f"(tolerance {args.tolerance_pp} pp)")
+    else:
+        lines.append("No reference values (protocol: counts and metrics are computed from this model only):")
+        lines.append(f"  test accuracy: {test['accuracy_percent']:.2f} % ({test['correct']}/{test['total']})")
+    lines += [f"  validation accuracy (5,000 held-out images): {val['accuracy_percent']:.2f} % ({val['correct']}/{val['total']}); "
               f"best-epoch value recorded during training: {ckpt.get('best_val_acc')}",
-              "", "Deviations from the runbook's starting assumption:",
+              "", "Notes:",
               "  - the checkpoint was trained in this project, not supplied by a teammate (see supplied_by in the manifest)",
               f"  - training ran with deterministic=False; training git state: {ckpt.get('git_commit')}",
               "", f"GATE 0: {'PASS' if gate0['PASS'] else 'FAIL'}  " + json.dumps(gate0)]
@@ -190,24 +216,44 @@ def main():
     rec = reconcile(rows, model)
     psum = parameter_summary(model, rows)
     psum["reconciliation"] = rec
-    psum["runbook_reference_check"] = {
-        "layers": {"expected": 21, "got": len(rows), "matches": len(rows) == 21},
-        "quantizable_weights": {"expected": 11164352, "got": psum["quantizable_weights"],
-                                "matches": psum["quantizable_weights"] == 11164352},
-        "total_parameters": {"expected": 11173962, "got": psum["total_parameters"],
-                             "matches": psum["total_parameters"] == 11173962},
-        "fp32_quantizable_bytes": {"expected": 44657408, "got": psum["fp32_quantizable_bytes"],
-                                   "matches": psum["fp32_quantizable_bytes"] == 44657408}}
+    if RUNBOOK_REFERENCE:
+        R = RUNBOOK_REFERENCE
+        psum["runbook_reference_check"] = {
+            "layers": {"expected": R["n_quantizable_layers"], "got": len(rows), "matches": len(rows) == R["n_quantizable_layers"]},
+            "quantizable_weights": {"expected": R["n_quantizable_weights"], "got": psum["quantizable_weights"],
+                                    "matches": psum["quantizable_weights"] == R["n_quantizable_weights"]},
+            "total_parameters": {"expected": R["n_parameters_total"], "got": psum["total_parameters"],
+                                 "matches": psum["total_parameters"] == R["n_parameters_total"]},
+            "fp32_quantizable_bytes": {"expected": R["fp32_quantizable_bytes"], "got": psum["fp32_quantizable_bytes"],
+                                       "matches": psum["fp32_quantizable_bytes"] == R["fp32_quantizable_bytes"]}}
+    else:
+        psum["runbook_reference_check"] = None
+    by_role = {}
+    for r in rows:
+        d = by_role.setdefault(r["layer_role"], {"layers": 0, "weights": 0})
+        d["layers"] += 1
+        d["weights"] += r["num_weights"]
+    psum["by_layer_role"] = by_role
+    psum["by_layer_group"] = {g: {"layers": sum(1 for r in rows if r["layer_group"] == g),
+                                  "weights": sum(r["num_weights"] for r in rows if r["layer_group"] == g)}
+                              for g in dict.fromkeys(r["layer_group"] for r in rows)}
+    psum["per_output_channel_scale_words"] = {"output_channels_total": sum(r["out_channels"] for r in rows),
+                                              "float32_scale_bytes_if_per_channel": 4 * sum(r["out_channels"] for r in rows)}
     flat = [{**{k: (json.dumps(v) if isinstance(v, list) else v) for k, v in r.items()}} for r in rows]
     write_csv(prof / "layer_inventory.csv", flat)
     dump_json({"checkpoint_sha256": sha, "ordering": "model definition order", "layers": rows}, prof / "layer_inventory.json")
     write_csv(prof / "layer_storage_summary.csv", storage_summary(rows))
     dump_json(psum, prof / "parameter_summary.json")
-    gate1 = all(rec.values()) and all(v["matches"] for v in psum["runbook_reference_check"].values())
+    gate1 = all(rec.values()) and (all(v["matches"] for v in psum["runbook_reference_check"].values())
+                                   if psum["runbook_reference_check"] else True)
 
     print(f"\nFP32 test        : {test['accuracy_percent']:.2f} %  ({test['correct']}/{test['total']})  CE {test['cross_entropy']:.4f}")
     print(f"FP32 validation  : {val['accuracy_percent']:.2f} %  ({val['correct']}/{val['total']})  CE {val['cross_entropy']:.4f}")
-    print(f"reference 95.11 %: difference {diff:+.3f} pp")
+    if RUNBOOK_REFERENCE:
+        print(f"reference {RUNBOOK_REFERENCE['test_accuracy_percent']:.2f} %: difference {diff:+.3f} pp")
+    else:
+        print("no reference values for this architecture (computed from the model only)")
+    print(f"architecture {arch}: layer roles {psum['by_layer_role']}")
     print(f"layers {len(rows)}, quantizable weights {psum['quantizable_weights']}, total params {psum['total_parameters']}")
     print(f"GATE 0 (baseline): {'PASS' if gate0['PASS'] else 'FAIL'}   GATE 1 (inventory): {'PASS' if gate1 else 'FAIL'}")
     print("written:", out)

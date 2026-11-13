@@ -83,7 +83,7 @@ def resolve_normalization(policy: str, init: str, ckpt_config=None) -> Norm:
         return None
     if policy == "cifar10":
         return (CIFAR10_MEAN, CIFAR10_STD)
-    if init == "scratch" and ckpt_config is None:
+    if init in ("scratch", "imagenet") and ckpt_config is None:      # fresh training / ImageNet fine-tuning: CIFAR-10 statistics
         return (CIFAR10_MEAN, CIFAR10_STD)
     found = norm_from_checkpoint_config(ckpt_config)
     if found == "unknown":

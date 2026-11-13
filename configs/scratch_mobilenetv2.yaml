@@ -1,0 +1,17 @@
+# Train MobileNetV2 (torchvision, first feature convolution stride 1; protocol Section 1) on CIFAR-10 from random initialisation.
+# The recipe is IDENTICAL to configs/scratch.yaml (the ResNet-18 baseline): no hyper-parameter was tuned for this architecture.
+arch: mobilenetv2_cifar
+init: scratch
+normalize: auto          # -> standard CIFAR-10 mean/std (same as the ResNet-18 run)
+epochs: 200
+lr: 0.1
+batch_size: 128
+momentum: 0.9
+nesterov: true
+weight_decay: 0.0005
+warmup_epochs: 5
+label_smoothing: 0.0
+val_size: 5000
+amp: true
+seed: 0
+num_workers: 4

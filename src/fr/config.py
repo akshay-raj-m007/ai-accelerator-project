@@ -29,8 +29,10 @@ class Config:
     data_dir: Optional[str] = None
     run_name: str = "run"
     init_checkpoint: Optional[str] = None
-    # init / preprocessing
-    init: str = "scratch"            # scratch | checkpoint
+    # model / init / preprocessing
+    arch: str = "resnet18_cifar"     # resnet18_cifar | mobilenetv2_cifar (see fr.model.ARCHS)
+    init: str = "scratch"            # scratch | checkpoint | imagenet (mobilenetv2_cifar only: torchvision ImageNet weights)
+    pretrained_weights: str = "IMAGENET1K_V1"   # init=imagenet: torchvision weight set; init_checkpoint = local state-dict file instead
     normalize: str = "auto"          # auto | none | cifar10
     # optimisation
     epochs: int = 200
@@ -78,7 +80,9 @@ class Config:
 
 _OPTIONAL_TYPES = {"root": str, "data_dir": str, "init_checkpoint": str,
                    "train_subset": int, "test_subset": int}
-_CHOICES = {"init": ["scratch", "checkpoint"], "normalize": ["auto", "none", "cifar10"]}
+ARCH_CHOICES = ["resnet18_cifar", "mobilenetv2_cifar"]      # must equal fr.model.ARCHS (checked in the tests)
+_CHOICES = {"arch": ARCH_CHOICES, "init": ["scratch", "checkpoint", "imagenet"], "normalize": ["auto", "none", "cifar10"],
+            "pretrained_weights": ["IMAGENET1K_V1", "IMAGENET1K_V2"]}
 
 
 def add_config_args(parser: argparse.ArgumentParser) -> argparse.ArgumentParser:

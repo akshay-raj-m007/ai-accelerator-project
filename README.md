@@ -254,3 +254,8 @@ bash scripts/run_layer_scores.sh     # held-out only; writes results/<run>/layer
 S0 clean Fisher, S1 measured damage when only one layer is struck, S2 Fisher-predicted damage, S2n the same without
 the Fisher, and their Spearman rank correlations (definitions: `src/fr/layer_scores.py`). INT8 here means per-tensor
 symmetric, the paper's Eq. 3 (per-channel stays an extension).
+
+
+### MobileNetV2 / CIFAR-10 (JFAMP MobileNetV2 protocol)
+Second model of the study: torchvision MobileNetV2 with a stride-1 first convolution, same pipeline and the protocol's seven formats (adds BF16, FP8 E5M2 and per-output-channel INT).
+Decisions, run commands and output map: [mobilenetv2/README.md](mobilenetv2/README.md). Training config: `configs/scratch_mobilenetv2.yaml`.

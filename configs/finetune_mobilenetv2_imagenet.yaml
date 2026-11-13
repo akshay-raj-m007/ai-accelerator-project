@@ -1,0 +1,21 @@
+# Fine-tune ALL layers of MobileNetV2 (torchvision, first feature convolution stride 1; protocol Section 1) on CIFAR-10, starting from
+# torchvision's ImageNet weights (every tensor except the 1000-class classifier is copied; the classifier is re-initialised for 10 classes).
+# Data, split, normalization (CIFAR-10 mean/std), augmentation (random crop 4 + flip), optimiser family and weight decay are those of the
+# ResNet-18 baseline (configs/scratch.yaml). Only what a fine-tuning start needs differs: smaller learning rate, shorter schedule.
+# These values were fixed BEFORE any run and are not tuned on test data.
+arch: mobilenetv2_cifar
+init: imagenet
+pretrained_weights: IMAGENET1K_V1    # original torchvision recipe; IMAGENET1K_V2 (heavily regularised recipe) is the alternative
+normalize: auto          # -> standard CIFAR-10 mean/std (same as the ResNet-18 run)
+epochs: 100
+lr: 0.05
+batch_size: 128
+momentum: 0.9
+nesterov: true
+weight_decay: 0.0005
+warmup_epochs: 3
+label_smoothing: 0.0
+val_size: 5000
+amp: true
+seed: 0
+num_workers: 4
