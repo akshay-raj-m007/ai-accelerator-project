@@ -1,0 +1,9 @@
+{
+  "checkpoint_sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+  "validation_images": 5000,
+  "validation_indices_sha256": "d2e1ec6587c2c4d4018f6e02e47393b604da05c6ce4d3e2f42e51c8b9f5b7372",
+  "fp32_correct": 4608,
+  "fp32_accuracy_percent": 92.16,
+  "precision": "FP32, model.eval(), inference_mode",
+  "quantizer_frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561"
+}

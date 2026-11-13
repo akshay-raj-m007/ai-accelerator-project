@@ -1,0 +1,12 @@
+Files already downloaded and verified
+fp16        changed     1  agreement  99.98%  C->I    0  I->C    0  mean|dlogit| 0.00144  max 0.0199
+bf16        changed     9  agreement  99.82%  C->I    3  I->C    3  mean|dlogit| 0.01047  max 0.1592
+e4m11_sn    changed     0  agreement 100.00%  C->I    0  I->C    0  mean|dlogit| 0.00249  max 0.0301
+fp8_e4m3fn  changed    99  agreement  98.02%  C->I   42  I->C   41  mean|dlogit| 0.15494  max 2.5453
+fp8_e5m2    changed   267  agreement  94.66%  C->I  153  I->C   76  mean|dlogit| 0.38798  max 5.5978
+int8_pt     changed    42  agreement  99.16%  C->I   16  I->C   19  mean|dlogit| 0.05066  max 0.6691
+int4_pt     changed   661  agreement  86.78%  C->I  489  I->C   97  mean|dlogit| 0.89101  max 10.8469
+int8_pc     changed    30  agreement  99.40%  C->I   12  I->C   14  mean|dlogit| 0.03580  max 0.5517
+int4_pc     changed   472  agreement  90.56%  C->I  311  I->C   99  mean|dlogit| 0.64003  max 7.0451
+e4m11_ftz   changed   111  agreement  97.78%  C->I   55  I->C   43  mean|dlogit| 0.75000  max 4.4216
+written: reports/mobilenetv2_cifar10/stage_02_prediction_impact
