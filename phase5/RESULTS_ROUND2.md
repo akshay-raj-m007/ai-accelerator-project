@@ -75,12 +75,27 @@ The larger compression results are at tighter budgets: **A156 stores 4.83 bits p
   and corrects every single flipped bit (exhaustively verified); two flips in the same bit position of two copies are not corrected.
 - Can: a measured joint datatype-protection assignment (A128; or A156 at 4.83 bits) meets delta_clean 0.5 pp, tau_fault 0.5 pp and the scale-word limit on validation data.
 - Cannot: any protection other than `scale_tmr` (integer codes and E4M11 / FP exponent bits are unprotected); exponent-bit faults of FP16 / E4M11 are a residual tail risk; the weight-fault metric is
-  too coarse (100 trials, 1,000 images) to rank assignments below 0.05 pp; one checkpoint; test accuracy not yet measured.
+  too coarse (100 trials, 1,000 images) to rank assignments below 0.05 pp; one checkpoint; test accuracy is reported in section 7.
 
-## 7. Next step (needs your confirmation)
-1. `tau_scale = 1 pp` is my addition (it follows from decisions 2 and 4 but is not a number you agreed). It decides between A128 (protected) and A071 (unprotected, 11 pp expected loss per flipped scale word).
-2. Freeze and test on the official test set once, at the primary operating point (300 trials per distribution on validation, then one test evaluation):
-```
-python scripts/stage5_end_to_end.py --checkpoint $CK --run-name scratch --finalize \
-  --final-delta-clean 0.5 --final-tau-fault 0.5 --final-avg-bits 8 --final-tau-scale 1.0
-```
+## 7. Frozen assignment A128 and the single test-set evaluation (2026-11-13)
+Frozen at the primary operating point (delta_clean 0.5 pp, tau_fault 0.5 pp, B 8 bits, tau_scale 1 pp, lambda 1, min-max) from validation measurements only; `--finalize` was run once.
+Assignment: 19 layers INT8 + `scale_tmr`, layer4.1.conv2 INT4 + `scale_tmr`, layer3.1.conv2 E4M11-SN (no protection; it has no scale word). Stored 10,574,768 bytes of weights (7.5775 bits per weight,
+including 160 bytes of protection overhead for 20 layers), 10,651,768 bytes including the fixed parameters.
+| measurement | result |
+|---|---|
+| clean validation (2,952 images) | 95.16 % vs FP32 95.29 %: drop 0.135 pp |
+| **official test set (10,000 images, read once)** | **95.20 % vs FP32 95.11 %: +0.09 pp (9 images), no loss** |
+| validation `weights_k8`, 300 trials, 1,000 images | mean drop 0.008 pp, median 0, p90 0, worst 0.6 pp; 13 of 300 trials show any drop |
+| validation `scales_k1`, 300 trials | 0.000 pp in every trial |
+| test set `weights_k8`, 100 trials, 10,000 images (same frozen assignment, no re-selection) | mean 0.005 pp, p90 0, worst 0.33 pp; 0 failures, 0 non-finite weights / activations / logits / loss |
+| test set `scales_k1`, 100 trials | 0.000 pp in every trial |
+| restoration | every trial restored the stored bytes exactly (SHA-256 check) |
+Reading:
+- The validation drop (-0.135 pp) and the test change (+0.09 pp) are both within about 0.15 pp of FP32, i.e. a few images: the correct statement is "no measurable accuracy loss", not an improvement.
+- The scale-word result is a guarantee check, not sampling evidence: with 20 protected layers every single flipped scale bit is corrected (exhaustive verification, section 1), so 0.0 pp in 400 trials is the expected outcome.
+- Residual risk, as in section 6: integer codes and the E4M11-SN layer have no protection; the 13 of 300 validation trials with a drop (worst 0.6 pp) come from high-bit flips of those.
+- The constraints were checked on measured values (delta 0.135 <= 0.5, tau_fault 0.008 <= 0.5, tau_scale 0.0 <= 1.0, 7.58 <= 8 bits).
+Files: `assignment.json` (frozen), `final_validation_fault_trials.jsonl`, `final_test_evaluation.json`, `stage5_final.log`.
+
+## 8. Remaining (Stage 6)
+Figures regenerated from round-2 / final data (the current Stage 5 PNGs use round-1 data), validation-vs-test comparison table, `final_summary.md`, rebuild script. No further selection is allowed on the test set.
