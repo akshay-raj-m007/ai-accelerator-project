@@ -1,0 +1,52 @@
+{
+  "stage": "JFAMP Stage 3 layer-wise quantization sensitivity",
+  "status": "complete",
+  "evaluations": 371,
+  "expected_evaluations": 371,
+  "layers": 53,
+  "formats": [
+    "fp16",
+    "bf16",
+    "e4m11_sn",
+    "fp8_e4m3fn",
+    "fp8_e5m2",
+    "int8_pt",
+    "int4_pt"
+  ],
+  "seed": 42,
+  "batch_size": 256,
+  "validation_images": 5000,
+  "fp32_reference": {
+    "accuracy_percent": 92.15999841690063,
+    "correct": 4608,
+    "validation_loss": 0.2528330683708191,
+    "changed_predictions": 0,
+    "prediction_agreement_percent": 100.0,
+    "correct_to_wrong": 0,
+    "wrong_to_correct": 0
+  },
+  "checkpoint_sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+  "quantizer_frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561",
+  "int_scale_policy": {
+    "primary": "per_tensor",
+    "comparison": "per_channel",
+    "note": "per-tensor and per-output-channel results are never mixed: every table row carries the granularity in its variant label and a role (primary | comparison). Protocol rule: if the previous JFAMP implementation used another policy than per-output-channel it is retained for both datasets and documented; the ResNet-18 implementation used per-tensor."
+  },
+  "evaluation": "FP32 compute on reconstructed weights; one layer quantized at a time; model restored to FP32 and re-verified bit-exact after the sweep",
+  "seconds": 238.87429285049438,
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "2890e5dd6c23fd17b8d4af705f0c0d0c14eacf09",
+      "dirty": true
+    }
+  }
+}
