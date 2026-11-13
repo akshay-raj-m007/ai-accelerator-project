@@ -1,0 +1,31 @@
+checkpoint: /home/ssl25/fr_runs/checkpoints/mobilenetv2_cifar10/best.pth  (18200924 bytes)  sha256 268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e
+strict load: strict load succeeded
+measured: {"output_shape_for_dummy_input": [1, 10], "layer_type_counts": {"depthwise": 17, "pointwise": 34, "standard": 1, "linear": 1}, "total_parameters": 2236682, "trainable_parameters": 2236682, "quantizable_layers": 53, "quantizable_weights": 2202560, "quantizable_biases": 10, "batchnorm_affine_parameters": 34112, "parameter_elements_in_checkpoint": 2236682}
+
+validation checks (spec section 7):
+  [PASS] 1_strict_checkpoint_load
+  [PASS] 2_dummy_input_1x3x32x32_gives_1xNUM_CLASSES
+  [PASS] 3_exactly_as_many_entries_as_conv2d_linear_modules
+  [PASS] 4_inventory_weight_count_equals_model_weight_count
+  [PASS] 5_layer_names_unique
+  [PASS] 6_every_weight_count_positive
+  [PASS] 7_layer_type_counts_sum_to_number_of_layers
+  [PASS] 8_total_parameters_match_checkpoint_and_decompose_into_weights_biases_batchnorm
+
+comparison with the spec's reference values (informational):
+  DIFFERS  total_parameters: spec 2,236,772  measured 2,236,682
+  match    quantizable_layers: spec 53  measured 53
+  match    quantizable_weights: spec 2,202,560  measured 2,202,560
+  match    quantizable_biases: spec 10  measured 10
+  match    depthwise: spec 17  measured 17
+  match    pointwise: spec 34  measured 34
+  match    standard: spec 1  measured 1
+  match    linear: spec 1  measured 1
+
+SHA256:
+  90591dfee2a0c7a1845b1fc874d5119960710f958337f2368c401cb7a89661c8  layer_inventory.csv
+  802abea6588da98663759e92fd3b896498ba6dbbe35b261b51fe2bd4cc5290d9  layer_inventory.json
+  dafb6c0a8ed95022c00757997c5f0e1f6439c0fe93fd543b9371cbebbab72ddf  inventory_summary.json
+
+written: /home/ssl25/Music/aia/ai-accelerator-project/reports/mobilenetv2_cifar10/stage_01_layer_inventory
+STAGE 1 COMPLETE: all checks passed

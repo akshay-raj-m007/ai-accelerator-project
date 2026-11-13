@@ -1,0 +1,94 @@
+{
+  "stage": "JFAMP Stage 1 - MobileNetV2 layer inventory",
+  "num_classes": 10,
+  "checkpoint": {
+    "file_name": "best.pth",
+    "size_bytes": 18200924,
+    "sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+    "epoch": 100,
+    "load": "strict load succeeded"
+  },
+  "architecture": "torchvision.models.mobilenet_v2(weights=None, num_classes=NUM_CLASSES); features[0][0].stride = (1, 1)",
+  "stage_column_definition": "stem = features.0; stage1..stage7 = the 7 torchvision inverted-residual stages (features.1 | 2-3 | 4-6 | 7-10 | 11-13 | 14-16 | 17); head = features.18 (final 1x1 conv); classifier = classifier.1",
+  "layer_type_rule": "depthwise: Conv2d with groups == in_channels; pointwise: Conv2d with kernel (1, 1); standard: other Conv2d; linear: Linear",
+  "quantization_axis_note": "0 (output-channel axis) is a proposed convention, to be checked against the actual quantizer in a later stage",
+  "measured": {
+    "output_shape_for_dummy_input": [
+      1,
+      10
+    ],
+    "layer_type_counts": {
+      "depthwise": 17,
+      "pointwise": 34,
+      "standard": 1,
+      "linear": 1
+    },
+    "total_parameters": 2236682,
+    "trainable_parameters": 2236682,
+    "quantizable_layers": 53,
+    "quantizable_weights": 2202560,
+    "quantizable_biases": 10,
+    "batchnorm_affine_parameters": 34112,
+    "parameter_elements_in_checkpoint": 2236682
+  },
+  "validation_checks": {
+    "1_strict_checkpoint_load": true,
+    "2_dummy_input_1x3x32x32_gives_1xNUM_CLASSES": true,
+    "3_exactly_as_many_entries_as_conv2d_linear_modules": true,
+    "4_inventory_weight_count_equals_model_weight_count": true,
+    "5_layer_names_unique": true,
+    "6_every_weight_count_positive": true,
+    "7_layer_type_counts_sum_to_number_of_layers": true,
+    "8_total_parameters_match_checkpoint_and_decompose_into_weights_biases_batchnorm": true
+  },
+  "all_checks_passed": true,
+  "comparison_with_spec_reference_values": {
+    "total_parameters": {
+      "spec_value": 2236772,
+      "measured": 2236682,
+      "matches": false
+    },
+    "quantizable_layers": {
+      "spec_value": 53,
+      "measured": 53,
+      "matches": true
+    },
+    "quantizable_weights": {
+      "spec_value": 2202560,
+      "measured": 2202560,
+      "matches": true
+    },
+    "quantizable_biases": {
+      "spec_value": 10,
+      "measured": 10,
+      "matches": true
+    },
+    "depthwise": {
+      "spec_value": 17,
+      "measured": 17,
+      "matches": true
+    },
+    "pointwise": {
+      "spec_value": 34,
+      "measured": 34,
+      "matches": true
+    },
+    "standard": {
+      "spec_value": 1,
+      "measured": 1,
+      "matches": true
+    },
+    "linear": {
+      "spec_value": 1,
+      "measured": 1,
+      "matches": true
+    }
+  },
+  "comparison_note": "spec values are references only; any 'matches': false is reported, not forced",
+  "weights_by_layer_type": {
+    "depthwise": 64224,
+    "pointwise": 2124672,
+    "standard": 864,
+    "linear": 12800
+  }
+}
