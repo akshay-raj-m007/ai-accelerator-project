@@ -92,7 +92,7 @@ def fig1(out):
     box(70, 8, 29, 17, "Measure end to end", "clean accuracy (2,952 images not\nused for Q), stored bytes,\nbit-flip trials in the stored bytes:\n8 flips over all weights, 50 trials,\nplus one scale-word flip (INT)", ec=INK)
     arrow(84.5, 7.6, 84.5, 4.4)
     ax.text(84.5, 2.4, "predicted vs measured differ?\nupdate layer estimates, repeat (runbook 7.2)", fontsize=9.4, color=COL["fp16"], fontweight="bold", va="center", ha="center")
-    save(fig, out / "1_stage5_overview.png")
+    save(fig, out / P("1_stage5_overview.png"))
 
 
 # ------------------------------------------------------------------ 2. layer sensitivity profile
@@ -133,7 +133,7 @@ def fig2(out, layers, tab, QV, fl):
         a.set_axisbelow(True)
         a.tick_params(axis="y", length=0)
     axs[3].text(-0.0255, 1.2, "grey = quantization lowered the loss\n(over-confident logits get shrunk);\nnot 'more sensitive'", fontsize=8.4, color=INK2, va="center")
-    save(fig, out / "2_layer_sensitivity_profile.png")
+    save(fig, out / P("2_layer_sensitivity_profile.png"))
 
 
 # ------------------------------------------------------------------ 3. Q heatmap
@@ -165,7 +165,7 @@ def fig3(out, layers, tab):
     cax = fig.add_axes([0.88, 0.2, 0.022, 0.55])
     cb = fig.colorbar(im, cax=cax)
     cb.set_label("predicted loss increase (log scale)", fontsize=9)
-    save(fig, out / "3_Q_quantization_penalty_heatmap.png")
+    save(fig, out / P("3_Q_quantization_penalty_heatmap.png"))
 
 
 # ------------------------------------------------------------------ 4. R heatmaps
@@ -200,7 +200,7 @@ def fig4(out, layers, tab):
         cax = fig.add_axes([pos.x0, 0.06, pos.width, 0.012])
         cb = fig.colorbar(im, cax=cax, orientation="horizontal")
         cb.set_label(lab, fontsize=8.5)
-    save(fig, out / "4_R_fault_risk_heatmaps.png")
+    save(fig, out / P("4_R_fault_risk_heatmaps.png"))
 
 
 # ------------------------------------------------------------------ 5. is Q right?
@@ -247,7 +247,7 @@ def fig5(out, layers, tab, QV, opt):
     b.legend(handles=[Line2D([], [], marker="o", ls="", mfc=SURF, mec=INK2, mew=2, ms=8, label="predicted  sum 1/2 Q"), Line2D([], [], marker="o", ls="", color=INK2, ms=8, label="measured")], loc="upper right", frameon=False, fontsize=9)
     b.text(2e-5, 0.42, "INT4: predicted 0.059, measured 0.016\n(3.7x over; before 5,000x under)", fontsize=8.6, color=INK2, va="bottom", ha="left")
     b.text(0.02, 0.62, "FP16, E4M11, INT8, FP8: measured\nchanges are within evaluation\nnoise (|change| < 1.5e-3)", transform=b.transAxes, fontsize=8.6, color=INK2, va="center", ha="left")
-    save(fig, out / "5_Q_validation_predicted_vs_measured.png")
+    save(fig, out / P("5_Q_validation_predicted_vs_measured.png"))
 
 
 # ------------------------------------------------------------------ 6. assignments
@@ -288,7 +288,7 @@ def fig6(out, layers, tab, M, QV):
     for s in a1.spines.values():
         s.set_visible(False)
     a1.legend(handles=[Patch(fc=COL[f], label=f"{LABEL[f]} ({BITS[f]} bit)") for f in FORMATS], ncol=5, loc="upper center", bbox_to_anchor=(0.5, -0.005), frameon=False, fontsize=9.5)
-    save(fig, out / "6_selected_assignments_per_layer.png")
+    save(fig, out / P("6_selected_assignments_per_layer.png"))
 
 
 # ------------------------------------------------------------------ 7. trade-off
@@ -348,7 +348,7 @@ def fig7(out, M):
         ax_.grid(color=GRID, lw=0.8)
         ax_.set_axisbelow(True)
         ax_.set_xlim(3.5, 16.8)
-    save(fig, out / "7_storage_accuracy_fault_tradeoff.png")
+    save(fig, out / P("7_storage_accuracy_fault_tradeoff.png"))
 
 
 # ------------------------------------------------------------------ 8. predicted vs measured (assignment level)
@@ -417,7 +417,7 @@ def fig8(out, layers, tab, M):
         ax_.grid(color=GRID, lw=0.8)
         ax_.set_axisbelow(True)
     b.text(0.03, 0.93, "above the dashed line = estimate too low", transform=b.transAxes, fontsize=8.3, color=INK2)
-    save(fig, out / "8_predicted_vs_measured_assignments.png")
+    save(fig, out / P("8_predicted_vs_measured_assignments.png"))
 
 
 # ------------------------------------------------------------------ 9. fault trial distributions
@@ -448,7 +448,7 @@ def fig9(out, trials):
         ax_.set_xlim(-0.6, len(keys) - 0.1 + 0.45)
     a.set_ylim(-3, 100)
     b.set_ylim(-3, 100)
-    save(fig, out / "9_fault_trial_distributions.png")
+    save(fig, out / P("9_fault_trial_distributions.png"))
 
 
 # ------------------------------------------------------------------ 10. lambda sweep
@@ -480,7 +480,7 @@ def fig10(out, S):
     axs[0].set_ylabel("number of layers (of 21)")
     axs[0].set_ylim(0, 23)
     axs[1].legend(handles=[Patch(fc=COL[f], label=LABEL[f]) for _, f in keys], ncol=5, loc="upper center", bbox_to_anchor=(-0.04, -0.15), frameon=False, fontsize=9.5)
-    save(fig, out / "10_lambda_sweep_composition.png")
+    save(fig, out / P("10_lambda_sweep_composition.png"))
 
 
 # ------------------------------------------------------------------ 11. per-layer data sheet
@@ -526,15 +526,26 @@ def fig11(out, layers, tab, QV, fl):
             cell.set_text_props(color="white" if frac > 0.75 else INK)
         if j == 0 and i > 0:
             cell.set_text_props(fontweight="bold", ha="left")
-    save(fig, out / "11_per_layer_data_sheet.png")
+    save(fig, out / P("11_per_layer_data_sheet.png"))
+
+
+TAG = ""
+
+
+def P(name):
+    """File name with the model tag as prefix, so figures of several models can live side by side."""
+    return f"{TAG}_{name}" if TAG else name
 
 
 def main():
+    global TAG
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--opt-dir", default="reports/scratch/jfamp/optimization_round1")
-    ap.add_argument("--out", default="plots_preview/stage5")
+    ap.add_argument("--out", default="plots_preview", help="root folder; figures go to <out>/<model-tag>/stage5/<model-tag>_<name>.png")
+    ap.add_argument("--model-tag", default="resnet18_cifar10", help="model + dataset tag used in folder and file names")
     args = ap.parse_args()
-    opt, out = Path(args.opt_dir), Path(args.out)
+    TAG = args.model_tag
+    opt, out = Path(args.opt_dir), Path(args.out) / args.model_tag / "stage5"
     out.mkdir(parents=True, exist_ok=True)
     layers, tab, QV, fl, M, trials, S = load(opt)
     fig1(out)

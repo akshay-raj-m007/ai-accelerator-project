@@ -56,18 +56,29 @@ def features(model, x):
     return out
 
 
+TAG = ""
+
+
+def P(name):
+    """File name with the model tag as prefix, so figures of several models can live side by side."""
+    return f"{TAG}_{name}" if TAG else name
+
+
 def main():
+    global TAG
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     add_config_args(ap)
     ap.add_argument("--checkpoint", required=True)
-    ap.add_argument("--out", default="plots_preview/stage5")
+    ap.add_argument("--out", default="plots_preview", help="root folder; figures go to <out>/<model-tag>/stage5/<model-tag>_<name>.png")
+    ap.add_argument("--model-tag", default="resnet18_cifar10", help="model + dataset tag used in folder and file names")
     ap.add_argument("--index", type=int, default=None, help="validation image index; default: first image (of the first 300) correctly classified by all four models")
     ap.add_argument("--only-fig12", action="store_true", help="draw only the feature-map figure (fast)")
     ap.add_argument("--n-error", type=int, default=500, help="validation images for the error-versus-depth figure")
     ap.add_argument("--opt-dir", default="reports/scratch/jfamp/optimization_round1", help="folder with q_layerwise_validation.csv (measured per-layer loss change)")
     args = ap.parse_args()
     cfg = config_from_args(args)
-    out = Path(args.out)
+    TAG = args.model_tag
+    out = Path(args.out) / args.model_tag / "stage5"
     out.mkdir(parents=True, exist_ok=True)
     model, ckpt = load_model(args.checkpoint)
     model.eval()
@@ -133,9 +144,9 @@ def main():
         ytop = axs_[0].get_position().y1 + 0.028
         fig.text((x0 + x1) / 2, ytop + 0.004, f"channel group {ci + 1}  (same channel, 4 formats)", ha="center", va="bottom", fontsize=9.4, fontweight="bold")
         fig.add_artist(matplotlib.lines.Line2D([x0, x1], [ytop, ytop], color=INK2, lw=1.2))
-    fig.savefig(out / "12_feature_maps_one_image.png", dpi=150)
+    fig.savefig(out / P("12_feature_maps_one_image.png"), dpi=150)
     plt.close(fig)
-    print("wrote", out / "12_feature_maps_one_image.png")
+    print("wrote", out / P("12_feature_maps_one_image.png"))
     if args.only_fig12:
         return
 
@@ -175,9 +186,9 @@ def main():
     for s in ("top", "right"):
         ax.spines[s].set_visible(False)
     ax.legend(frameon=False, loc="upper left", fontsize=9.5)
-    fig.savefig(out / "13_feature_map_error_vs_depth.png", dpi=150)
+    fig.savefig(out / P("13_feature_map_error_vs_depth.png"), dpi=150)
     plt.close(fig)
-    print("wrote", out / "13_feature_map_error_vs_depth.png")
+    print("wrote", out / P("13_feature_map_error_vs_depth.png"))
     for k in err:
         print(k, {n: round(float(np.concatenate(err[k][n]).mean()), 5) for n in names})
 
@@ -232,9 +243,9 @@ def main():
         for s in ("top", "right"):
             ax_.spines[s].set_visible(False)
         ax_.tick_params(axis="y", length=0)
-    fig.savefig(out / "14_one_layer_int4_output_change.png", dpi=150)
+    fig.savefig(out / P("14_one_layer_int4_output_change.png"), dpi=150)
     plt.close(fig)
-    print("wrote", out / "14_one_layer_int4_output_change.png")
+    print("wrote", out / P("14_one_layer_int4_output_change.png"))
     print({l: round(r, 4) for l, r in zip(labels, rel)})
 
 

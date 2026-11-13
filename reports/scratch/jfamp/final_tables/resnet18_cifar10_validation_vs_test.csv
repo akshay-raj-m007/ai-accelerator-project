@@ -1,0 +1,9 @@
+item,kind,val_images,val_drop_pp,test_images,test_drop_pp,used_for_selection
+FP32 (uniform),uniform format,5000,0.0,10000,0.0,no (reported only)
+E4M11-SN (uniform),uniform format,5000,0.0,10000,0.0,no (reported only)
+FP16 (uniform),uniform format,5000,0.0,10000,0.0,no (reported only)
+FP8 E4M3FN (uniform),uniform format,5000,0.18000000000000682,10000,-0.010000000000005116,no (reported only)
+INT8 (uniform),uniform format,5000,0.12000000000000455,10000,-0.04000000000000625,no (reported only)
+INT4 (uniform),uniform format,5000,1.1800000000000068,10000,1.230000000000004,no (reported only)
+E4M11-FTZ (uniform),uniform format,5000,66.5,10000,66.67,no (reported only)
+A128 (frozen assignment),frozen mixed assignment,2952,0.1354992389678955,10000,-0.0899970531463623,validation only; test read once after freezing

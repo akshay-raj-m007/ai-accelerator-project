@@ -50,3 +50,5 @@ Layer-additive estimates are approximations; Fisher from 2,048 validation images
 is flipped in two copies; one checkpoint; no INT3.
 
 Code: `src/fr/stage5.py`, `src/fr/stage5_e2e.py`, `src/fr/protect.py`; tests `tests/test_stage5.py`, `tests/test_stage5_e2e.py`, `tests/test_protect.py`.
+
+Stage 6 (final package, figures with model-tag names): [../phase6/README.md](../phase6/README.md).

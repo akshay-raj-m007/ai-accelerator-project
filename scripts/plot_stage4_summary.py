@@ -96,7 +96,7 @@ def fig_overview(qdir, out):
         a.grid(axis="y", alpha=0.3)
     fig.suptitle("What each number format costs and how good it is, before any fault", fontsize=13, fontweight="bold")
     fig.tight_layout(rect=(0, 0, 1, 0.94))
-    fig.savefig(out / "1_format_overview.png", dpi=150)
+    fig.savefig(out / P("1_format_overview.png"), dpi=150)
     plt.close(fig)
 
 
@@ -144,7 +144,7 @@ def fig_global(frows, out, scope, formats, fname, title, noun):
     fig.suptitle(title, fontsize=13, fontweight="bold")
     fig.text(0.5, 0.005, "Each bar = mean accuracy of 20 independent fault trials (1,000 validation images each). Number above a bar = mean accuracy lost (percentage points)." + ("" if scope == "scales" else " n/a = this bit group does not exist for the format."), ha="center", fontsize=8.5)
     fig.tight_layout(rect=(0, 0.09, 1, 0.93))
-    fig.savefig(out / fname, dpi=150)
+    fig.savefig(out / P(fname), dpi=150)
     plt.close(fig)
 
 
@@ -181,7 +181,7 @@ def fig_heatmaps(lrows, out):
     cb.set_label("mean accuracy lost (percentage points; colour capped at 60)")
     fig.suptitle("Which layer hurts most when its stored weights are corrupted? (faults injected into ONE layer at a time, mean of 20 trials)\n"
                  "rows = layers from the first (top) to the last (bottom); darker red = more accuracy lost (tiny negative numbers are noise)", fontsize=12, fontweight="bold")
-    fig.savefig(out / "4_layer_heatmaps.png", dpi=150, bbox_inches="tight")
+    fig.savefig(out / P("4_layer_heatmaps.png"), dpi=150, bbox_inches="tight")
     plt.close(fig)
 
 
@@ -210,7 +210,7 @@ def fig_quality_vs_robust(frows, qdir, out):
     axes[0].legend(loc="lower right", fontsize=8.5)
     fig.suptitle("Compression quality (SQNR) vs. robustness: the arrow is the accuracy lost to random bit flips (any bit, all layers)", fontsize=12, fontweight="bold")
     fig.tight_layout(rect=(0, 0, 1, 0.93))
-    fig.savefig(out / "5_quality_vs_robustness.png", dpi=150)
+    fig.savefig(out / P("5_quality_vs_robustness.png"), dpi=150)
     plt.close(fig)
 
 
@@ -269,7 +269,7 @@ def fig_distributions(z, out):
                  "same axes in each column so the two formats can be compared directly; blue = clean model, red line = the same model after the faults\n"
                  "(worst of 20 recorded trials; the horizontal axis is stretched around 0 so small and very large values are both visible)", fontsize=12, fontweight="bold")
     fig.tight_layout(rect=(0, 0, 1, 0.92))
-    fig.savefig(out / f"6_distributions_{fmts[0]}_vs_{fmts[1]}.png", dpi=150)
+    fig.savefig(out / P(f"6_distributions_{fmts[0]}_vs_{fmts[1]}.png"), dpi=150)
     plt.close(fig)
 
     # figure 7: largest value in each layer
@@ -293,18 +293,29 @@ def fig_distributions(z, out):
     ax.grid(alpha=0.3)
     ax.legend()
     fig.tight_layout()
-    fig.savefig(out / f"7_activation_growth_{fmts[0]}_vs_{fmts[1]}.png", dpi=150)
+    fig.savefig(out / P(f"7_activation_growth_{fmts[0]}_vs_{fmts[1]}.png"), dpi=150)
     plt.close(fig)
 
 
+TAG = ""
+
+
+def P(name):
+    """File name with the model tag as prefix, so figures of several models can live side by side."""
+    return f"{TAG}_{name}" if TAG else name
+
+
 def main():
+    global TAG
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--fault-dir", default="reports/scratch/jfamp/fault_screening")
     ap.add_argument("--quant-dir", default="reports/scratch/jfamp/quantization")
-    ap.add_argument("--out", default="plots_preview")
+    ap.add_argument("--out", default="plots_preview", help="root folder; figures go to <out>/<model-tag>/stage4/<model-tag>_<name>.png")
+    ap.add_argument("--model-tag", default="resnet18_cifar10", help="model + dataset tag used in folder and file names")
     ap.add_argument("--npz", default=None, help="default <fault-dir>/fault_distribution_data.npz (figures 6 and 7 are skipped if missing)")
     a = ap.parse_args()
-    fd, qd, out = Path(a.fault_dir), Path(a.quant_dir), Path(a.out)
+    TAG = a.model_tag
+    fd, qd, out = Path(a.fault_dir), Path(a.quant_dir), Path(a.out) / a.model_tag / "stage4"
     out.mkdir(parents=True, exist_ok=True)
     grows = rd(fd / "global_fault_summary.csv")
     lrows = rd(fd / "fault_summary.csv")
