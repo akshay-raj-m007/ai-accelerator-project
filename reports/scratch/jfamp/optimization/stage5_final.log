@@ -1,0 +1,11 @@
+nohup: ignoring input
+Files already downloaded and verified
+Files already downloaded and verified
+run 20261112T180259Z-9f4ca1cf: 2952 validation images (clean, skipping the first 2048), first 1000 for fault trials, device cuda
+A. clean measurements: 198 assignments (0 new)
+B. fault shortlist (31): ['A067', 'A023', 'A101', 'A068', 'A059', 'A102', 'A060', 'A071', 'A056', 'A026', 'A065', 'A002', 'A125', 'A022', 'A161', 'A156', 'A117', 'A162', 'A118', 'A128', 'A170', 'A114', 'A123', 'A119', 'U_E4M11SN', 'U_FP16', 'U_FP8', 'U_INT8', 'U_INT4', 'U_INT8_TMR', 'U_INT4_TMR']
+C. fault trials: 0 new
+summaries written to /home/ssl25/fr_runs/results/scratch/jfamp/optimization  (incomplete trial cells: 0)
+Files already downloaded and verified
+Files already downloaded and verified
+FINAL: A128 frozen; test accuracy 95.20 % (FP32 95.11 %) -> assignment.json, final_test_evaluation.json

@@ -1,0 +1,53 @@
+{
+  "assignment_id": "A128",
+  "test_samples": 10000,
+  "fp32_test_accuracy": 95.10999917984009,
+  "assembled_test_accuracy": 95.19999623298645,
+  "test_clean_drop_pp_vs_fp32": -0.0899970531463623,
+  "test_fault": {
+    "weights_k8": {
+      "n_trials": 100,
+      "sample_count": 10000,
+      "requested_k": 8,
+      "clean_accuracy_subset": 95.19999623298645,
+      "fault_accuracy_mean": 95.19459670782089,
+      "drop_pp_mean": 0.005399525165557861,
+      "drop_pp_median": 0.0,
+      "drop_pp_std": 0.042365194036523154,
+      "drop_pp_p90": 0.0,
+      "drop_pp_worst": 0.3300011157989502,
+      "rel_drop_percent_mean": 0.005671770356317457,
+      "n_loss_finite": 100,
+      "loss_increase_median": 1.1622905731201172e-06,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "fail_weights_nonfinite": 0,
+      "fail_activations_nonfinite": 0,
+      "fail_logits_nonfinite": 0,
+      "fail_loss_nonfinite": 0
+    },
+    "scales_k1": {
+      "n_trials": 100,
+      "sample_count": 10000,
+      "requested_k": 1,
+      "clean_accuracy_subset": 95.19999623298645,
+      "fault_accuracy_mean": 95.19999623298645,
+      "drop_pp_mean": 0.0,
+      "drop_pp_median": 0.0,
+      "drop_pp_std": 0.0,
+      "drop_pp_p90": 0.0,
+      "drop_pp_worst": 0.0,
+      "rel_drop_percent_mean": 0.0,
+      "n_loss_finite": 100,
+      "loss_increase_median": 0.0,
+      "failures": 0,
+      "failure_rate": 0.0,
+      "fail_weights_nonfinite": 0,
+      "fail_activations_nonfinite": 0,
+      "fail_logits_nonfinite": 0,
+      "fail_loss_nonfinite": 0
+    }
+  },
+  "note": "official test set, evaluated once for the frozen assignment; do not compare with the 1,000-image validation fault screen as the same protocol",
+  "all_restored_exactly": true
+}
