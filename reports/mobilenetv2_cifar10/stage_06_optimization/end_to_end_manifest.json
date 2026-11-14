@@ -63,7 +63,7 @@
     "norm": "minmax"
   },
   "git": {
-    "commit": "9e22be198d39ab540db2c42a0e79996d37957bc0",
+    "commit": "d21af60ef43fb65acbf6f7a41a92c96dc8530b02",
     "dirty": true
   },
   "environment": {
@@ -77,9 +77,9 @@
     "cudnn_version": 90100,
     "gpu": "NVIDIA GeForce RTX 3050 OEM",
     "git": {
-      "commit": "9e22be198d39ab540db2c42a0e79996d37957bc0",
+      "commit": "d21af60ef43fb65acbf6f7a41a92c96dc8530b02",
       "dirty": true
     }
   },
-  "seconds_last_session": 1744.0575914382935
+  "seconds_last_session": 0.9480512142181396
 }
