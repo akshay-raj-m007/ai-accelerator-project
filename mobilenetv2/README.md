@@ -71,5 +71,19 @@ Both stage scripts print the gate / shortlist lines; `stage2_quantize.py` exits 
 | theoretical bits vs actual encoded bytes (payload, scales, padding, packing), compression | `quantization/storage_summary.csv` |
 | FP32 -> bytes -> decoded round trip; no-fault output equals the clean quantized reference | `quantization/roundtrip_check.csv`, `quantized_weights/<format>.npz` (immutable, not exported to git) |
 
+## Stage 3 (layer-wise sensitivity) and Section 4 (encoded-weight fault injection)
+```bash
+OUT=reports/$RUN/stage_04_encoded_fault_injection
+python scripts/stage3_layerwise_sensitivity.py --checkpoint $CK --run-name $RUN --out-dir reports/$RUN/stage_03_layerwise_sensitivity
+# Section 4 - one script, one campaign per call; each is resumable (re-run the same command after an interruption)
+S4="python scripts/stage4_encoded_fault_injection.py --checkpoint $CK --run-name $RUN --out-dir $OUT"
+$S4 --campaign validate  --inventory reports/$RUN/stage_01_layer_inventory/layer_inventory.csv   # 4.3 gate; the campaigns refuse to start without PASS
+$S4 --campaign global                                                                           # 30 trials x format x group x k in {1,8}   (1,140 trials)
+$S4 --campaign layerwise                                                                        # 10 trials x layer x format x group x k   (20,140 trials)
+$S4 --campaign shortlist --top-n 5 --min-mean-drop-pp 0.5                                       # writes targeted_shortlist.csv from the layer-wise summary
+$S4 --campaign targeted  --targets-csv $OUT/targeted_shortlist.csv                              # 100 trials per shortlisted configuration, FULL validation
+```
+Design points (Section 4): faults are XOR flips of the stored encoded bytes (`fr.stage3.EncodedFaultInjector`: words/bytes/packed INT4 nibbles) which are decoded and evaluated; `E4M11-SN`, BF16 and FP8 E5M2 bit maps are validated by the Section 4.3 gate (every bit of a synthetic tensor against an independent decoder, INT4 nibble order/padding, no-fault control within 1e-5 logit difference, byte-for-byte restoration hash after every trial, non-finite tracking in weights/activations/logits/loss, trial scope regenerated from the recorded seed). Groups: sign/exponent/fraction (fp), sign/value (INT, two's-complement, no exponent). k = 8 means eight DISTINCT weights, one bit each. Screening (global, layer-wise) uses a fixed class-stratified 1,000-image validation subset declared in `eval_subset` of every manifest (`--subset-size 0` = full 5,000); targeted follow-up always uses all 5,000 images. The INT per-tensor scale words are not faulted in this campaign (Section 4 covers weight codes).
+
 ## Limits to state in any report
 Weights-only; encoded weights are decoded to FP32 for evaluation (no native low-precision kernels); one checkpoint, one seed; INT3 deferred; the baseline is trained here with the ResNet-18 recipe, not tuned for MobileNetV2.

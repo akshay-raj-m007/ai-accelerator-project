@@ -100,6 +100,12 @@ def special_value_rows(fmt: str, codec: S2.Codec) -> List[dict]:
     if fmt == "fp16":
         cases = [("exponent MSB flip of 1.0 (0x3C00) gives +inf", [0x3C00], 14, None),
                  ("exponent MSB flip of 0x3C01 gives NaN", [0x3C01], 14, None)]
+    elif fmt == "bf16":
+        cases = [("exponent MSB flip of 1.0 (0x3F80) gives +inf (0x7F80)", [0x3F80], 14, None),
+                 ("exponent MSB flip of 0x3F81 gives NaN (0x7F81)", [0x3F81], 14, None)]
+    elif fmt == "fp8_e5m2":
+        cases = [("exponent MSB flip of 1.0 (0x3C) gives +inf (0x7C)", [0x3C], 6, None),
+                 ("exponent MSB flip of 0x3D gives NaN (0x7D)", [0x3D], 6, None)]
     elif fmt == "fp8_e4m3fn":
         cases = [("exponent MSB flip of 1.875 (0x3F) gives the single NaN pattern 0x7F", [0x3F], 6, None),
                  ("exponent MSB flip of 1.0 (0x38) gives 256 (0x78), finite", [0x38], 6, None)]
@@ -357,7 +363,7 @@ def _forced_nonfinite_case(fmt: str, store: S3.EncodedStore):
     """(kind, weight_flips, scale_flips, expect_nonfinite, description) built from several flips of ONE element/scale."""
     l = len(store.names) - 1                                   # fc layer
     e = 0
-    if fmt == "fp16":
+    if fmt in ("fp16", "bf16", "fp8_e5m2"):
         w = store.code(l, e)
         bits = [b for b in S3.SPECS[fmt]["fields"]["exponent"] if not (w >> b) & 1]
         return "w", [(l, e, b) for b in bits], [], True, "exponent forced to all ones (inf/NaN) in one fc weight"

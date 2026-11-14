@@ -10,7 +10,7 @@ from fr import stage3_validation as V
 from fr.model import build_resnet18_cifar, quantizable_modules
 from fr.stage3_protocol import build_protocol
 
-CODECS = S2.make_codecs(True)
+CODECS = S2.codec_registry()
 
 
 @pytest.mark.parametrize("fmt", list(S3.SPECS))

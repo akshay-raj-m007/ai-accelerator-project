@@ -56,6 +56,11 @@ SPECS: "OrderedDict[str, dict]" = OrderedDict([
                  "fields": {"sign": (3,), "value": (0, 1, 2)}}),
     ("e4m11_ftz", {"kind": "float", "width": 16, "e_bits": 4, "m_bits": 11, "bias": 7, "word_dtype": np.uint16,
                    "fields": {"sign": (15,), "exponent": (11, 12, 13, 14), "fraction": tuple(range(0, 11))}}),
+    # added for the MobileNetV2 protocol (Section 4.1)
+    ("bf16", {"kind": "float", "width": 16, "e_bits": 8, "m_bits": 7, "bias": 127, "word_dtype": np.uint16,
+              "fields": {"sign": (15,), "exponent": tuple(range(7, 15)), "fraction": tuple(range(0, 7))}}),
+    ("fp8_e5m2", {"kind": "float", "width": 8, "e_bits": 5, "m_bits": 2, "bias": 15, "word_dtype": np.uint8,
+                  "fields": {"sign": (7,), "exponent": (2, 3, 4, 5, 6), "fraction": (0, 1)}}),
 ])
 SCALE_FIELDS = {"sign": (31,), "exponent": tuple(range(23, 31)), "fraction": tuple(range(0, 23))}
 SCALE_FORMATS = ("int8_pt", "int4_pt")
@@ -109,6 +114,20 @@ def ref_decode_float(fmt: str, word: int) -> float:
             mag = m * 2.0 ** -24
         else:
             mag = (1.0 + m / 1024.0) * 2.0 ** (es - 15)
+    elif fmt == "bf16":
+        if es == 255:
+            mag = math.inf if m == 0 else math.nan
+        elif es == 0:
+            mag = m * 2.0 ** -133
+        else:
+            mag = (1.0 + m / 128.0) * 2.0 ** (es - 127)
+    elif fmt == "fp8_e5m2":
+        if es == 31:
+            mag = math.inf if m == 0 else math.nan
+        elif es == 0:
+            mag = m * 2.0 ** -16
+        else:
+            mag = (1.0 + m / 4.0) * 2.0 ** (es - 15)
     elif fmt == "fp8_e4m3fn":
         if es == 15 and m == 7:
             mag = math.nan
