@@ -118,6 +118,27 @@ Fault sensitivity concentrates in the early blocks. The late blocks 13–18 hold
 | stem (1) | 9.08 | 11.91 | 8.60 | 5.58 | 9.52 | 1.10 | 2.83 |
 | classifier (1) | 10.63 | 2.10 | 0.57 | 0.46 | 17.34 | −0.04 | −0.01 |
 
+### Targeted follow-up (100 trials, full 5,000 validation images)
+
+The 35 highest-risk configurations of the layer-wise screening were repeated with 100 independent trials each on all 5,000 validation images (3,500 trials; no-fault control exact for every format; 0 restoration failures; every trial scope-verified). The shortlist rule was the top 5 configurations per format by layer-wise mean accuracy drop with a drop of at least 0.5 pp. **The configurations were chosen from the screening results, so these estimates are biased toward high risk and must not be read as format averages.** All 35 shortlisted configurations turned out to be k = 8 (25 exponent, 10 sign); k = 1 configurations were not followed up.
+
+| Format | Configs | Screening mean (10 trials) | Targeted mean (100 trials) | Trials with a drop above 60 pp | Typical per-config SEM |
+|---|---:|---:|---:|---:|---:|
+| FP16 (exponent) | 5 | 68.99 pp | 58.81 pp | 358 / 500 | 3.6 pp |
+| BF16 (exponent) | 5 | 59.85 pp | 50.26 pp | 305 / 500 | 4.0 pp |
+| E4M11-SN (exponent) | 5 | 48.81 pp | 43.38 pp | 228 / 500 | 3.1 pp |
+| FP8 E4M3FN (exponent) | 5 | 48.83 pp | 46.57 pp | 250 / 500 | 3.1 pp |
+| FP8 E5M2 (exponent) | 5 | 68.68 pp | 58.10 pp | 354 / 500 | 3.5 pp |
+| INT8 (sign) | 5 | 5.10 pp | 6.55 pp | 0 / 500 | 0.5 pp |
+| INT4 (sign) | 5 | 8.21 pp | 9.60 pp | 0 / 500 | 0.7 pp |
+
+Observations:
+1. **Winner's curse is visible.** For 24 of the 35 configurations the 10-trial screening mean is above the 100-trial mean (average 44.1 pp against 39.0 pp), mostly for the floating-point exponent groups. This is the expected regression toward the mean after selecting the worst screening results. The INT configurations moved slightly the other way (5.1 to 6.6 pp and 8.2 to 9.6 pp), so their screening was not over-pessimistic.
+2. **Floating-point exponent faults are bimodal.** A trial either collapses the model to near chance (accuracy about 10 %, a drop of about 82 pp) or does little. The median and 90th percentile sit at the collapse level for most FP16, BF16 and E5M2 configurations (median about 80 pp, p90 about 82 pp), while the mean is near 50 pp. Collapse happened in 72 % (FP16), 71 % (E5M2), 61 % (BF16), 50 % (E4M3FN) and 46 % (E4M11-SN) of the trials.
+3. **Layer matters even inside the shortlist.** For E4M11-SN, `features.4.conv.0.0` has a median drop of only 7.8 pp (mean 24.9 pp) while `features.1.conv.1` and `features.2.conv.2` have medians of 79.6 and 75.1 pp. For FP8 E4M3FN the same layer has a median of 22.9 pp (mean 33.1 pp) against 79.0 pp for `features.2.conv.2`. The FP16, BF16 and E5M2 shortlist entries all have medians of 79 to 82 pp.
+4. **INT sign faults are graded, not collapsing.** The worst INT8 configuration is `features.1.conv.0.0` (16.4 pp mean, 59.3 pp worst); the worst INT4 configuration is the same layer (20.4 pp mean, 51.7 pp worst). No INT trial dropped by more than 60 pp.
+5. **Non-finite outcomes:** 16 of the 3,500 trials produced non-finite activations, all BF16 8-bit exponent faults (9 in `features.1.conv.1`, 6 in `features.2.conv.2`, 1 in `features.4.conv.2`); 1 of them also gave non-finite logits and loss. They are kept as failed trials (no weights were non-finite).
+
 ## 5. Measurements and Metrics
 
 Per trial: accuracy and accuracy change relative to the clean quantized model, loss, changed predictions and prediction agreement, non-finite flags (weights, activations, logits, loss), fault group, k, layer, the exact (layer, element, bit) flips, trial seed and restoration check. Per-configuration summaries give mean, median, standard deviation, 90th percentile, worst case and failure counts.
@@ -127,14 +148,14 @@ Not recorded in this campaign: correct-to-wrong and wrong-to-correct counts, and
 ## 6. Overall Contribution of Stage 4
 
 1. A fault-injection pipeline works directly on the stored encoded bytes of all seven formats and passes the validation gate.
-2. 21,280 trials were completed with no restoration failure and no dropped trials.
+2. 24,780 trials were completed (21,280 screening and validation trials plus 3,500 targeted trials) with no restoration failure and no dropped trials.
 3. Sensitivity depends strongly on format and bit field. Exponent bits of FP16, BF16 and E5M2 are the dominant risk, while INT formats and fraction/sign bits are tolerant.
 4. Sensitivity also depends on layer, with the early blocks most exposed.
 5. Clean quantization quality does not predict fault tolerance. E5M2 and FP16 are close on clean accuracy but behave very differently under exponent faults.
 
 ## 7. Scope and Limitations
 
-- Screening used a fixed 1,000-image validation subset, so one image is 0.1 pp. The targeted 100-trial follow-up on the full 5,000 images has not been run.
+- Screening used a fixed 1,000-image validation subset, so one image is 0.1 pp. The targeted 100-trial follow-up used all 5,000 images but only the 35 configurations selected from the screening results (all k = 8), so it is biased toward high risk and does not cover k = 1.
 - Layer-wise results use 10 trials per configuration. Heavy-tailed outcomes make single configurations noisy, and only aggregates should be compared.
 - The INT per-tensor scale words were not faulted. A flipped scale would affect a whole layer and is a separate risk.
 - ECC and parity were not evaluated. They need the codeword layout, scale protection and reaction policy from the shared protocol.
