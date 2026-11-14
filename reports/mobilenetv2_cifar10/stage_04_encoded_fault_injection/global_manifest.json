@@ -1,0 +1,344 @@
+{
+  "stage": "MobileNetV2 protocol Section 4 - encoded-weight fault injection, global campaign",
+  "label": "screening",
+  "experiment_id": "jfamp-mobilenetv2-cifar10-stage4-encoded-fault-injection",
+  "checkpoint_sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+  "stage2_frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561",
+  "validation_gate": {
+    "run_id": "20261114T063537Z-8902d6b0",
+    "per_format": {
+      "fp16": "PASS",
+      "bf16": "PASS",
+      "e4m11_sn": "PASS",
+      "fp8_e4m3fn": "PASS",
+      "fp8_e5m2": "PASS",
+      "int8_pt": "PASS",
+      "int4_pt": "PASS"
+    }
+  },
+  "settings": {
+    "trials_per_configuration": 30,
+    "protocol_budget": 30,
+    "budget_overridden": false,
+    "k_values": [
+      1,
+      8
+    ],
+    "formats": [
+      "fp16",
+      "bf16",
+      "e4m11_sn",
+      "fp8_e4m3fn",
+      "fp8_e5m2",
+      "int8_pt",
+      "int4_pt"
+    ],
+    "eval_subset": {
+      "name": "stratified-1000-seed42",
+      "images": 1000,
+      "positions_in_validation_set_sha256": "188433ef02c16d195ae9d78208112a782e968fa8a377582947ac6a0b89ca6831",
+      "class_counts": [
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100,
+        100
+      ],
+      "seed": 42,
+      "declared_in_advance": true
+    },
+    "base_seed": 42,
+    "groups": {
+      "fp16": [
+        "sign",
+        "exponent",
+        "fraction"
+      ],
+      "bf16": [
+        "sign",
+        "exponent",
+        "fraction"
+      ],
+      "e4m11_sn": [
+        "sign",
+        "exponent",
+        "fraction"
+      ],
+      "fp8_e4m3fn": [
+        "sign",
+        "exponent",
+        "fraction"
+      ],
+      "fp8_e5m2": [
+        "sign",
+        "exponent",
+        "fraction"
+      ],
+      "int8_pt": [
+        "sign",
+        "value"
+      ],
+      "int4_pt": [
+        "sign",
+        "value"
+      ]
+    },
+    "int_scale_policy": {
+      "primary": "per_tensor",
+      "comparison": "per_channel",
+      "note": "per-tensor and per-output-channel results are never mixed: every table row carries the granularity in its variant label and a role (primary | comparison). Protocol rule: if the previous JFAMP implementation used another policy than per-output-channel it is retained for both datasets and documented; the ResNet-18 implementation used per-tensor."
+    },
+    "fault_scope": "stored weight codes only; the INT float32 scale words are NOT faulted in this campaign",
+    "sampling": "k DISTINCT weights without replacement from the declared scope (global: all weights of all 53 layers; layer-wise: the target layer), one bit per weight, uniform within the fault group; one derived seed per trial",
+    "non_finite_policy": "images with non-finite logits count as incorrect; fault_loss is null when any logit is non-finite; such trials are kept, flagged and counted as failures",
+    "evaluation_images_note": "screening results (subset) are not comparable with full-validation results"
+  },
+  "clean_per_format": {
+    "fp16": {
+      "accuracy": 92.50000715255737,
+      "loss": 0.2422415018081665
+    },
+    "bf16": {
+      "accuracy": 92.50000715255737,
+      "loss": 0.24206888675689697
+    },
+    "e4m11_sn": {
+      "accuracy": 92.50000715255737,
+      "loss": 0.24236896634101868
+    },
+    "fp8_e4m3fn": {
+      "accuracy": 92.50000715255737,
+      "loss": 0.24395935237407684
+    },
+    "fp8_e5m2": {
+      "accuracy": 90.30000567436218,
+      "loss": 0.29019108414649963
+    },
+    "int8_pt": {
+      "accuracy": 92.20000505447388,
+      "loss": 0.2378450334072113
+    },
+    "int4_pt": {
+      "accuracy": 83.80000591278076,
+      "loss": 0.5557992458343506
+    }
+  },
+  "per_format": {
+    "fp16": {
+      "configurations": 6,
+      "expected_trials": 180,
+      "recorded_trials": 180,
+      "accuracy": 92.50000715255737,
+      "loss": 0.2422415018081665
+    },
+    "bf16": {
+      "configurations": 6,
+      "expected_trials": 180,
+      "recorded_trials": 180,
+      "accuracy": 92.50000715255737,
+      "loss": 0.24206888675689697
+    },
+    "e4m11_sn": {
+      "configurations": 6,
+      "expected_trials": 180,
+      "recorded_trials": 180,
+      "accuracy": 92.50000715255737,
+      "loss": 0.24236896634101868
+    },
+    "fp8_e4m3fn": {
+      "configurations": 6,
+      "expected_trials": 180,
+      "recorded_trials": 180,
+      "accuracy": 92.50000715255737,
+      "loss": 0.24395935237407684
+    },
+    "fp8_e5m2": {
+      "configurations": 6,
+      "expected_trials": 180,
+      "recorded_trials": 180,
+      "accuracy": 90.30000567436218,
+      "loss": 0.29019108414649963
+    },
+    "int8_pt": {
+      "configurations": 4,
+      "expected_trials": 120,
+      "recorded_trials": 120,
+      "accuracy": 92.20000505447388,
+      "loss": 0.2378450334072113
+    },
+    "int4_pt": {
+      "configurations": 4,
+      "expected_trials": 120,
+      "recorded_trials": 120,
+      "accuracy": 83.80000591278076,
+      "loss": 0.5557992458343506
+    }
+  },
+  "no_fault_controls_this_session": [
+    {
+      "campaign": "global",
+      "format": "fp16",
+      "flips": 0,
+      "eval_images": 1000,
+      "clean_accuracy": 92.50000715255737,
+      "control_accuracy": 92.50000715255737,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "1277dc15e7bbd4142451cb759e500ce602daf520e9c1ca1e803fac4f95f6b451",
+      "encoded_hash_after": "1277dc15e7bbd4142451cb759e500ce602daf520e9c1ca1e803fac4f95f6b451",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "global",
+      "format": "bf16",
+      "flips": 0,
+      "eval_images": 1000,
+      "clean_accuracy": 92.50000715255737,
+      "control_accuracy": 92.50000715255737,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "dabb8e13266f2350463dd6353499867edf7f499aa5ee9e447ade56ae9cfff196",
+      "encoded_hash_after": "dabb8e13266f2350463dd6353499867edf7f499aa5ee9e447ade56ae9cfff196",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "global",
+      "format": "e4m11_sn",
+      "flips": 0,
+      "eval_images": 1000,
+      "clean_accuracy": 92.50000715255737,
+      "control_accuracy": 92.50000715255737,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "969564429d78df68fc056e2679031d1afae94fe01c4a6fc97e861256ad46a5ba",
+      "encoded_hash_after": "969564429d78df68fc056e2679031d1afae94fe01c4a6fc97e861256ad46a5ba",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "global",
+      "format": "fp8_e4m3fn",
+      "flips": 0,
+      "eval_images": 1000,
+      "clean_accuracy": 92.50000715255737,
+      "control_accuracy": 92.50000715255737,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "9a8de2433c8bb4991c6fc1d925bb09313cbc89930985ab71d7f3d9c3242ae580",
+      "encoded_hash_after": "9a8de2433c8bb4991c6fc1d925bb09313cbc89930985ab71d7f3d9c3242ae580",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "global",
+      "format": "fp8_e5m2",
+      "flips": 0,
+      "eval_images": 1000,
+      "clean_accuracy": 90.30000567436218,
+      "control_accuracy": 90.30000567436218,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "9da8841d3707ce2f31b4520a95396be7d5afde66fc3d50c657572864968e4817",
+      "encoded_hash_after": "9da8841d3707ce2f31b4520a95396be7d5afde66fc3d50c657572864968e4817",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "global",
+      "format": "int8_pt",
+      "flips": 0,
+      "eval_images": 1000,
+      "clean_accuracy": 92.20000505447388,
+      "control_accuracy": 92.20000505447388,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "1b96765dda409e9ea5d69121647517422a1a428abff0a305f1bcd8a6d6eba02d",
+      "encoded_hash_after": "1b96765dda409e9ea5d69121647517422a1a428abff0a305f1bcd8a6d6eba02d",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "global",
+      "format": "int4_pt",
+      "flips": 0,
+      "eval_images": 1000,
+      "clean_accuracy": 83.80000591278076,
+      "control_accuracy": 83.80000591278076,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "6f4ae1e771d88d3745e0213d5f0212561b5114e61314583eac5e903c3e51a194",
+      "encoded_hash_after": "6f4ae1e771d88d3745e0213d5f0212561b5114e61314583eac5e903c3e51a194",
+      "restored_exactly": true,
+      "passed": true
+    }
+  ],
+  "completion": {
+    "expected": 1140,
+    "recorded": 1140,
+    "duplicates": [],
+    "missing": [],
+    "n_missing": 0,
+    "unexpected": [],
+    "n_unexpected": 0,
+    "complete": true
+  },
+  "failure_counts_by_cause": {
+    "weights_nonfinite": 0,
+    "activations_nonfinite": 0,
+    "logits_nonfinite": 0,
+    "loss_nonfinite": 0
+  },
+  "skipped_configurations": [
+    {
+      "format": "int8_pt",
+      "group": "exponent",
+      "reason": "integer format has no exponent field (runbook 6.1)"
+    },
+    {
+      "format": "int4_pt",
+      "group": "exponent",
+      "reason": "integer format has no exponent field (runbook 6.1)"
+    }
+  ],
+  "trials_recorded": 1140,
+  "sessions": [
+    {
+      "run_id": "20261114T064153Z-89003223",
+      "started_utc": "2026-11-14T06:41:53+00:00",
+      "new_trials": 1140,
+      "skipped_already_done": 0,
+      "seconds": 276.80978059768677,
+      "git": {
+        "commit": "91b62d5c5c389e407d3d6e9ae96d599167baa7f3",
+        "dirty": true
+      },
+      "summarize_only": false
+    }
+  ],
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "91b62d5c5c389e407d3d6e9ae96d599167baa7f3",
+      "dirty": true
+    }
+  },
+  "git": {
+    "commit": "91b62d5c5c389e407d3d6e9ae96d599167baa7f3",
+    "dirty": true
+  }
+}

@@ -1,0 +1,12 @@
+Files already downloaded and verified
+validate: stratified-1000-seed42 (1000 validation images), device cuda
+fp16        gate PASS  (21/21 tests, 38 trials, clean 92.50 %)
+bf16        gate PASS  (21/21 tests, 38 trials, clean 92.50 %)
+e4m11_sn    gate PASS  (21/21 tests, 38 trials, clean 92.50 %)
+fp8_e4m3fn  gate PASS  (21/21 tests, 38 trials, clean 92.50 %)
+fp8_e5m2    gate PASS  (21/21 tests, 38 trials, clean 90.30 %)
+int8_pt     gate PASS  (22/22 tests, 32 trials, clean 92.20 %)
+int4_pt     gate PASS  (23/23 tests, 32 trials, clean 83.80 %)
+
+VALIDATION GATE: PASS
+written: reports/mobilenetv2_cifar10/stage_04_encoded_fault_injection

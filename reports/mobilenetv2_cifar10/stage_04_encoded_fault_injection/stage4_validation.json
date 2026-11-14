@@ -1,0 +1,978 @@
+{
+  "stage": "MobileNetV2 protocol Section 4.3 - mandatory validation before the fault campaigns",
+  "run_id": "20261114T063537Z-8902d6b0",
+  "created_utc": "2026-11-14T06:36:45+00:00",
+  "checkpoint_sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+  "stage2_frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561",
+  "injector_version": "stage3-injector-v1",
+  "eval_subset": {
+    "name": "stratified-1000-seed42",
+    "images": 1000,
+    "positions_in_validation_set_sha256": "188433ef02c16d195ae9d78208112a782e968fa8a377582947ac6a0b89ca6831",
+    "class_counts": [
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100,
+      100
+    ],
+    "seed": 42,
+    "declared_in_advance": true
+  },
+  "synthetic_cases": {
+    "total": 547,
+    "passed": 547
+  },
+  "gate_per_format": {
+    "fp16": "PASS",
+    "bf16": "PASS",
+    "e4m11_sn": "PASS",
+    "fp8_e4m3fn": "PASS",
+    "fp8_e5m2": "PASS",
+    "int8_pt": "PASS",
+    "int4_pt": "PASS"
+  },
+  "gate_all_formats": "PASS",
+  "bit_maps": {
+    "fp16": {
+      "width": 16,
+      "groups": {
+        "sign": [
+          15
+        ],
+        "exponent": [
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "fraction": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9
+        ]
+      }
+    },
+    "bf16": {
+      "width": 16,
+      "groups": {
+        "sign": [
+          15
+        ],
+        "exponent": [
+          7,
+          8,
+          9,
+          10,
+          11,
+          12,
+          13,
+          14
+        ],
+        "fraction": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    "e4m11_sn": {
+      "width": 16,
+      "groups": {
+        "sign": [
+          15
+        ],
+        "exponent": [
+          11,
+          12,
+          13,
+          14
+        ],
+        "fraction": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7,
+          8,
+          9,
+          10
+        ]
+      }
+    },
+    "fp8_e4m3fn": {
+      "width": 8,
+      "groups": {
+        "sign": [
+          7
+        ],
+        "exponent": [
+          3,
+          4,
+          5,
+          6
+        ],
+        "fraction": [
+          0,
+          1,
+          2
+        ]
+      }
+    },
+    "fp8_e5m2": {
+      "width": 8,
+      "groups": {
+        "sign": [
+          7
+        ],
+        "exponent": [
+          2,
+          3,
+          4,
+          5,
+          6
+        ],
+        "fraction": [
+          0,
+          1
+        ]
+      }
+    },
+    "int8_pt": {
+      "width": 8,
+      "groups": {
+        "sign": [
+          7
+        ],
+        "value": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6
+        ]
+      }
+    },
+    "int4_pt": {
+      "width": 4,
+      "groups": {
+        "sign": [
+          3
+        ],
+        "value": [
+          0,
+          1,
+          2
+        ]
+      }
+    }
+  },
+  "int_encoding": "two's complement; sign = MSB, value bits = the remaining low bits; INT4 packed two per byte, element 2j in the LOW nibble (bits 0-3) of byte j, element 2j+1 in the HIGH nibble; odd count padded with one zero nibble that is never a fault target",
+  "git": {
+    "commit": "91b62d5c5c389e407d3d6e9ae96d599167baa7f3",
+    "dirty": true
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "91b62d5c5c389e407d3d6e9ae96d599167baa7f3",
+      "dirty": true
+    }
+  },
+  "formats": {
+    "fp16": {
+      "tests": [
+        {
+          "test": "fp16: known-bit smoke test, bit_mapping (96 cases)",
+          "passed": true,
+          "detail": "96 pass, 0 fail"
+        },
+        {
+          "test": "fp16: known-bit smoke test, special_value (2 cases)",
+          "passed": true,
+          "detail": "2 pass, 0 fail"
+        },
+        {
+          "test": "fp16: encoding is deterministic (stable bytes)",
+          "passed": true
+        },
+        {
+          "test": "fp16: decode returns float32 of the original shape, all finite",
+          "passed": true
+        },
+        {
+          "test": "fp16: encode(decode(words)) reproduces the stored bytes",
+          "passed": true
+        },
+        {
+          "test": "fp16: re-encoding the FP32 checkpoint reproduces the stored (frozen) bytes",
+          "passed": true,
+          "detail": "content sha256 78c37473fc51263f vs 78c37473fc51263f"
+        },
+        {
+          "test": "fp16: stored content hash equals the Stage 2 manifest hash",
+          "passed": true
+        },
+        {
+          "test": "fp16: decode of stored words equals the independent reference decoder (97840 sampled elements) and the codec's layer decode",
+          "passed": true,
+          "detail": "0 mismatches"
+        },
+        {
+          "test": "fp16: encoded layer names and element counts equal the model's Conv/Linear weights",
+          "passed": true,
+          "detail": "53 layers, 2202560 elements"
+        },
+        {
+          "test": "fp16: layer order, names and counts equal the Stage 1 inventory (stable layer key)",
+          "passed": true
+        },
+        {
+          "test": "fp16: drawn locations lie inside the declared scope and layer; k=8 flips hit 8 distinct elements",
+          "passed": true,
+          "detail": "0 violations"
+        },
+        {
+          "test": "fp16: global scope is uniform over weights (per-layer share of flips follows layer size)",
+          "passed": true,
+          "detail": "max |share - size share| = 0.0028"
+        },
+        {
+          "test": "fp16: no-fault control (0 flips) reproduces the clean quantized model exactly (logits bit-equal)",
+          "passed": true,
+          "detail": "clean accuracy 92.50 % on 1000 images"
+        },
+        {
+          "test": "fp16: restoration - encoded-state hash before == after for all 12 trials (groups ['sign', 'exponent', 'fraction', 'all'], k 1 and 8)",
+          "passed": true,
+          "detail": "stored state sha256 1277dc15e7bbd414"
+        },
+        {
+          "test": "fp16: every faulted trial changed the ENCODED bytes (hash during the fault differs from before)",
+          "passed": true
+        },
+        {
+          "test": "fp16: after the trials the decoded weights are bit-identical to the clean ones and logits equal the clean logits",
+          "passed": true
+        },
+        {
+          "test": "fp16: the FP32 source checkpoint tensors were not touched by any injection",
+          "passed": true
+        },
+        {
+          "test": "fp16: forced scenario - exponent forced to all ones (inf/NaN) in one fc weight",
+          "passed": true,
+          "detail": "nonfinite weights 1, flags weights_nonfinite,activations_nonfinite,logits_nonfinite,loss_nonfinite, fault accuracy 0.00 %, fault loss None; trial recorded and state restored"
+        },
+        {
+          "test": "fp16: all 38 validation trial records contain every required field",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "test": "fp16: 24 smoke trials, each restored byte-for-byte (hash before == after) with the flip applied to the encoded bytes",
+          "passed": true
+        },
+        {
+          "test": "fp16: non-finite trials are kept and flagged, never dropped",
+          "passed": true,
+          "detail": "0 of 24 flagged"
+        }
+      ],
+      "n_tests": 21,
+      "n_passed": 21,
+      "failed": [],
+      "gate": "PASS",
+      "clean_accuracy_on_gate_images": 92.50000715255737,
+      "clean_loss_on_gate_images": 0.2422415018081665,
+      "seconds": 10.168540716171265
+    },
+    "bf16": {
+      "tests": [
+        {
+          "test": "bf16: known-bit smoke test, bit_mapping (96 cases)",
+          "passed": true,
+          "detail": "96 pass, 0 fail"
+        },
+        {
+          "test": "bf16: known-bit smoke test, special_value (2 cases)",
+          "passed": true,
+          "detail": "2 pass, 0 fail"
+        },
+        {
+          "test": "bf16: encoding is deterministic (stable bytes)",
+          "passed": true
+        },
+        {
+          "test": "bf16: decode returns float32 of the original shape, all finite",
+          "passed": true
+        },
+        {
+          "test": "bf16: encode(decode(words)) reproduces the stored bytes",
+          "passed": true
+        },
+        {
+          "test": "bf16: re-encoding the FP32 checkpoint reproduces the stored (frozen) bytes",
+          "passed": true,
+          "detail": "content sha256 61a6dea614258fbf vs 61a6dea614258fbf"
+        },
+        {
+          "test": "bf16: stored content hash equals the Stage 2 manifest hash",
+          "passed": true
+        },
+        {
+          "test": "bf16: decode of stored words equals the independent reference decoder (97840 sampled elements) and the codec's layer decode",
+          "passed": true,
+          "detail": "0 mismatches"
+        },
+        {
+          "test": "bf16: encoded layer names and element counts equal the model's Conv/Linear weights",
+          "passed": true,
+          "detail": "53 layers, 2202560 elements"
+        },
+        {
+          "test": "bf16: layer order, names and counts equal the Stage 1 inventory (stable layer key)",
+          "passed": true
+        },
+        {
+          "test": "bf16: drawn locations lie inside the declared scope and layer; k=8 flips hit 8 distinct elements",
+          "passed": true,
+          "detail": "0 violations"
+        },
+        {
+          "test": "bf16: global scope is uniform over weights (per-layer share of flips follows layer size)",
+          "passed": true,
+          "detail": "max |share - size share| = 0.0028"
+        },
+        {
+          "test": "bf16: no-fault control (0 flips) reproduces the clean quantized model exactly (logits bit-equal)",
+          "passed": true,
+          "detail": "clean accuracy 92.50 % on 1000 images"
+        },
+        {
+          "test": "bf16: restoration - encoded-state hash before == after for all 12 trials (groups ['sign', 'exponent', 'fraction', 'all'], k 1 and 8)",
+          "passed": true,
+          "detail": "stored state sha256 dabb8e13266f2350"
+        },
+        {
+          "test": "bf16: every faulted trial changed the ENCODED bytes (hash during the fault differs from before)",
+          "passed": true
+        },
+        {
+          "test": "bf16: after the trials the decoded weights are bit-identical to the clean ones and logits equal the clean logits",
+          "passed": true
+        },
+        {
+          "test": "bf16: the FP32 source checkpoint tensors were not touched by any injection",
+          "passed": true
+        },
+        {
+          "test": "bf16: forced scenario - exponent forced to all ones (inf/NaN) in one fc weight",
+          "passed": true,
+          "detail": "nonfinite weights 1, flags weights_nonfinite,activations_nonfinite,logits_nonfinite,loss_nonfinite, fault accuracy 0.00 %, fault loss None; trial recorded and state restored"
+        },
+        {
+          "test": "bf16: all 38 validation trial records contain every required field",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "test": "bf16: 24 smoke trials, each restored byte-for-byte (hash before == after) with the flip applied to the encoded bytes",
+          "passed": true
+        },
+        {
+          "test": "bf16: non-finite trials are kept and flagged, never dropped",
+          "passed": true,
+          "detail": "0 of 24 flagged"
+        }
+      ],
+      "n_tests": 21,
+      "n_passed": 21,
+      "failed": [],
+      "gate": "PASS",
+      "clean_accuracy_on_gate_images": 92.50000715255737,
+      "clean_loss_on_gate_images": 0.24206888675689697,
+      "seconds": 10.042000770568848
+    },
+    "e4m11_sn": {
+      "tests": [
+        {
+          "test": "e4m11_sn: known-bit smoke test, bit_mapping (96 cases)",
+          "passed": true,
+          "detail": "96 pass, 0 fail"
+        },
+        {
+          "test": "e4m11_sn: known-bit smoke test, special_value (2 cases)",
+          "passed": true,
+          "detail": "2 pass, 0 fail"
+        },
+        {
+          "test": "e4m11_sn: encoding is deterministic (stable bytes)",
+          "passed": true
+        },
+        {
+          "test": "e4m11_sn: decode returns float32 of the original shape, all finite",
+          "passed": true
+        },
+        {
+          "test": "e4m11_sn: encode(decode(words)) reproduces the stored bytes",
+          "passed": true
+        },
+        {
+          "test": "e4m11_sn: re-encoding the FP32 checkpoint reproduces the stored (frozen) bytes",
+          "passed": true,
+          "detail": "content sha256 3d1b8cef12a6d1fb vs 3d1b8cef12a6d1fb"
+        },
+        {
+          "test": "e4m11_sn: stored content hash equals the Stage 2 manifest hash",
+          "passed": true
+        },
+        {
+          "test": "e4m11_sn: decode of stored words equals the independent reference decoder (97840 sampled elements) and the codec's layer decode",
+          "passed": true,
+          "detail": "0 mismatches"
+        },
+        {
+          "test": "e4m11_sn: encoded layer names and element counts equal the model's Conv/Linear weights",
+          "passed": true,
+          "detail": "53 layers, 2202560 elements"
+        },
+        {
+          "test": "e4m11_sn: layer order, names and counts equal the Stage 1 inventory (stable layer key)",
+          "passed": true
+        },
+        {
+          "test": "e4m11_sn: drawn locations lie inside the declared scope and layer; k=8 flips hit 8 distinct elements",
+          "passed": true,
+          "detail": "0 violations"
+        },
+        {
+          "test": "e4m11_sn: global scope is uniform over weights (per-layer share of flips follows layer size)",
+          "passed": true,
+          "detail": "max |share - size share| = 0.0028"
+        },
+        {
+          "test": "e4m11_sn: no-fault control (0 flips) reproduces the clean quantized model exactly (logits bit-equal)",
+          "passed": true,
+          "detail": "clean accuracy 92.50 % on 1000 images"
+        },
+        {
+          "test": "e4m11_sn: restoration - encoded-state hash before == after for all 12 trials (groups ['sign', 'exponent', 'fraction', 'all'], k 1 and 8)",
+          "passed": true,
+          "detail": "stored state sha256 969564429d78df68"
+        },
+        {
+          "test": "e4m11_sn: every faulted trial changed the ENCODED bytes (hash during the fault differs from before)",
+          "passed": true
+        },
+        {
+          "test": "e4m11_sn: after the trials the decoded weights are bit-identical to the clean ones and logits equal the clean logits",
+          "passed": true
+        },
+        {
+          "test": "e4m11_sn: the FP32 source checkpoint tensors were not touched by any injection",
+          "passed": true
+        },
+        {
+          "test": "e4m11_sn: forced scenario - reserved exponent es=15 is read as es=14 -> weight stays finite, no non-finite value can occur",
+          "passed": true,
+          "detail": "nonfinite weights 0, flags none, fault accuracy 59.10 %, fault loss 6.371860980987549; trial recorded and state restored"
+        },
+        {
+          "test": "e4m11_sn: all 38 validation trial records contain every required field",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "test": "e4m11_sn: 24 smoke trials, each restored byte-for-byte (hash before == after) with the flip applied to the encoded bytes",
+          "passed": true
+        },
+        {
+          "test": "e4m11_sn: non-finite trials are kept and flagged, never dropped",
+          "passed": true,
+          "detail": "0 of 24 flagged"
+        }
+      ],
+      "n_tests": 21,
+      "n_passed": 21,
+      "failed": [],
+      "gate": "PASS",
+      "clean_accuracy_on_gate_images": 92.50000715255737,
+      "clean_loss_on_gate_images": 0.24236896634101868,
+      "seconds": 10.12944221496582
+    },
+    "fp8_e4m3fn": {
+      "tests": [
+        {
+          "test": "fp8_e4m3fn: known-bit smoke test, bit_mapping (48 cases)",
+          "passed": true,
+          "detail": "48 pass, 0 fail"
+        },
+        {
+          "test": "fp8_e4m3fn: known-bit smoke test, special_value (2 cases)",
+          "passed": true,
+          "detail": "2 pass, 0 fail"
+        },
+        {
+          "test": "fp8_e4m3fn: encoding is deterministic (stable bytes)",
+          "passed": true
+        },
+        {
+          "test": "fp8_e4m3fn: decode returns float32 of the original shape, all finite",
+          "passed": true
+        },
+        {
+          "test": "fp8_e4m3fn: encode(decode(words)) reproduces the stored bytes",
+          "passed": true
+        },
+        {
+          "test": "fp8_e4m3fn: re-encoding the FP32 checkpoint reproduces the stored (frozen) bytes",
+          "passed": true,
+          "detail": "content sha256 74f6acc4ae744c0a vs 74f6acc4ae744c0a"
+        },
+        {
+          "test": "fp8_e4m3fn: stored content hash equals the Stage 2 manifest hash",
+          "passed": true
+        },
+        {
+          "test": "fp8_e4m3fn: decode of stored words equals the independent reference decoder (97840 sampled elements) and the codec's layer decode",
+          "passed": true,
+          "detail": "0 mismatches"
+        },
+        {
+          "test": "fp8_e4m3fn: encoded layer names and element counts equal the model's Conv/Linear weights",
+          "passed": true,
+          "detail": "53 layers, 2202560 elements"
+        },
+        {
+          "test": "fp8_e4m3fn: layer order, names and counts equal the Stage 1 inventory (stable layer key)",
+          "passed": true
+        },
+        {
+          "test": "fp8_e4m3fn: drawn locations lie inside the declared scope and layer; k=8 flips hit 8 distinct elements",
+          "passed": true,
+          "detail": "0 violations"
+        },
+        {
+          "test": "fp8_e4m3fn: global scope is uniform over weights (per-layer share of flips follows layer size)",
+          "passed": true,
+          "detail": "max |share - size share| = 0.0028"
+        },
+        {
+          "test": "fp8_e4m3fn: no-fault control (0 flips) reproduces the clean quantized model exactly (logits bit-equal)",
+          "passed": true,
+          "detail": "clean accuracy 92.50 % on 1000 images"
+        },
+        {
+          "test": "fp8_e4m3fn: restoration - encoded-state hash before == after for all 12 trials (groups ['sign', 'exponent', 'fraction', 'all'], k 1 and 8)",
+          "passed": true,
+          "detail": "stored state sha256 9a8de2433c8bb499"
+        },
+        {
+          "test": "fp8_e4m3fn: every faulted trial changed the ENCODED bytes (hash during the fault differs from before)",
+          "passed": true
+        },
+        {
+          "test": "fp8_e4m3fn: after the trials the decoded weights are bit-identical to the clean ones and logits equal the clean logits",
+          "passed": true
+        },
+        {
+          "test": "fp8_e4m3fn: the FP32 source checkpoint tensors were not touched by any injection",
+          "passed": true
+        },
+        {
+          "test": "fp8_e4m3fn: forced scenario - one fc weight forced to the NaN pattern S.1111.111",
+          "passed": true,
+          "detail": "nonfinite weights 1, flags weights_nonfinite,activations_nonfinite,logits_nonfinite,loss_nonfinite, fault accuracy 0.00 %, fault loss None; trial recorded and state restored"
+        },
+        {
+          "test": "fp8_e4m3fn: all 38 validation trial records contain every required field",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "test": "fp8_e4m3fn: 24 smoke trials, each restored byte-for-byte (hash before == after) with the flip applied to the encoded bytes",
+          "passed": true
+        },
+        {
+          "test": "fp8_e4m3fn: non-finite trials are kept and flagged, never dropped",
+          "passed": true,
+          "detail": "0 of 24 flagged"
+        }
+      ],
+      "n_tests": 21,
+      "n_passed": 21,
+      "failed": [],
+      "gate": "PASS",
+      "clean_accuracy_on_gate_images": 92.50000715255737,
+      "clean_loss_on_gate_images": 0.24395935237407684,
+      "seconds": 9.995618104934692
+    },
+    "fp8_e5m2": {
+      "tests": [
+        {
+          "test": "fp8_e5m2: known-bit smoke test, bit_mapping (48 cases)",
+          "passed": true,
+          "detail": "48 pass, 0 fail"
+        },
+        {
+          "test": "fp8_e5m2: known-bit smoke test, special_value (2 cases)",
+          "passed": true,
+          "detail": "2 pass, 0 fail"
+        },
+        {
+          "test": "fp8_e5m2: encoding is deterministic (stable bytes)",
+          "passed": true
+        },
+        {
+          "test": "fp8_e5m2: decode returns float32 of the original shape, all finite",
+          "passed": true
+        },
+        {
+          "test": "fp8_e5m2: encode(decode(words)) reproduces the stored bytes",
+          "passed": true
+        },
+        {
+          "test": "fp8_e5m2: re-encoding the FP32 checkpoint reproduces the stored (frozen) bytes",
+          "passed": true,
+          "detail": "content sha256 2b4c5d14a0af0c53 vs 2b4c5d14a0af0c53"
+        },
+        {
+          "test": "fp8_e5m2: stored content hash equals the Stage 2 manifest hash",
+          "passed": true
+        },
+        {
+          "test": "fp8_e5m2: decode of stored words equals the independent reference decoder (97840 sampled elements) and the codec's layer decode",
+          "passed": true,
+          "detail": "0 mismatches"
+        },
+        {
+          "test": "fp8_e5m2: encoded layer names and element counts equal the model's Conv/Linear weights",
+          "passed": true,
+          "detail": "53 layers, 2202560 elements"
+        },
+        {
+          "test": "fp8_e5m2: layer order, names and counts equal the Stage 1 inventory (stable layer key)",
+          "passed": true
+        },
+        {
+          "test": "fp8_e5m2: drawn locations lie inside the declared scope and layer; k=8 flips hit 8 distinct elements",
+          "passed": true,
+          "detail": "0 violations"
+        },
+        {
+          "test": "fp8_e5m2: global scope is uniform over weights (per-layer share of flips follows layer size)",
+          "passed": true,
+          "detail": "max |share - size share| = 0.0028"
+        },
+        {
+          "test": "fp8_e5m2: no-fault control (0 flips) reproduces the clean quantized model exactly (logits bit-equal)",
+          "passed": true,
+          "detail": "clean accuracy 90.30 % on 1000 images"
+        },
+        {
+          "test": "fp8_e5m2: restoration - encoded-state hash before == after for all 12 trials (groups ['sign', 'exponent', 'fraction', 'all'], k 1 and 8)",
+          "passed": true,
+          "detail": "stored state sha256 9da8841d3707ce2f"
+        },
+        {
+          "test": "fp8_e5m2: every faulted trial changed the ENCODED bytes (hash during the fault differs from before)",
+          "passed": true
+        },
+        {
+          "test": "fp8_e5m2: after the trials the decoded weights are bit-identical to the clean ones and logits equal the clean logits",
+          "passed": true
+        },
+        {
+          "test": "fp8_e5m2: the FP32 source checkpoint tensors were not touched by any injection",
+          "passed": true
+        },
+        {
+          "test": "fp8_e5m2: forced scenario - exponent forced to all ones (inf/NaN) in one fc weight",
+          "passed": true,
+          "detail": "nonfinite weights 1, flags weights_nonfinite,activations_nonfinite,logits_nonfinite,loss_nonfinite, fault accuracy 0.00 %, fault loss None; trial recorded and state restored"
+        },
+        {
+          "test": "fp8_e5m2: all 38 validation trial records contain every required field",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "test": "fp8_e5m2: 24 smoke trials, each restored byte-for-byte (hash before == after) with the flip applied to the encoded bytes",
+          "passed": true
+        },
+        {
+          "test": "fp8_e5m2: non-finite trials are kept and flagged, never dropped",
+          "passed": true,
+          "detail": "0 of 24 flagged"
+        }
+      ],
+      "n_tests": 21,
+      "n_passed": 21,
+      "failed": [],
+      "gate": "PASS",
+      "clean_accuracy_on_gate_images": 90.30000567436218,
+      "clean_loss_on_gate_images": 0.29019108414649963,
+      "seconds": 10.015867948532104
+    },
+    "int8_pt": {
+      "tests": [
+        {
+          "test": "int8_pt: known-bit smoke test, bit_mapping (56 cases)",
+          "passed": true,
+          "detail": "56 pass, 0 fail"
+        },
+        {
+          "test": "int8_pt: known-bit smoke test, special_value (2 cases)",
+          "passed": true,
+          "detail": "2 pass, 0 fail"
+        },
+        {
+          "test": "int8_pt: known-bit smoke test, scale_bit_mapping (32 cases)",
+          "passed": true,
+          "detail": "32 pass, 0 fail"
+        },
+        {
+          "test": "int8_pt: encoding is deterministic (stable bytes)",
+          "passed": true
+        },
+        {
+          "test": "int8_pt: decode returns float32 of the original shape, all finite",
+          "passed": true
+        },
+        {
+          "test": "int8_pt: decode equals code * float32 scale computed independently",
+          "passed": true
+        },
+        {
+          "test": "int8_pt: re-encoding the FP32 checkpoint reproduces the stored (frozen) bytes",
+          "passed": true,
+          "detail": "content sha256 9823a7527fb86527 vs 9823a7527fb86527"
+        },
+        {
+          "test": "int8_pt: stored content hash equals the Stage 2 manifest hash",
+          "passed": true
+        },
+        {
+          "test": "int8_pt: decode of stored words equals the independent reference decoder (97840 sampled elements) and the codec's layer decode",
+          "passed": true,
+          "detail": "0 mismatches"
+        },
+        {
+          "test": "int8_pt: encoded layer names and element counts equal the model's Conv/Linear weights",
+          "passed": true,
+          "detail": "53 layers, 2202560 elements"
+        },
+        {
+          "test": "int8_pt: layer order, names and counts equal the Stage 1 inventory (stable layer key)",
+          "passed": true
+        },
+        {
+          "test": "int8_pt: drawn locations lie inside the declared scope and layer; k=8 flips hit 8 distinct elements",
+          "passed": true,
+          "detail": "0 violations"
+        },
+        {
+          "test": "int8_pt: global scope is uniform over weights (per-layer share of flips follows layer size)",
+          "passed": true,
+          "detail": "max |share - size share| = 0.0028"
+        },
+        {
+          "test": "int8_pt: no-fault control (0 flips) reproduces the clean quantized model exactly (logits bit-equal)",
+          "passed": true,
+          "detail": "clean accuracy 92.20 % on 1000 images"
+        },
+        {
+          "test": "int8_pt: restoration - encoded-state hash before == after for all 12 trials (groups ['sign', 'value', 'all'], k 1 and 8)",
+          "passed": true,
+          "detail": "stored state sha256 1b96765dda409e9e"
+        },
+        {
+          "test": "int8_pt: every faulted trial changed the ENCODED bytes (hash during the fault differs from before)",
+          "passed": true
+        },
+        {
+          "test": "int8_pt: after the trials the decoded weights are bit-identical to the clean ones and logits equal the clean logits",
+          "passed": true
+        },
+        {
+          "test": "int8_pt: the FP32 source checkpoint tensors were not touched by any injection",
+          "passed": true
+        },
+        {
+          "test": "int8_pt: forced scenario - float32 scale of the fc layer forced to exponent all ones (inf/NaN)",
+          "passed": true,
+          "detail": "nonfinite weights 12800, flags weights_nonfinite,activations_nonfinite,logits_nonfinite,loss_nonfinite, fault accuracy 0.00 %, fault loss None; trial recorded and state restored"
+        },
+        {
+          "test": "int8_pt: all 32 validation trial records contain every required field",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "test": "int8_pt: 18 smoke trials, each restored byte-for-byte (hash before == after) with the flip applied to the encoded bytes",
+          "passed": true
+        },
+        {
+          "test": "int8_pt: non-finite trials are kept and flagged, never dropped",
+          "passed": true,
+          "detail": "0 of 18 flagged"
+        }
+      ],
+      "n_tests": 22,
+      "n_passed": 22,
+      "failed": [],
+      "gate": "PASS",
+      "clean_accuracy_on_gate_images": 92.20000505447388,
+      "clean_loss_on_gate_images": 0.2378450334072113,
+      "seconds": 8.545694589614868
+    },
+    "int4_pt": {
+      "tests": [
+        {
+          "test": "int4_pt: known-bit smoke test, bit_mapping (28 cases)",
+          "passed": true,
+          "detail": "28 pass, 0 fail"
+        },
+        {
+          "test": "int4_pt: known-bit smoke test, special_value (2 cases)",
+          "passed": true,
+          "detail": "2 pass, 0 fail"
+        },
+        {
+          "test": "int4_pt: known-bit smoke test, scale_bit_mapping (32 cases)",
+          "passed": true,
+          "detail": "32 pass, 0 fail"
+        },
+        {
+          "test": "int4_pt: known-bit smoke test, packing (1 cases)",
+          "passed": true,
+          "detail": "1 pass, 0 fail"
+        },
+        {
+          "test": "int4_pt: encoding is deterministic (stable bytes)",
+          "passed": true
+        },
+        {
+          "test": "int4_pt: decode returns float32 of the original shape, all finite",
+          "passed": true
+        },
+        {
+          "test": "int4_pt: decode equals code * float32 scale computed independently",
+          "passed": true
+        },
+        {
+          "test": "int4_pt: re-encoding the FP32 checkpoint reproduces the stored (frozen) bytes",
+          "passed": true,
+          "detail": "content sha256 ae1cf2616aa2384b vs ae1cf2616aa2384b"
+        },
+        {
+          "test": "int4_pt: stored content hash equals the Stage 2 manifest hash",
+          "passed": true
+        },
+        {
+          "test": "int4_pt: decode of stored words equals the independent reference decoder (97840 sampled elements) and the codec's layer decode",
+          "passed": true,
+          "detail": "0 mismatches"
+        },
+        {
+          "test": "int4_pt: encoded layer names and element counts equal the model's Conv/Linear weights",
+          "passed": true,
+          "detail": "53 layers, 2202560 elements"
+        },
+        {
+          "test": "int4_pt: layer order, names and counts equal the Stage 1 inventory (stable layer key)",
+          "passed": true
+        },
+        {
+          "test": "int4_pt: drawn locations lie inside the declared scope and layer; k=8 flips hit 8 distinct elements",
+          "passed": true,
+          "detail": "0 violations"
+        },
+        {
+          "test": "int4_pt: global scope is uniform over weights (per-layer share of flips follows layer size)",
+          "passed": true,
+          "detail": "max |share - size share| = 0.0028"
+        },
+        {
+          "test": "int4_pt: no-fault control (0 flips) reproduces the clean quantized model exactly (logits bit-equal)",
+          "passed": true,
+          "detail": "clean accuracy 83.80 % on 1000 images"
+        },
+        {
+          "test": "int4_pt: restoration - encoded-state hash before == after for all 12 trials (groups ['sign', 'value', 'all'], k 1 and 8)",
+          "passed": true,
+          "detail": "stored state sha256 6f4ae1e771d88d37"
+        },
+        {
+          "test": "int4_pt: every faulted trial changed the ENCODED bytes (hash during the fault differs from before)",
+          "passed": true
+        },
+        {
+          "test": "int4_pt: after the trials the decoded weights are bit-identical to the clean ones and logits equal the clean logits",
+          "passed": true
+        },
+        {
+          "test": "int4_pt: the FP32 source checkpoint tensors were not touched by any injection",
+          "passed": true
+        },
+        {
+          "test": "int4_pt: forced scenario - float32 scale of the fc layer forced to exponent all ones (inf/NaN)",
+          "passed": true,
+          "detail": "nonfinite weights 12800, flags weights_nonfinite,activations_nonfinite,logits_nonfinite,loss_nonfinite, fault accuracy 0.00 %, fault loss None; trial recorded and state restored"
+        },
+        {
+          "test": "int4_pt: all 32 validation trial records contain every required field",
+          "passed": true,
+          "detail": ""
+        },
+        {
+          "test": "int4_pt: 18 smoke trials, each restored byte-for-byte (hash before == after) with the flip applied to the encoded bytes",
+          "passed": true
+        },
+        {
+          "test": "int4_pt: non-finite trials are kept and flagged, never dropped",
+          "passed": true,
+          "detail": "0 of 18 flagged"
+        }
+      ],
+      "n_tests": 23,
+      "n_passed": 23,
+      "failed": [],
+      "gate": "PASS",
+      "clean_accuracy_on_gate_images": 83.80000591278076,
+      "clean_loss_on_gate_images": 0.5557992458343506,
+      "seconds": 8.779412746429443
+    }
+  }
+}

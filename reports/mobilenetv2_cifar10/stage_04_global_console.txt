@@ -1,0 +1,51 @@
+Files already downloaded and verified
+global: stratified-1000-seed42 (1000 validation images), device cuda
+7 formats, 38 configurations x 30 trials = 1140 trials
+  [fp16|GLOBAL|sign|k1] 30 trials, mean fault accuracy 92.50 % (clean 92.50 %)
+  [fp16|GLOBAL|sign|k8] 30 trials, mean fault accuracy 92.48 % (clean 92.50 %)
+  [fp16|GLOBAL|exponent|k1] 30 trials, mean fault accuracy 90.20 % (clean 92.50 %)
+  [fp16|GLOBAL|exponent|k8] 30 trials, mean fault accuracy 72.15 % (clean 92.50 %)
+  [fp16|GLOBAL|fraction|k1] 30 trials, mean fault accuracy 92.50 % (clean 92.50 %)
+  [fp16|GLOBAL|fraction|k8] 30 trials, mean fault accuracy 92.49 % (clean 92.50 %)
+=== fp16: clean 92.50 % | control max|dlogit| 0.0e+00 PASS | 180 new, 0 done before | 44 s elapsed
+  [bf16|GLOBAL|sign|k1] 30 trials, mean fault accuracy 92.38 % (clean 92.50 %)
+  [bf16|GLOBAL|sign|k8] 30 trials, mean fault accuracy 92.52 % (clean 92.50 %)
+  [bf16|GLOBAL|exponent|k1] 30 trials, mean fault accuracy 88.74 % (clean 92.50 %)
+  [bf16|GLOBAL|exponent|k8] 30 trials, mean fault accuracy 66.37 % (clean 92.50 %)
+  [bf16|GLOBAL|fraction|k1] 30 trials, mean fault accuracy 92.50 % (clean 92.50 %)
+  [bf16|GLOBAL|fraction|k8] 30 trials, mean fault accuracy 92.51 % (clean 92.50 %)
+=== bf16: clean 92.50 % | control max|dlogit| 0.0e+00 PASS | 180 new, 0 done before | 88 s elapsed
+  [e4m11_sn|GLOBAL|sign|k1] 30 trials, mean fault accuracy 92.49 % (clean 92.50 %)
+  [e4m11_sn|GLOBAL|sign|k8] 30 trials, mean fault accuracy 92.46 % (clean 92.50 %)
+  [e4m11_sn|GLOBAL|exponent|k1] 30 trials, mean fault accuracy 92.48 % (clean 92.50 %)
+  [e4m11_sn|GLOBAL|exponent|k8] 30 trials, mean fault accuracy 87.39 % (clean 92.50 %)
+  [e4m11_sn|GLOBAL|fraction|k1] 30 trials, mean fault accuracy 92.50 % (clean 92.50 %)
+  [e4m11_sn|GLOBAL|fraction|k8] 30 trials, mean fault accuracy 92.49 % (clean 92.50 %)
+=== e4m11_sn: clean 92.50 % | control max|dlogit| 0.0e+00 PASS | 180 new, 0 done before | 132 s elapsed
+  [fp8_e4m3fn|GLOBAL|sign|k1] 30 trials, mean fault accuracy 92.50 % (clean 92.50 %)
+  [fp8_e4m3fn|GLOBAL|sign|k8] 30 trials, mean fault accuracy 92.51 % (clean 92.50 %)
+  [fp8_e4m3fn|GLOBAL|exponent|k1] 30 trials, mean fault accuracy 90.84 % (clean 92.50 %)
+  [fp8_e4m3fn|GLOBAL|exponent|k8] 30 trials, mean fault accuracy 92.02 % (clean 92.50 %)
+  [fp8_e4m3fn|GLOBAL|fraction|k1] 30 trials, mean fault accuracy 92.50 % (clean 92.50 %)
+  [fp8_e4m3fn|GLOBAL|fraction|k8] 30 trials, mean fault accuracy 92.50 % (clean 92.50 %)
+=== fp8_e4m3fn: clean 92.50 % | control max|dlogit| 0.0e+00 PASS | 180 new, 0 done before | 175 s elapsed
+  [fp8_e5m2|GLOBAL|sign|k1] 30 trials, mean fault accuracy 90.30 % (clean 90.30 %)
+  [fp8_e5m2|GLOBAL|sign|k8] 30 trials, mean fault accuracy 90.28 % (clean 90.30 %)
+  [fp8_e5m2|GLOBAL|exponent|k1] 30 trials, mean fault accuracy 90.27 % (clean 90.30 %)
+  [fp8_e5m2|GLOBAL|exponent|k8] 30 trials, mean fault accuracy 71.05 % (clean 90.30 %)
+  [fp8_e5m2|GLOBAL|fraction|k1] 30 trials, mean fault accuracy 90.30 % (clean 90.30 %)
+  [fp8_e5m2|GLOBAL|fraction|k8] 30 trials, mean fault accuracy 90.30 % (clean 90.30 %)
+=== fp8_e5m2: clean 90.30 % | control max|dlogit| 0.0e+00 PASS | 180 new, 0 done before | 219 s elapsed
+  [int8_pt|GLOBAL|sign|k1] 30 trials, mean fault accuracy 92.22 % (clean 92.20 %)
+  [int8_pt|GLOBAL|sign|k8] 30 trials, mean fault accuracy 92.29 % (clean 92.20 %)
+  [int8_pt|GLOBAL|value|k1] 30 trials, mean fault accuracy 92.21 % (clean 92.20 %)
+  [int8_pt|GLOBAL|value|k8] 30 trials, mean fault accuracy 92.27 % (clean 92.20 %)
+=== int8_pt: clean 92.20 % | control max|dlogit| 0.0e+00 PASS | 120 new, 0 done before | 248 s elapsed
+  [int4_pt|GLOBAL|sign|k1] 30 trials, mean fault accuracy 83.79 % (clean 83.80 %)
+  [int4_pt|GLOBAL|sign|k8] 30 trials, mean fault accuracy 83.79 % (clean 83.80 %)
+  [int4_pt|GLOBAL|value|k1] 30 trials, mean fault accuracy 83.81 % (clean 83.80 %)
+  [int4_pt|GLOBAL|value|k8] 30 trials, mean fault accuracy 83.74 % (clean 83.80 %)
+=== int4_pt: clean 83.80 % | control max|dlogit| 0.0e+00 PASS | 120 new, 0 done before | 277 s elapsed
+
+completeness: COMPLETE (1140/1140 trials; duplicates 0, missing 0)
+written: reports/mobilenetv2_cifar10/stage_04_encoded_fault_injection

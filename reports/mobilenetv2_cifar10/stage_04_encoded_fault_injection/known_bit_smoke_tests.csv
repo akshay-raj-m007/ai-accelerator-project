@@ -1,0 +1,548 @@
+test_id,category,format,tensor,element_index,field_group,bit_index,stored_index,bit_in_stored_unit,value_before,word_before_hex,expected_word_after_hex,observed_word_after_hex,expected_value_after,observed_value_after,expected_change_ratio,status,note
+fp16:bitmap:e0:b0,bit_mapping,fp16,synthetic,0,fraction,0,0,0,1.0,0x3C00,0x3C01,0x3C01,1.00097656,1.00097656,1.00098,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b1,bit_mapping,fp16,synthetic,0,fraction,1,0,1,1.0,0x3C00,0x3C02,0x3C02,1.00195312,1.00195312,1.00195,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b2,bit_mapping,fp16,synthetic,0,fraction,2,0,2,1.0,0x3C00,0x3C04,0x3C04,1.00390625,1.00390625,1.00391,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b3,bit_mapping,fp16,synthetic,0,fraction,3,0,3,1.0,0x3C00,0x3C08,0x3C08,1.0078125,1.0078125,1.00781,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b4,bit_mapping,fp16,synthetic,0,fraction,4,0,4,1.0,0x3C00,0x3C10,0x3C10,1.015625,1.015625,1.01562,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b5,bit_mapping,fp16,synthetic,0,fraction,5,0,5,1.0,0x3C00,0x3C20,0x3C20,1.03125,1.03125,1.03125,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b6,bit_mapping,fp16,synthetic,0,fraction,6,0,6,1.0,0x3C00,0x3C40,0x3C40,1.0625,1.0625,1.0625,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b7,bit_mapping,fp16,synthetic,0,fraction,7,0,7,1.0,0x3C00,0x3C80,0x3C80,1.125,1.125,1.125,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b8,bit_mapping,fp16,synthetic,0,fraction,8,0,8,1.0,0x3C00,0x3D00,0x3D00,1.25,1.25,1.25,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b9,bit_mapping,fp16,synthetic,0,fraction,9,0,9,1.0,0x3C00,0x3E00,0x3E00,1.5,1.5,1.5,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b10,bit_mapping,fp16,synthetic,0,exponent,10,0,10,1.0,0x3C00,0x3800,0x3800,0.5,0.5,0.5,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b11,bit_mapping,fp16,synthetic,0,exponent,11,0,11,1.0,0x3C00,0x3400,0x3400,0.25,0.25,0.25,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b12,bit_mapping,fp16,synthetic,0,exponent,12,0,12,1.0,0x3C00,0x2C00,0x2C00,0.0625,0.0625,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b13,bit_mapping,fp16,synthetic,0,exponent,13,0,13,1.0,0x3C00,0x1C00,0x1C00,0.00390625,0.00390625,0.00390625,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b14,bit_mapping,fp16,synthetic,0,exponent,14,0,14,1.0,0x3C00,0x7C00,0x7C00,inf,inf,,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e0:b15,bit_mapping,fp16,synthetic,0,sign,15,0,15,1.0,0x3C00,0xBC00,0xBC00,-1.0,-1.0,-1,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b0,bit_mapping,fp16,synthetic,1,fraction,0,1,0,-0.75,0xBA00,0xBA01,0xBA01,-0.75048828,-0.75048828,1.00065,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b1,bit_mapping,fp16,synthetic,1,fraction,1,1,1,-0.75,0xBA00,0xBA02,0xBA02,-0.75097656,-0.75097656,1.0013,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b2,bit_mapping,fp16,synthetic,1,fraction,2,1,2,-0.75,0xBA00,0xBA04,0xBA04,-0.75195312,-0.75195312,1.0026,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b3,bit_mapping,fp16,synthetic,1,fraction,3,1,3,-0.75,0xBA00,0xBA08,0xBA08,-0.75390625,-0.75390625,1.00521,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b4,bit_mapping,fp16,synthetic,1,fraction,4,1,4,-0.75,0xBA00,0xBA10,0xBA10,-0.7578125,-0.7578125,1.01042,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b5,bit_mapping,fp16,synthetic,1,fraction,5,1,5,-0.75,0xBA00,0xBA20,0xBA20,-0.765625,-0.765625,1.02083,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b6,bit_mapping,fp16,synthetic,1,fraction,6,1,6,-0.75,0xBA00,0xBA40,0xBA40,-0.78125,-0.78125,1.04167,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b7,bit_mapping,fp16,synthetic,1,fraction,7,1,7,-0.75,0xBA00,0xBA80,0xBA80,-0.8125,-0.8125,1.08333,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b8,bit_mapping,fp16,synthetic,1,fraction,8,1,8,-0.75,0xBA00,0xBB00,0xBB00,-0.875,-0.875,1.16667,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b9,bit_mapping,fp16,synthetic,1,fraction,9,1,9,-0.75,0xBA00,0xB800,0xB800,-0.5,-0.5,0.666667,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b10,bit_mapping,fp16,synthetic,1,exponent,10,1,10,-0.75,0xBA00,0xBE00,0xBE00,-1.5,-1.5,2,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b11,bit_mapping,fp16,synthetic,1,exponent,11,1,11,-0.75,0xBA00,0xB200,0xB200,-0.1875,-0.1875,0.25,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b12,bit_mapping,fp16,synthetic,1,exponent,12,1,12,-0.75,0xBA00,0xAA00,0xAA00,-0.046875,-0.046875,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b13,bit_mapping,fp16,synthetic,1,exponent,13,1,13,-0.75,0xBA00,0x9A00,0x9A00,-0.00292969,-0.00292969,0.00390625,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b14,bit_mapping,fp16,synthetic,1,exponent,14,1,14,-0.75,0xBA00,0xFA00,0xFA00,-49152.0,-49152.0,65536,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e1:b15,bit_mapping,fp16,synthetic,1,sign,15,1,15,-0.75,0xBA00,0x3A00,0x3A00,0.75,0.75,-1,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b0,bit_mapping,fp16,synthetic,2,fraction,0,2,0,0.01000214,0x211F,0x211E,0x211E,0.00999451,0.00999451,0.999237,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b1,bit_mapping,fp16,synthetic,2,fraction,1,2,1,0.01000214,0x211F,0x211D,0x211D,0.00998688,0.00998688,0.998474,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b2,bit_mapping,fp16,synthetic,2,fraction,2,2,2,0.01000214,0x211F,0x211B,0x211B,0.00997162,0.00997162,0.996949,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b3,bit_mapping,fp16,synthetic,2,fraction,3,2,3,0.01000214,0x211F,0x2117,0x2117,0.0099411,0.0099411,0.993898,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b4,bit_mapping,fp16,synthetic,2,fraction,4,2,4,0.01000214,0x211F,0x210F,0x210F,0.00988007,0.00988007,0.987796,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b5,bit_mapping,fp16,synthetic,2,fraction,5,2,5,0.01000214,0x211F,0x213F,0x213F,0.01024628,0.01024628,1.02441,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b6,bit_mapping,fp16,synthetic,2,fraction,6,2,6,0.01000214,0x211F,0x215F,0x215F,0.01049042,0.01049042,1.04882,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b7,bit_mapping,fp16,synthetic,2,fraction,7,2,7,0.01000214,0x211F,0x219F,0x219F,0.0109787,0.0109787,1.09764,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b8,bit_mapping,fp16,synthetic,2,fraction,8,2,8,0.01000214,0x211F,0x201F,0x201F,0.00804901,0.00804901,0.804729,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b9,bit_mapping,fp16,synthetic,2,fraction,9,2,9,0.01000214,0x211F,0x231F,0x231F,0.01390839,0.01390839,1.39054,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b10,bit_mapping,fp16,synthetic,2,exponent,10,2,10,0.01000214,0x211F,0x251F,0x251F,0.02000427,0.02000427,2,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b11,bit_mapping,fp16,synthetic,2,exponent,11,2,11,0.01000214,0x211F,0x291F,0x291F,0.04000854,0.04000854,4,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b12,bit_mapping,fp16,synthetic,2,exponent,12,2,12,0.01000214,0x211F,0x311F,0x311F,0.16003418,0.16003418,16,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b13,bit_mapping,fp16,synthetic,2,exponent,13,2,13,0.01000214,0x211F,0x011F,0x011F,1.711e-05,1.711e-05,0.00171029,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b14,bit_mapping,fp16,synthetic,2,exponent,14,2,14,0.01000214,0x211F,0x611F,0x611F,655.5,655.5,65536,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e2:b15,bit_mapping,fp16,synthetic,2,sign,15,2,15,0.01000214,0x211F,0xA11F,0xA11F,-0.01000214,-0.01000214,-1,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b0,bit_mapping,fp16,synthetic,3,fraction,0,3,0,3.140625,0x4248,0x4249,0x4249,3.14257812,3.14257812,1.00062,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b1,bit_mapping,fp16,synthetic,3,fraction,1,3,1,3.140625,0x4248,0x424A,0x424A,3.14453125,3.14453125,1.00124,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b2,bit_mapping,fp16,synthetic,3,fraction,2,3,2,3.140625,0x4248,0x424C,0x424C,3.1484375,3.1484375,1.00249,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b3,bit_mapping,fp16,synthetic,3,fraction,3,3,3,3.140625,0x4248,0x4240,0x4240,3.125,3.125,0.995025,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b4,bit_mapping,fp16,synthetic,3,fraction,4,3,4,3.140625,0x4248,0x4258,0x4258,3.171875,3.171875,1.00995,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b5,bit_mapping,fp16,synthetic,3,fraction,5,3,5,3.140625,0x4248,0x4268,0x4268,3.203125,3.203125,1.0199,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b6,bit_mapping,fp16,synthetic,3,fraction,6,3,6,3.140625,0x4248,0x4208,0x4208,3.015625,3.015625,0.960199,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b7,bit_mapping,fp16,synthetic,3,fraction,7,3,7,3.140625,0x4248,0x42C8,0x42C8,3.390625,3.390625,1.0796,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b8,bit_mapping,fp16,synthetic,3,fraction,8,3,8,3.140625,0x4248,0x4348,0x4348,3.640625,3.640625,1.1592,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b9,bit_mapping,fp16,synthetic,3,fraction,9,3,9,3.140625,0x4248,0x4048,0x4048,2.140625,2.140625,0.681592,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b10,bit_mapping,fp16,synthetic,3,exponent,10,3,10,3.140625,0x4248,0x4648,0x4648,6.28125,6.28125,2,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b11,bit_mapping,fp16,synthetic,3,exponent,11,3,11,3.140625,0x4248,0x4A48,0x4A48,12.5625,12.5625,4,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b12,bit_mapping,fp16,synthetic,3,exponent,12,3,12,3.140625,0x4248,0x5248,0x5248,50.25,50.25,16,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b13,bit_mapping,fp16,synthetic,3,exponent,13,3,13,3.140625,0x4248,0x6248,0x6248,804.0,804.0,256,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b14,bit_mapping,fp16,synthetic,3,exponent,14,3,14,3.140625,0x4248,0x0248,0x0248,3.481e-05,3.481e-05,1.10835e-05,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e3:b15,bit_mapping,fp16,synthetic,3,sign,15,3,15,3.140625,0x4248,0xC248,0xC248,-3.140625,-3.140625,-1,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b0,bit_mapping,fp16,synthetic,4,fraction,0,4,0,0.25,0x3400,0x3401,0x3401,0.25024414,0.25024414,1.00098,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b1,bit_mapping,fp16,synthetic,4,fraction,1,4,1,0.25,0x3400,0x3402,0x3402,0.25048828,0.25048828,1.00195,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b2,bit_mapping,fp16,synthetic,4,fraction,2,4,2,0.25,0x3400,0x3404,0x3404,0.25097656,0.25097656,1.00391,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b3,bit_mapping,fp16,synthetic,4,fraction,3,4,3,0.25,0x3400,0x3408,0x3408,0.25195312,0.25195312,1.00781,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b4,bit_mapping,fp16,synthetic,4,fraction,4,4,4,0.25,0x3400,0x3410,0x3410,0.25390625,0.25390625,1.01562,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b5,bit_mapping,fp16,synthetic,4,fraction,5,4,5,0.25,0x3400,0x3420,0x3420,0.2578125,0.2578125,1.03125,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b6,bit_mapping,fp16,synthetic,4,fraction,6,4,6,0.25,0x3400,0x3440,0x3440,0.265625,0.265625,1.0625,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b7,bit_mapping,fp16,synthetic,4,fraction,7,4,7,0.25,0x3400,0x3480,0x3480,0.28125,0.28125,1.125,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b8,bit_mapping,fp16,synthetic,4,fraction,8,4,8,0.25,0x3400,0x3500,0x3500,0.3125,0.3125,1.25,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b9,bit_mapping,fp16,synthetic,4,fraction,9,4,9,0.25,0x3400,0x3600,0x3600,0.375,0.375,1.5,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b10,bit_mapping,fp16,synthetic,4,exponent,10,4,10,0.25,0x3400,0x3000,0x3000,0.125,0.125,0.5,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b11,bit_mapping,fp16,synthetic,4,exponent,11,4,11,0.25,0x3400,0x3C00,0x3C00,1.0,1.0,4,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b12,bit_mapping,fp16,synthetic,4,exponent,12,4,12,0.25,0x3400,0x2400,0x2400,0.015625,0.015625,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b13,bit_mapping,fp16,synthetic,4,exponent,13,4,13,0.25,0x3400,0x1400,0x1400,0.00097656,0.00097656,0.00390625,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b14,bit_mapping,fp16,synthetic,4,exponent,14,4,14,0.25,0x3400,0x7400,0x7400,16384.0,16384.0,65536,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e4:b15,bit_mapping,fp16,synthetic,4,sign,15,4,15,0.25,0x3400,0xB400,0xB400,-0.25,-0.25,-1,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b0,bit_mapping,fp16,synthetic,5,fraction,0,5,0,0.00097656,0x1400,0x1401,0x1401,0.00097752,0.00097752,1.00098,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b1,bit_mapping,fp16,synthetic,5,fraction,1,5,1,0.00097656,0x1400,0x1402,0x1402,0.00097847,0.00097847,1.00195,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b2,bit_mapping,fp16,synthetic,5,fraction,2,5,2,0.00097656,0x1400,0x1404,0x1404,0.00098038,0.00098038,1.00391,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b3,bit_mapping,fp16,synthetic,5,fraction,3,5,3,0.00097656,0x1400,0x1408,0x1408,0.00098419,0.00098419,1.00781,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b4,bit_mapping,fp16,synthetic,5,fraction,4,5,4,0.00097656,0x1400,0x1410,0x1410,0.00099182,0.00099182,1.01562,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b5,bit_mapping,fp16,synthetic,5,fraction,5,5,5,0.00097656,0x1400,0x1420,0x1420,0.00100708,0.00100708,1.03125,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b6,bit_mapping,fp16,synthetic,5,fraction,6,5,6,0.00097656,0x1400,0x1440,0x1440,0.0010376,0.0010376,1.0625,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b7,bit_mapping,fp16,synthetic,5,fraction,7,5,7,0.00097656,0x1400,0x1480,0x1480,0.00109863,0.00109863,1.125,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b8,bit_mapping,fp16,synthetic,5,fraction,8,5,8,0.00097656,0x1400,0x1500,0x1500,0.0012207,0.0012207,1.25,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b9,bit_mapping,fp16,synthetic,5,fraction,9,5,9,0.00097656,0x1400,0x1600,0x1600,0.00146484,0.00146484,1.5,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b10,bit_mapping,fp16,synthetic,5,exponent,10,5,10,0.00097656,0x1400,0x1000,0x1000,0.00048828,0.00048828,0.5,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b11,bit_mapping,fp16,synthetic,5,exponent,11,5,11,0.00097656,0x1400,0x1C00,0x1C00,0.00390625,0.00390625,4,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b12,bit_mapping,fp16,synthetic,5,exponent,12,5,12,0.00097656,0x1400,0x0400,0x0400,6.104e-05,6.104e-05,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b13,bit_mapping,fp16,synthetic,5,exponent,13,5,13,0.00097656,0x1400,0x3400,0x3400,0.25,0.25,256,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b14,bit_mapping,fp16,synthetic,5,exponent,14,5,14,0.00097656,0x1400,0x5400,0x5400,64.0,64.0,65536,PASS,only this element changed; stored byte/bit as expected
+fp16:bitmap:e5:b15,bit_mapping,fp16,synthetic,5,sign,15,5,15,0.00097656,0x1400,0x9400,0x9400,-0.00097656,-0.00097656,-1,PASS,only this element changed; stored byte/bit as expected
+fp16:special:0,special_value,fp16,synthetic,0,exponent,14,0,14,1.0,0x3C00,0x7C00,0x7C00,inf,inf,,PASS,exponent MSB flip of 1.0 (0x3C00) gives +inf
+fp16:special:1,special_value,fp16,synthetic,0,exponent,14,0,14,1.00097656,0x3C01,0x7C01,0x7C01,nan,nan,,PASS,exponent MSB flip of 0x3C01 gives NaN
+bf16:bitmap:e0:b0,bit_mapping,bf16,synthetic,0,fraction,0,0,0,1.0,0x3F80,0x3F81,0x3F81,1.0078125,1.0078125,1.00781,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b1,bit_mapping,bf16,synthetic,0,fraction,1,0,1,1.0,0x3F80,0x3F82,0x3F82,1.015625,1.015625,1.01562,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b2,bit_mapping,bf16,synthetic,0,fraction,2,0,2,1.0,0x3F80,0x3F84,0x3F84,1.03125,1.03125,1.03125,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b3,bit_mapping,bf16,synthetic,0,fraction,3,0,3,1.0,0x3F80,0x3F88,0x3F88,1.0625,1.0625,1.0625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b4,bit_mapping,bf16,synthetic,0,fraction,4,0,4,1.0,0x3F80,0x3F90,0x3F90,1.125,1.125,1.125,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b5,bit_mapping,bf16,synthetic,0,fraction,5,0,5,1.0,0x3F80,0x3FA0,0x3FA0,1.25,1.25,1.25,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b6,bit_mapping,bf16,synthetic,0,fraction,6,0,6,1.0,0x3F80,0x3FC0,0x3FC0,1.5,1.5,1.5,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b7,bit_mapping,bf16,synthetic,0,exponent,7,0,7,1.0,0x3F80,0x3F00,0x3F00,0.5,0.5,0.5,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b8,bit_mapping,bf16,synthetic,0,exponent,8,0,8,1.0,0x3F80,0x3E80,0x3E80,0.25,0.25,0.25,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b9,bit_mapping,bf16,synthetic,0,exponent,9,0,9,1.0,0x3F80,0x3D80,0x3D80,0.0625,0.0625,0.0625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b10,bit_mapping,bf16,synthetic,0,exponent,10,0,10,1.0,0x3F80,0x3B80,0x3B80,0.00390625,0.00390625,0.00390625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b11,bit_mapping,bf16,synthetic,0,exponent,11,0,11,1.0,0x3F80,0x3780,0x3780,1.526e-05,1.526e-05,1.52588e-05,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b12,bit_mapping,bf16,synthetic,0,exponent,12,0,12,1.0,0x3F80,0x2F80,0x2F80,0.0,0.0,2.32831e-10,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b13,bit_mapping,bf16,synthetic,0,exponent,13,0,13,1.0,0x3F80,0x1F80,0x1F80,0.0,0.0,5.42101e-20,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b14,bit_mapping,bf16,synthetic,0,exponent,14,0,14,1.0,0x3F80,0x7F80,0x7F80,inf,inf,,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e0:b15,bit_mapping,bf16,synthetic,0,sign,15,0,15,1.0,0x3F80,0xBF80,0xBF80,-1.0,-1.0,-1,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b0,bit_mapping,bf16,synthetic,1,fraction,0,1,0,-0.75,0xBF40,0xBF41,0xBF41,-0.75390625,-0.75390625,1.00521,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b1,bit_mapping,bf16,synthetic,1,fraction,1,1,1,-0.75,0xBF40,0xBF42,0xBF42,-0.7578125,-0.7578125,1.01042,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b2,bit_mapping,bf16,synthetic,1,fraction,2,1,2,-0.75,0xBF40,0xBF44,0xBF44,-0.765625,-0.765625,1.02083,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b3,bit_mapping,bf16,synthetic,1,fraction,3,1,3,-0.75,0xBF40,0xBF48,0xBF48,-0.78125,-0.78125,1.04167,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b4,bit_mapping,bf16,synthetic,1,fraction,4,1,4,-0.75,0xBF40,0xBF50,0xBF50,-0.8125,-0.8125,1.08333,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b5,bit_mapping,bf16,synthetic,1,fraction,5,1,5,-0.75,0xBF40,0xBF60,0xBF60,-0.875,-0.875,1.16667,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b6,bit_mapping,bf16,synthetic,1,fraction,6,1,6,-0.75,0xBF40,0xBF00,0xBF00,-0.5,-0.5,0.666667,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b7,bit_mapping,bf16,synthetic,1,exponent,7,1,7,-0.75,0xBF40,0xBFC0,0xBFC0,-1.5,-1.5,2,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b8,bit_mapping,bf16,synthetic,1,exponent,8,1,8,-0.75,0xBF40,0xBE40,0xBE40,-0.1875,-0.1875,0.25,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b9,bit_mapping,bf16,synthetic,1,exponent,9,1,9,-0.75,0xBF40,0xBD40,0xBD40,-0.046875,-0.046875,0.0625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b10,bit_mapping,bf16,synthetic,1,exponent,10,1,10,-0.75,0xBF40,0xBB40,0xBB40,-0.00292969,-0.00292969,0.00390625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b11,bit_mapping,bf16,synthetic,1,exponent,11,1,11,-0.75,0xBF40,0xB740,0xB740,-1.144e-05,-1.144e-05,1.52588e-05,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b12,bit_mapping,bf16,synthetic,1,exponent,12,1,12,-0.75,0xBF40,0xAF40,0xAF40,-0.0,-0.0,2.32831e-10,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b13,bit_mapping,bf16,synthetic,1,exponent,13,1,13,-0.75,0xBF40,0x9F40,0x9F40,-0.0,-0.0,5.42101e-20,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b14,bit_mapping,bf16,synthetic,1,exponent,14,1,14,-0.75,0xBF40,0xFF40,0xFF40,-2.5521177519070385e+38,-2.5521177519070385e+38,3.40282e+38,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e1:b15,bit_mapping,bf16,synthetic,1,sign,15,1,15,-0.75,0xBF40,0x3F40,0x3F40,0.75,0.75,-1,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b0,bit_mapping,bf16,synthetic,2,fraction,0,2,0,0.01000977,0x3C24,0x3C25,0x3C25,0.0100708,0.0100708,1.0061,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b1,bit_mapping,bf16,synthetic,2,fraction,1,2,1,0.01000977,0x3C24,0x3C26,0x3C26,0.01013184,0.01013184,1.0122,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b2,bit_mapping,bf16,synthetic,2,fraction,2,2,2,0.01000977,0x3C24,0x3C20,0x3C20,0.00976562,0.00976562,0.97561,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b3,bit_mapping,bf16,synthetic,2,fraction,3,2,3,0.01000977,0x3C24,0x3C2C,0x3C2C,0.01049805,0.01049805,1.04878,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b4,bit_mapping,bf16,synthetic,2,fraction,4,2,4,0.01000977,0x3C24,0x3C34,0x3C34,0.01098633,0.01098633,1.09756,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b5,bit_mapping,bf16,synthetic,2,fraction,5,2,5,0.01000977,0x3C24,0x3C04,0x3C04,0.00805664,0.00805664,0.804878,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b6,bit_mapping,bf16,synthetic,2,fraction,6,2,6,0.01000977,0x3C24,0x3C64,0x3C64,0.01391602,0.01391602,1.39024,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b7,bit_mapping,bf16,synthetic,2,exponent,7,2,7,0.01000977,0x3C24,0x3CA4,0x3CA4,0.02001953,0.02001953,2,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b8,bit_mapping,bf16,synthetic,2,exponent,8,2,8,0.01000977,0x3C24,0x3D24,0x3D24,0.04003906,0.04003906,4,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b9,bit_mapping,bf16,synthetic,2,exponent,9,2,9,0.01000977,0x3C24,0x3E24,0x3E24,0.16015625,0.16015625,16,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b10,bit_mapping,bf16,synthetic,2,exponent,10,2,10,0.01000977,0x3C24,0x3824,0x3824,3.91e-05,3.91e-05,0.00390625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b11,bit_mapping,bf16,synthetic,2,exponent,11,2,11,0.01000977,0x3C24,0x3424,0x3424,1.5e-07,1.5e-07,1.52588e-05,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b12,bit_mapping,bf16,synthetic,2,exponent,12,2,12,0.01000977,0x3C24,0x2C24,0x2C24,0.0,0.0,2.32831e-10,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b13,bit_mapping,bf16,synthetic,2,exponent,13,2,13,0.01000977,0x3C24,0x1C24,0x1C24,0.0,0.0,5.42101e-20,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b14,bit_mapping,bf16,synthetic,2,exponent,14,2,14,0.01000977,0x3C24,0x7C24,0x7C24,3.406146739198847e+36,3.406146739198847e+36,3.40282e+38,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e2:b15,bit_mapping,bf16,synthetic,2,sign,15,2,15,0.01000977,0x3C24,0xBC24,0xBC24,-0.01000977,-0.01000977,-1,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b0,bit_mapping,bf16,synthetic,3,fraction,0,3,0,3.140625,0x4049,0x4048,0x4048,3.125,3.125,0.995025,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b1,bit_mapping,bf16,synthetic,3,fraction,1,3,1,3.140625,0x4049,0x404B,0x404B,3.171875,3.171875,1.00995,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b2,bit_mapping,bf16,synthetic,3,fraction,2,3,2,3.140625,0x4049,0x404D,0x404D,3.203125,3.203125,1.0199,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b3,bit_mapping,bf16,synthetic,3,fraction,3,3,3,3.140625,0x4049,0x4041,0x4041,3.015625,3.015625,0.960199,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b4,bit_mapping,bf16,synthetic,3,fraction,4,3,4,3.140625,0x4049,0x4059,0x4059,3.390625,3.390625,1.0796,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b5,bit_mapping,bf16,synthetic,3,fraction,5,3,5,3.140625,0x4049,0x4069,0x4069,3.640625,3.640625,1.1592,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b6,bit_mapping,bf16,synthetic,3,fraction,6,3,6,3.140625,0x4049,0x4009,0x4009,2.140625,2.140625,0.681592,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b7,bit_mapping,bf16,synthetic,3,exponent,7,3,7,3.140625,0x4049,0x40C9,0x40C9,6.28125,6.28125,2,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b8,bit_mapping,bf16,synthetic,3,exponent,8,3,8,3.140625,0x4049,0x4149,0x4149,12.5625,12.5625,4,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b9,bit_mapping,bf16,synthetic,3,exponent,9,3,9,3.140625,0x4049,0x4249,0x4249,50.25,50.25,16,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b10,bit_mapping,bf16,synthetic,3,exponent,10,3,10,3.140625,0x4049,0x4449,0x4449,804.0,804.0,256,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b11,bit_mapping,bf16,synthetic,3,exponent,11,3,11,3.140625,0x4049,0x4849,0x4849,205824.0,205824.0,65536,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b12,bit_mapping,bf16,synthetic,3,exponent,12,3,12,3.140625,0x4049,0x5049,0x5049,13488881664.0,13488881664.0,4.29497e+09,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b13,bit_mapping,bf16,synthetic,3,exponent,13,3,13,3.140625,0x4049,0x6049,0x6049,5.793430560649406e+19,5.793430560649406e+19,1.84467e+19,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b14,bit_mapping,bf16,synthetic,3,exponent,14,3,14,3.140625,0x4049,0x0049,0x0049,0.0,0.0,2.1346e-39,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e3:b15,bit_mapping,bf16,synthetic,3,sign,15,3,15,3.140625,0x4049,0xC049,0xC049,-3.140625,-3.140625,-1,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b0,bit_mapping,bf16,synthetic,4,fraction,0,4,0,0.25,0x3E80,0x3E81,0x3E81,0.25195312,0.25195312,1.00781,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b1,bit_mapping,bf16,synthetic,4,fraction,1,4,1,0.25,0x3E80,0x3E82,0x3E82,0.25390625,0.25390625,1.01562,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b2,bit_mapping,bf16,synthetic,4,fraction,2,4,2,0.25,0x3E80,0x3E84,0x3E84,0.2578125,0.2578125,1.03125,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b3,bit_mapping,bf16,synthetic,4,fraction,3,4,3,0.25,0x3E80,0x3E88,0x3E88,0.265625,0.265625,1.0625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b4,bit_mapping,bf16,synthetic,4,fraction,4,4,4,0.25,0x3E80,0x3E90,0x3E90,0.28125,0.28125,1.125,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b5,bit_mapping,bf16,synthetic,4,fraction,5,4,5,0.25,0x3E80,0x3EA0,0x3EA0,0.3125,0.3125,1.25,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b6,bit_mapping,bf16,synthetic,4,fraction,6,4,6,0.25,0x3E80,0x3EC0,0x3EC0,0.375,0.375,1.5,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b7,bit_mapping,bf16,synthetic,4,exponent,7,4,7,0.25,0x3E80,0x3E00,0x3E00,0.125,0.125,0.5,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b8,bit_mapping,bf16,synthetic,4,exponent,8,4,8,0.25,0x3E80,0x3F80,0x3F80,1.0,1.0,4,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b9,bit_mapping,bf16,synthetic,4,exponent,9,4,9,0.25,0x3E80,0x3C80,0x3C80,0.015625,0.015625,0.0625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b10,bit_mapping,bf16,synthetic,4,exponent,10,4,10,0.25,0x3E80,0x3A80,0x3A80,0.00097656,0.00097656,0.00390625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b11,bit_mapping,bf16,synthetic,4,exponent,11,4,11,0.25,0x3E80,0x3680,0x3680,3.81e-06,3.81e-06,1.52588e-05,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b12,bit_mapping,bf16,synthetic,4,exponent,12,4,12,0.25,0x3E80,0x2E80,0x2E80,0.0,0.0,2.32831e-10,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b13,bit_mapping,bf16,synthetic,4,exponent,13,4,13,0.25,0x3E80,0x1E80,0x1E80,0.0,0.0,5.42101e-20,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b14,bit_mapping,bf16,synthetic,4,exponent,14,4,14,0.25,0x3E80,0x7E80,0x7E80,8.507059173023462e+37,8.507059173023462e+37,3.40282e+38,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e4:b15,bit_mapping,bf16,synthetic,4,sign,15,4,15,0.25,0x3E80,0xBE80,0xBE80,-0.25,-0.25,-1,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b0,bit_mapping,bf16,synthetic,5,fraction,0,5,0,0.00097656,0x3A80,0x3A81,0x3A81,0.00098419,0.00098419,1.00781,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b1,bit_mapping,bf16,synthetic,5,fraction,1,5,1,0.00097656,0x3A80,0x3A82,0x3A82,0.00099182,0.00099182,1.01562,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b2,bit_mapping,bf16,synthetic,5,fraction,2,5,2,0.00097656,0x3A80,0x3A84,0x3A84,0.00100708,0.00100708,1.03125,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b3,bit_mapping,bf16,synthetic,5,fraction,3,5,3,0.00097656,0x3A80,0x3A88,0x3A88,0.0010376,0.0010376,1.0625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b4,bit_mapping,bf16,synthetic,5,fraction,4,5,4,0.00097656,0x3A80,0x3A90,0x3A90,0.00109863,0.00109863,1.125,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b5,bit_mapping,bf16,synthetic,5,fraction,5,5,5,0.00097656,0x3A80,0x3AA0,0x3AA0,0.0012207,0.0012207,1.25,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b6,bit_mapping,bf16,synthetic,5,fraction,6,5,6,0.00097656,0x3A80,0x3AC0,0x3AC0,0.00146484,0.00146484,1.5,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b7,bit_mapping,bf16,synthetic,5,exponent,7,5,7,0.00097656,0x3A80,0x3A00,0x3A00,0.00048828,0.00048828,0.5,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b8,bit_mapping,bf16,synthetic,5,exponent,8,5,8,0.00097656,0x3A80,0x3B80,0x3B80,0.00390625,0.00390625,4,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b9,bit_mapping,bf16,synthetic,5,exponent,9,5,9,0.00097656,0x3A80,0x3880,0x3880,6.104e-05,6.104e-05,0.0625,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b10,bit_mapping,bf16,synthetic,5,exponent,10,5,10,0.00097656,0x3A80,0x3E80,0x3E80,0.25,0.25,256,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b11,bit_mapping,bf16,synthetic,5,exponent,11,5,11,0.00097656,0x3A80,0x3280,0x3280,1e-08,1e-08,1.52588e-05,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b12,bit_mapping,bf16,synthetic,5,exponent,12,5,12,0.00097656,0x3A80,0x2A80,0x2A80,0.0,0.0,2.32831e-10,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b13,bit_mapping,bf16,synthetic,5,exponent,13,5,13,0.00097656,0x3A80,0x1A80,0x1A80,0.0,0.0,5.42101e-20,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b14,bit_mapping,bf16,synthetic,5,exponent,14,5,14,0.00097656,0x3A80,0x7A80,0x7A80,3.32306998946229e+35,3.32306998946229e+35,3.40282e+38,PASS,only this element changed; stored byte/bit as expected
+bf16:bitmap:e5:b15,bit_mapping,bf16,synthetic,5,sign,15,5,15,0.00097656,0x3A80,0xBA80,0xBA80,-0.00097656,-0.00097656,-1,PASS,only this element changed; stored byte/bit as expected
+bf16:special:0,special_value,bf16,synthetic,0,exponent,14,0,14,1.0,0x3F80,0x7F80,0x7F80,inf,inf,,PASS,exponent MSB flip of 1.0 (0x3F80) gives +inf (0x7F80)
+bf16:special:1,special_value,bf16,synthetic,0,exponent,14,0,14,1.0078125,0x3F81,0x7F81,0x7F81,nan,nan,,PASS,exponent MSB flip of 0x3F81 gives NaN (0x7F81)
+e4m11_sn:bitmap:e0:b0,bit_mapping,e4m11_sn,synthetic,0,fraction,0,0,0,1.0,0x3800,0x3801,0x3801,1.00048828,1.00048828,1.00049,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b1,bit_mapping,e4m11_sn,synthetic,0,fraction,1,0,1,1.0,0x3800,0x3802,0x3802,1.00097656,1.00097656,1.00098,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b2,bit_mapping,e4m11_sn,synthetic,0,fraction,2,0,2,1.0,0x3800,0x3804,0x3804,1.00195312,1.00195312,1.00195,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b3,bit_mapping,e4m11_sn,synthetic,0,fraction,3,0,3,1.0,0x3800,0x3808,0x3808,1.00390625,1.00390625,1.00391,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b4,bit_mapping,e4m11_sn,synthetic,0,fraction,4,0,4,1.0,0x3800,0x3810,0x3810,1.0078125,1.0078125,1.00781,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b5,bit_mapping,e4m11_sn,synthetic,0,fraction,5,0,5,1.0,0x3800,0x3820,0x3820,1.015625,1.015625,1.01562,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b6,bit_mapping,e4m11_sn,synthetic,0,fraction,6,0,6,1.0,0x3800,0x3840,0x3840,1.03125,1.03125,1.03125,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b7,bit_mapping,e4m11_sn,synthetic,0,fraction,7,0,7,1.0,0x3800,0x3880,0x3880,1.0625,1.0625,1.0625,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b8,bit_mapping,e4m11_sn,synthetic,0,fraction,8,0,8,1.0,0x3800,0x3900,0x3900,1.125,1.125,1.125,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b9,bit_mapping,e4m11_sn,synthetic,0,fraction,9,0,9,1.0,0x3800,0x3A00,0x3A00,1.25,1.25,1.25,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b10,bit_mapping,e4m11_sn,synthetic,0,fraction,10,0,10,1.0,0x3800,0x3C00,0x3C00,1.5,1.5,1.5,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b11,bit_mapping,e4m11_sn,synthetic,0,exponent,11,0,11,1.0,0x3800,0x3000,0x3000,0.5,0.5,0.5,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b12,bit_mapping,e4m11_sn,synthetic,0,exponent,12,0,12,1.0,0x3800,0x2800,0x2800,0.25,0.25,0.25,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b13,bit_mapping,e4m11_sn,synthetic,0,exponent,13,0,13,1.0,0x3800,0x1800,0x1800,0.0625,0.0625,0.0625,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b14,bit_mapping,e4m11_sn,synthetic,0,exponent,14,0,14,1.0,0x3800,0x7800,0x7800,128.0,128.0,128,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e0:b15,bit_mapping,e4m11_sn,synthetic,0,sign,15,0,15,1.0,0x3800,0xB800,0xB800,-1.0,-1.0,-1,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b0,bit_mapping,e4m11_sn,synthetic,1,fraction,0,1,0,-0.75,0xB400,0xB401,0xB401,-0.75024414,-0.75024414,1.00033,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b1,bit_mapping,e4m11_sn,synthetic,1,fraction,1,1,1,-0.75,0xB400,0xB402,0xB402,-0.75048828,-0.75048828,1.00065,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b2,bit_mapping,e4m11_sn,synthetic,1,fraction,2,1,2,-0.75,0xB400,0xB404,0xB404,-0.75097656,-0.75097656,1.0013,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b3,bit_mapping,e4m11_sn,synthetic,1,fraction,3,1,3,-0.75,0xB400,0xB408,0xB408,-0.75195312,-0.75195312,1.0026,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b4,bit_mapping,e4m11_sn,synthetic,1,fraction,4,1,4,-0.75,0xB400,0xB410,0xB410,-0.75390625,-0.75390625,1.00521,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b5,bit_mapping,e4m11_sn,synthetic,1,fraction,5,1,5,-0.75,0xB400,0xB420,0xB420,-0.7578125,-0.7578125,1.01042,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b6,bit_mapping,e4m11_sn,synthetic,1,fraction,6,1,6,-0.75,0xB400,0xB440,0xB440,-0.765625,-0.765625,1.02083,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b7,bit_mapping,e4m11_sn,synthetic,1,fraction,7,1,7,-0.75,0xB400,0xB480,0xB480,-0.78125,-0.78125,1.04167,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b8,bit_mapping,e4m11_sn,synthetic,1,fraction,8,1,8,-0.75,0xB400,0xB500,0xB500,-0.8125,-0.8125,1.08333,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b9,bit_mapping,e4m11_sn,synthetic,1,fraction,9,1,9,-0.75,0xB400,0xB600,0xB600,-0.875,-0.875,1.16667,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b10,bit_mapping,e4m11_sn,synthetic,1,fraction,10,1,10,-0.75,0xB400,0xB000,0xB000,-0.5,-0.5,0.666667,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b11,bit_mapping,e4m11_sn,synthetic,1,exponent,11,1,11,-0.75,0xB400,0xBC00,0xBC00,-1.5,-1.5,2,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b12,bit_mapping,e4m11_sn,synthetic,1,exponent,12,1,12,-0.75,0xB400,0xA400,0xA400,-0.1875,-0.1875,0.25,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b13,bit_mapping,e4m11_sn,synthetic,1,exponent,13,1,13,-0.75,0xB400,0x9400,0x9400,-0.046875,-0.046875,0.0625,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b14,bit_mapping,e4m11_sn,synthetic,1,exponent,14,1,14,-0.75,0xB400,0xF400,0xF400,-192.0,-192.0,256,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e1:b15,bit_mapping,e4m11_sn,synthetic,1,sign,15,1,15,-0.75,0xB400,0x3400,0x3400,0.75,0.75,-1,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b0,bit_mapping,e4m11_sn,synthetic,2,fraction,0,2,0,0.01000214,0x051F,0x051E,0x051E,0.00999451,0.00999451,0.999237,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b1,bit_mapping,e4m11_sn,synthetic,2,fraction,1,2,1,0.01000214,0x051F,0x051D,0x051D,0.00998688,0.00998688,0.998474,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b2,bit_mapping,e4m11_sn,synthetic,2,fraction,2,2,2,0.01000214,0x051F,0x051B,0x051B,0.00997162,0.00997162,0.996949,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b3,bit_mapping,e4m11_sn,synthetic,2,fraction,3,2,3,0.01000214,0x051F,0x0517,0x0517,0.0099411,0.0099411,0.993898,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b4,bit_mapping,e4m11_sn,synthetic,2,fraction,4,2,4,0.01000214,0x051F,0x050F,0x050F,0.00988007,0.00988007,0.987796,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b5,bit_mapping,e4m11_sn,synthetic,2,fraction,5,2,5,0.01000214,0x051F,0x053F,0x053F,0.01024628,0.01024628,1.02441,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b6,bit_mapping,e4m11_sn,synthetic,2,fraction,6,2,6,0.01000214,0x051F,0x055F,0x055F,0.01049042,0.01049042,1.04882,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b7,bit_mapping,e4m11_sn,synthetic,2,fraction,7,2,7,0.01000214,0x051F,0x059F,0x059F,0.0109787,0.0109787,1.09764,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b8,bit_mapping,e4m11_sn,synthetic,2,fraction,8,2,8,0.01000214,0x051F,0x041F,0x041F,0.00804901,0.00804901,0.804729,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b9,bit_mapping,e4m11_sn,synthetic,2,fraction,9,2,9,0.01000214,0x051F,0x071F,0x071F,0.01390839,0.01390839,1.39054,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b10,bit_mapping,e4m11_sn,synthetic,2,fraction,10,2,10,0.01000214,0x051F,0x011F,0x011F,0.00218964,0.00218964,0.218917,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b11,bit_mapping,e4m11_sn,synthetic,2,exponent,11,2,11,0.01000214,0x051F,0x0D1F,0x0D1F,0.02562714,0.02562714,2.56217,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b12,bit_mapping,e4m11_sn,synthetic,2,exponent,12,2,12,0.01000214,0x051F,0x151F,0x151F,0.05125427,0.05125427,5.12433,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b13,bit_mapping,e4m11_sn,synthetic,2,exponent,13,2,13,0.01000214,0x051F,0x251F,0x251F,0.20501709,0.20501709,20.4973,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b14,bit_mapping,e4m11_sn,synthetic,2,exponent,14,2,14,0.01000214,0x051F,0x451F,0x451F,3.28027344,3.28027344,327.957,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e2:b15,bit_mapping,e4m11_sn,synthetic,2,sign,15,2,15,0.01000214,0x051F,0x851F,0x851F,-0.01000214,-0.01000214,-1,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b0,bit_mapping,e4m11_sn,synthetic,3,fraction,0,3,0,3.13964844,0x448F,0x448E,0x448E,3.13867188,3.13867188,0.999689,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b1,bit_mapping,e4m11_sn,synthetic,3,fraction,1,3,1,3.13964844,0x448F,0x448D,0x448D,3.13769531,3.13769531,0.999378,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b2,bit_mapping,e4m11_sn,synthetic,3,fraction,2,3,2,3.13964844,0x448F,0x448B,0x448B,3.13574219,3.13574219,0.998756,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b3,bit_mapping,e4m11_sn,synthetic,3,fraction,3,3,3,3.13964844,0x448F,0x4487,0x4487,3.13183594,3.13183594,0.997512,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b4,bit_mapping,e4m11_sn,synthetic,3,fraction,4,3,4,3.13964844,0x448F,0x449F,0x449F,3.15527344,3.15527344,1.00498,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b5,bit_mapping,e4m11_sn,synthetic,3,fraction,5,3,5,3.13964844,0x448F,0x44AF,0x44AF,3.17089844,3.17089844,1.00995,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b6,bit_mapping,e4m11_sn,synthetic,3,fraction,6,3,6,3.13964844,0x448F,0x44CF,0x44CF,3.20214844,3.20214844,1.01991,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b7,bit_mapping,e4m11_sn,synthetic,3,fraction,7,3,7,3.13964844,0x448F,0x440F,0x440F,3.01464844,3.01464844,0.960187,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b8,bit_mapping,e4m11_sn,synthetic,3,fraction,8,3,8,3.13964844,0x448F,0x458F,0x458F,3.38964844,3.38964844,1.07963,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b9,bit_mapping,e4m11_sn,synthetic,3,fraction,9,3,9,3.13964844,0x448F,0x468F,0x468F,3.63964844,3.63964844,1.15925,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b10,bit_mapping,e4m11_sn,synthetic,3,fraction,10,3,10,3.13964844,0x448F,0x408F,0x408F,2.13964844,2.13964844,0.681493,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b11,bit_mapping,e4m11_sn,synthetic,3,exponent,11,3,11,3.13964844,0x448F,0x4C8F,0x4C8F,6.27929688,6.27929688,2,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b12,bit_mapping,e4m11_sn,synthetic,3,exponent,12,3,12,3.13964844,0x448F,0x548F,0x548F,12.55859375,12.55859375,4,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b13,bit_mapping,e4m11_sn,synthetic,3,exponent,13,3,13,3.13964844,0x448F,0x648F,0x648F,50.234375,50.234375,16,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b14,bit_mapping,e4m11_sn,synthetic,3,exponent,14,3,14,3.13964844,0x448F,0x048F,0x048F,0.0089035,0.0089035,0.00283583,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e3:b15,bit_mapping,e4m11_sn,synthetic,3,sign,15,3,15,3.13964844,0x448F,0xC48F,0xC48F,-3.13964844,-3.13964844,-1,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b0,bit_mapping,e4m11_sn,synthetic,4,fraction,0,4,0,0.25,0x2800,0x2801,0x2801,0.25012207,0.25012207,1.00049,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b1,bit_mapping,e4m11_sn,synthetic,4,fraction,1,4,1,0.25,0x2800,0x2802,0x2802,0.25024414,0.25024414,1.00098,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b2,bit_mapping,e4m11_sn,synthetic,4,fraction,2,4,2,0.25,0x2800,0x2804,0x2804,0.25048828,0.25048828,1.00195,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b3,bit_mapping,e4m11_sn,synthetic,4,fraction,3,4,3,0.25,0x2800,0x2808,0x2808,0.25097656,0.25097656,1.00391,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b4,bit_mapping,e4m11_sn,synthetic,4,fraction,4,4,4,0.25,0x2800,0x2810,0x2810,0.25195312,0.25195312,1.00781,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b5,bit_mapping,e4m11_sn,synthetic,4,fraction,5,4,5,0.25,0x2800,0x2820,0x2820,0.25390625,0.25390625,1.01562,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b6,bit_mapping,e4m11_sn,synthetic,4,fraction,6,4,6,0.25,0x2800,0x2840,0x2840,0.2578125,0.2578125,1.03125,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b7,bit_mapping,e4m11_sn,synthetic,4,fraction,7,4,7,0.25,0x2800,0x2880,0x2880,0.265625,0.265625,1.0625,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b8,bit_mapping,e4m11_sn,synthetic,4,fraction,8,4,8,0.25,0x2800,0x2900,0x2900,0.28125,0.28125,1.125,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b9,bit_mapping,e4m11_sn,synthetic,4,fraction,9,4,9,0.25,0x2800,0x2A00,0x2A00,0.3125,0.3125,1.25,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b10,bit_mapping,e4m11_sn,synthetic,4,fraction,10,4,10,0.25,0x2800,0x2C00,0x2C00,0.375,0.375,1.5,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b11,bit_mapping,e4m11_sn,synthetic,4,exponent,11,4,11,0.25,0x2800,0x2000,0x2000,0.125,0.125,0.5,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b12,bit_mapping,e4m11_sn,synthetic,4,exponent,12,4,12,0.25,0x2800,0x3800,0x3800,1.0,1.0,4,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b13,bit_mapping,e4m11_sn,synthetic,4,exponent,13,4,13,0.25,0x2800,0x0800,0x0800,0.015625,0.015625,0.0625,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b14,bit_mapping,e4m11_sn,synthetic,4,exponent,14,4,14,0.25,0x2800,0x6800,0x6800,64.0,64.0,256,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e4:b15,bit_mapping,e4m11_sn,synthetic,4,sign,15,4,15,0.25,0x2800,0xA800,0xA800,-0.25,-0.25,-1,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b0,bit_mapping,e4m11_sn,synthetic,5,fraction,0,5,0,0.00097656,0x0080,0x0081,0x0081,0.00098419,0.00098419,1.00781,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b1,bit_mapping,e4m11_sn,synthetic,5,fraction,1,5,1,0.00097656,0x0080,0x0082,0x0082,0.00099182,0.00099182,1.01562,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b2,bit_mapping,e4m11_sn,synthetic,5,fraction,2,5,2,0.00097656,0x0080,0x0084,0x0084,0.00100708,0.00100708,1.03125,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b3,bit_mapping,e4m11_sn,synthetic,5,fraction,3,5,3,0.00097656,0x0080,0x0088,0x0088,0.0010376,0.0010376,1.0625,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b4,bit_mapping,e4m11_sn,synthetic,5,fraction,4,5,4,0.00097656,0x0080,0x0090,0x0090,0.00109863,0.00109863,1.125,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b5,bit_mapping,e4m11_sn,synthetic,5,fraction,5,5,5,0.00097656,0x0080,0x00A0,0x00A0,0.0012207,0.0012207,1.25,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b6,bit_mapping,e4m11_sn,synthetic,5,fraction,6,5,6,0.00097656,0x0080,0x00C0,0x00C0,0.00146484,0.00146484,1.5,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b7,bit_mapping,e4m11_sn,synthetic,5,fraction,7,5,7,0.00097656,0x0080,0x0000,0x0000,0.0,0.0,0,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b8,bit_mapping,e4m11_sn,synthetic,5,fraction,8,5,8,0.00097656,0x0080,0x0180,0x0180,0.00292969,0.00292969,3,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b9,bit_mapping,e4m11_sn,synthetic,5,fraction,9,5,9,0.00097656,0x0080,0x0280,0x0280,0.00488281,0.00488281,5,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b10,bit_mapping,e4m11_sn,synthetic,5,fraction,10,5,10,0.00097656,0x0080,0x0480,0x0480,0.00878906,0.00878906,9,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b11,bit_mapping,e4m11_sn,synthetic,5,exponent,11,5,11,0.00097656,0x0080,0x0880,0x0880,0.01660156,0.01660156,17,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b12,bit_mapping,e4m11_sn,synthetic,5,exponent,12,5,12,0.00097656,0x0080,0x1080,0x1080,0.03320312,0.03320312,34,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b13,bit_mapping,e4m11_sn,synthetic,5,exponent,13,5,13,0.00097656,0x0080,0x2080,0x2080,0.1328125,0.1328125,136,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b14,bit_mapping,e4m11_sn,synthetic,5,exponent,14,5,14,0.00097656,0x0080,0x4080,0x4080,2.125,2.125,2176,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:bitmap:e5:b15,bit_mapping,e4m11_sn,synthetic,5,sign,15,5,15,0.00097656,0x0080,0x8080,0x8080,-0.00097656,-0.00097656,-1,PASS,only this element changed; stored byte/bit as expected
+e4m11_sn:special:0,special_value,e4m11_sn,synthetic,0,exponent,14,0,14,1.0,0x3800,0x7800,0x7800,128.0,128.0,128,PASS,"exponent MSB flip of 1.0 reaches the reserved es=15, read as es=14 (128)"
+e4m11_sn:special:1,special_value,e4m11_sn,synthetic,0,exponent,11,0,11,0.01563263,0x0801,0x0001,0x0001,7.63e-06,7.63e-06,0.000488043,PASS,es=1 -> es=0 with m=1: subnormal 2^-17
+fp8_e4m3fn:bitmap:e0:b0,bit_mapping,fp8_e4m3fn,synthetic,0,fraction,0,0,0,1.0,0x38,0x39,0x39,1.125,1.125,1.125,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e0:b1,bit_mapping,fp8_e4m3fn,synthetic,0,fraction,1,0,1,1.0,0x38,0x3A,0x3A,1.25,1.25,1.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e0:b2,bit_mapping,fp8_e4m3fn,synthetic,0,fraction,2,0,2,1.0,0x38,0x3C,0x3C,1.5,1.5,1.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e0:b3,bit_mapping,fp8_e4m3fn,synthetic,0,exponent,3,0,3,1.0,0x38,0x30,0x30,0.5,0.5,0.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e0:b4,bit_mapping,fp8_e4m3fn,synthetic,0,exponent,4,0,4,1.0,0x38,0x28,0x28,0.25,0.25,0.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e0:b5,bit_mapping,fp8_e4m3fn,synthetic,0,exponent,5,0,5,1.0,0x38,0x18,0x18,0.0625,0.0625,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e0:b6,bit_mapping,fp8_e4m3fn,synthetic,0,exponent,6,0,6,1.0,0x38,0x78,0x78,256.0,256.0,256,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e0:b7,bit_mapping,fp8_e4m3fn,synthetic,0,sign,7,0,7,1.0,0x38,0xB8,0xB8,-1.0,-1.0,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e1:b0,bit_mapping,fp8_e4m3fn,synthetic,1,fraction,0,1,0,-0.75,0xB4,0xB5,0xB5,-0.8125,-0.8125,1.08333,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e1:b1,bit_mapping,fp8_e4m3fn,synthetic,1,fraction,1,1,1,-0.75,0xB4,0xB6,0xB6,-0.875,-0.875,1.16667,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e1:b2,bit_mapping,fp8_e4m3fn,synthetic,1,fraction,2,1,2,-0.75,0xB4,0xB0,0xB0,-0.5,-0.5,0.666667,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e1:b3,bit_mapping,fp8_e4m3fn,synthetic,1,exponent,3,1,3,-0.75,0xB4,0xBC,0xBC,-1.5,-1.5,2,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e1:b4,bit_mapping,fp8_e4m3fn,synthetic,1,exponent,4,1,4,-0.75,0xB4,0xA4,0xA4,-0.1875,-0.1875,0.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e1:b5,bit_mapping,fp8_e4m3fn,synthetic,1,exponent,5,1,5,-0.75,0xB4,0x94,0x94,-0.046875,-0.046875,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e1:b6,bit_mapping,fp8_e4m3fn,synthetic,1,exponent,6,1,6,-0.75,0xB4,0xF4,0xF4,-192.0,-192.0,256,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e1:b7,bit_mapping,fp8_e4m3fn,synthetic,1,sign,7,1,7,-0.75,0xB4,0x34,0x34,0.75,0.75,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e2:b0,bit_mapping,fp8_e4m3fn,synthetic,2,fraction,0,2,0,0.0625,0x18,0x19,0x19,0.0703125,0.0703125,1.125,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e2:b1,bit_mapping,fp8_e4m3fn,synthetic,2,fraction,1,2,1,0.0625,0x18,0x1A,0x1A,0.078125,0.078125,1.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e2:b2,bit_mapping,fp8_e4m3fn,synthetic,2,fraction,2,2,2,0.0625,0x18,0x1C,0x1C,0.09375,0.09375,1.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e2:b3,bit_mapping,fp8_e4m3fn,synthetic,2,exponent,3,2,3,0.0625,0x18,0x10,0x10,0.03125,0.03125,0.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e2:b4,bit_mapping,fp8_e4m3fn,synthetic,2,exponent,4,2,4,0.0625,0x18,0x08,0x08,0.015625,0.015625,0.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e2:b5,bit_mapping,fp8_e4m3fn,synthetic,2,exponent,5,2,5,0.0625,0x18,0x38,0x38,1.0,1.0,16,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e2:b6,bit_mapping,fp8_e4m3fn,synthetic,2,exponent,6,2,6,0.0625,0x18,0x58,0x58,16.0,16.0,256,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e2:b7,bit_mapping,fp8_e4m3fn,synthetic,2,sign,7,2,7,0.0625,0x18,0x98,0x98,-0.0625,-0.0625,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e3:b0,bit_mapping,fp8_e4m3fn,synthetic,3,fraction,0,3,0,0.3125,0x2A,0x2B,0x2B,0.34375,0.34375,1.1,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e3:b1,bit_mapping,fp8_e4m3fn,synthetic,3,fraction,1,3,1,0.3125,0x2A,0x28,0x28,0.25,0.25,0.8,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e3:b2,bit_mapping,fp8_e4m3fn,synthetic,3,fraction,2,3,2,0.3125,0x2A,0x2E,0x2E,0.4375,0.4375,1.4,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e3:b3,bit_mapping,fp8_e4m3fn,synthetic,3,exponent,3,3,3,0.3125,0x2A,0x22,0x22,0.15625,0.15625,0.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e3:b4,bit_mapping,fp8_e4m3fn,synthetic,3,exponent,4,3,4,0.3125,0x2A,0x3A,0x3A,1.25,1.25,4,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e3:b5,bit_mapping,fp8_e4m3fn,synthetic,3,exponent,5,3,5,0.3125,0x2A,0x0A,0x0A,0.01953125,0.01953125,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e3:b6,bit_mapping,fp8_e4m3fn,synthetic,3,exponent,6,3,6,0.3125,0x2A,0x6A,0x6A,80.0,80.0,256,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e3:b7,bit_mapping,fp8_e4m3fn,synthetic,3,sign,7,3,7,0.3125,0x2A,0xAA,0xAA,-0.3125,-0.3125,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e4:b0,bit_mapping,fp8_e4m3fn,synthetic,4,fraction,0,4,0,0.0,0x00,0x01,0x01,0.00195312,0.00195312,,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e4:b1,bit_mapping,fp8_e4m3fn,synthetic,4,fraction,1,4,1,0.0,0x00,0x02,0x02,0.00390625,0.00390625,,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e4:b2,bit_mapping,fp8_e4m3fn,synthetic,4,fraction,2,4,2,0.0,0x00,0x04,0x04,0.0078125,0.0078125,,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e4:b3,bit_mapping,fp8_e4m3fn,synthetic,4,exponent,3,4,3,0.0,0x00,0x08,0x08,0.015625,0.015625,,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e4:b4,bit_mapping,fp8_e4m3fn,synthetic,4,exponent,4,4,4,0.0,0x00,0x10,0x10,0.03125,0.03125,,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e4:b5,bit_mapping,fp8_e4m3fn,synthetic,4,exponent,5,4,5,0.0,0x00,0x20,0x20,0.125,0.125,,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e4:b6,bit_mapping,fp8_e4m3fn,synthetic,4,exponent,6,4,6,0.0,0x00,0x40,0x40,2.0,2.0,,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e4:b7,bit_mapping,fp8_e4m3fn,synthetic,4,sign,7,4,7,0.0,0x00,0x80,0x80,-0.0,-0.0,,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e5:b0,bit_mapping,fp8_e4m3fn,synthetic,5,fraction,0,5,0,0.0078125,0x04,0x05,0x05,0.00976562,0.00976562,1.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e5:b1,bit_mapping,fp8_e4m3fn,synthetic,5,fraction,1,5,1,0.0078125,0x04,0x06,0x06,0.01171875,0.01171875,1.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e5:b2,bit_mapping,fp8_e4m3fn,synthetic,5,fraction,2,5,2,0.0078125,0x04,0x00,0x00,0.0,0.0,0,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e5:b3,bit_mapping,fp8_e4m3fn,synthetic,5,exponent,3,5,3,0.0078125,0x04,0x0C,0x0C,0.0234375,0.0234375,3,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e5:b4,bit_mapping,fp8_e4m3fn,synthetic,5,exponent,4,5,4,0.0078125,0x04,0x14,0x14,0.046875,0.046875,6,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e5:b5,bit_mapping,fp8_e4m3fn,synthetic,5,exponent,5,5,5,0.0078125,0x04,0x24,0x24,0.1875,0.1875,24,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e5:b6,bit_mapping,fp8_e4m3fn,synthetic,5,exponent,6,5,6,0.0078125,0x04,0x44,0x44,3.0,3.0,384,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:bitmap:e5:b7,bit_mapping,fp8_e4m3fn,synthetic,5,sign,7,5,7,0.0078125,0x04,0x84,0x84,-0.0078125,-0.0078125,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e4m3fn:special:0,special_value,fp8_e4m3fn,synthetic,0,exponent,6,0,6,1.875,0x3F,0x7F,0x7F,nan,nan,,PASS,exponent MSB flip of 1.875 (0x3F) gives the single NaN pattern 0x7F
+fp8_e4m3fn:special:1,special_value,fp8_e4m3fn,synthetic,0,exponent,6,0,6,1.0,0x38,0x78,0x78,256.0,256.0,256,PASS,"exponent MSB flip of 1.0 (0x38) gives 256 (0x78), finite"
+fp8_e5m2:bitmap:e0:b0,bit_mapping,fp8_e5m2,synthetic,0,fraction,0,0,0,1.0,0x3C,0x3D,0x3D,1.25,1.25,1.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e0:b1,bit_mapping,fp8_e5m2,synthetic,0,fraction,1,0,1,1.0,0x3C,0x3E,0x3E,1.5,1.5,1.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e0:b2,bit_mapping,fp8_e5m2,synthetic,0,exponent,2,0,2,1.0,0x3C,0x38,0x38,0.5,0.5,0.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e0:b3,bit_mapping,fp8_e5m2,synthetic,0,exponent,3,0,3,1.0,0x3C,0x34,0x34,0.25,0.25,0.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e0:b4,bit_mapping,fp8_e5m2,synthetic,0,exponent,4,0,4,1.0,0x3C,0x2C,0x2C,0.0625,0.0625,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e0:b5,bit_mapping,fp8_e5m2,synthetic,0,exponent,5,0,5,1.0,0x3C,0x1C,0x1C,0.00390625,0.00390625,0.00390625,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e0:b6,bit_mapping,fp8_e5m2,synthetic,0,exponent,6,0,6,1.0,0x3C,0x7C,0x7C,inf,inf,,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e0:b7,bit_mapping,fp8_e5m2,synthetic,0,sign,7,0,7,1.0,0x3C,0xBC,0xBC,-1.0,-1.0,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e1:b0,bit_mapping,fp8_e5m2,synthetic,1,fraction,0,1,0,-0.75,0xBA,0xBB,0xBB,-0.875,-0.875,1.16667,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e1:b1,bit_mapping,fp8_e5m2,synthetic,1,fraction,1,1,1,-0.75,0xBA,0xB8,0xB8,-0.5,-0.5,0.666667,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e1:b2,bit_mapping,fp8_e5m2,synthetic,1,exponent,2,1,2,-0.75,0xBA,0xBE,0xBE,-1.5,-1.5,2,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e1:b3,bit_mapping,fp8_e5m2,synthetic,1,exponent,3,1,3,-0.75,0xBA,0xB2,0xB2,-0.1875,-0.1875,0.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e1:b4,bit_mapping,fp8_e5m2,synthetic,1,exponent,4,1,4,-0.75,0xBA,0xAA,0xAA,-0.046875,-0.046875,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e1:b5,bit_mapping,fp8_e5m2,synthetic,1,exponent,5,1,5,-0.75,0xBA,0x9A,0x9A,-0.00292969,-0.00292969,0.00390625,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e1:b6,bit_mapping,fp8_e5m2,synthetic,1,exponent,6,1,6,-0.75,0xBA,0xFA,0xFA,-49152.0,-49152.0,65536,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e1:b7,bit_mapping,fp8_e5m2,synthetic,1,sign,7,1,7,-0.75,0xBA,0x3A,0x3A,0.75,0.75,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e2:b0,bit_mapping,fp8_e5m2,synthetic,2,fraction,0,2,0,0.00976562,0x21,0x20,0x20,0.0078125,0.0078125,0.8,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e2:b1,bit_mapping,fp8_e5m2,synthetic,2,fraction,1,2,1,0.00976562,0x21,0x23,0x23,0.01367188,0.01367188,1.4,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e2:b2,bit_mapping,fp8_e5m2,synthetic,2,exponent,2,2,2,0.00976562,0x21,0x25,0x25,0.01953125,0.01953125,2,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e2:b3,bit_mapping,fp8_e5m2,synthetic,2,exponent,3,2,3,0.00976562,0x21,0x29,0x29,0.0390625,0.0390625,4,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e2:b4,bit_mapping,fp8_e5m2,synthetic,2,exponent,4,2,4,0.00976562,0x21,0x31,0x31,0.15625,0.15625,16,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e2:b5,bit_mapping,fp8_e5m2,synthetic,2,exponent,5,2,5,0.00976562,0x21,0x01,0x01,1.526e-05,1.526e-05,0.0015625,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e2:b6,bit_mapping,fp8_e5m2,synthetic,2,exponent,6,2,6,0.00976562,0x21,0x61,0x61,640.0,640.0,65536,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e2:b7,bit_mapping,fp8_e5m2,synthetic,2,sign,7,2,7,0.00976562,0x21,0xA1,0xA1,-0.00976562,-0.00976562,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e3:b0,bit_mapping,fp8_e5m2,synthetic,3,fraction,0,3,0,3.0,0x42,0x43,0x43,3.5,3.5,1.16667,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e3:b1,bit_mapping,fp8_e5m2,synthetic,3,fraction,1,3,1,3.0,0x42,0x40,0x40,2.0,2.0,0.666667,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e3:b2,bit_mapping,fp8_e5m2,synthetic,3,exponent,2,3,2,3.0,0x42,0x46,0x46,6.0,6.0,2,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e3:b3,bit_mapping,fp8_e5m2,synthetic,3,exponent,3,3,3,3.0,0x42,0x4A,0x4A,12.0,12.0,4,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e3:b4,bit_mapping,fp8_e5m2,synthetic,3,exponent,4,3,4,3.0,0x42,0x52,0x52,48.0,48.0,16,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e3:b5,bit_mapping,fp8_e5m2,synthetic,3,exponent,5,3,5,3.0,0x42,0x62,0x62,768.0,768.0,256,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e3:b6,bit_mapping,fp8_e5m2,synthetic,3,exponent,6,3,6,3.0,0x42,0x02,0x02,3.052e-05,3.052e-05,1.01725e-05,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e3:b7,bit_mapping,fp8_e5m2,synthetic,3,sign,7,3,7,3.0,0x42,0xC2,0xC2,-3.0,-3.0,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e4:b0,bit_mapping,fp8_e5m2,synthetic,4,fraction,0,4,0,0.25,0x34,0x35,0x35,0.3125,0.3125,1.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e4:b1,bit_mapping,fp8_e5m2,synthetic,4,fraction,1,4,1,0.25,0x34,0x36,0x36,0.375,0.375,1.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e4:b2,bit_mapping,fp8_e5m2,synthetic,4,exponent,2,4,2,0.25,0x34,0x30,0x30,0.125,0.125,0.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e4:b3,bit_mapping,fp8_e5m2,synthetic,4,exponent,3,4,3,0.25,0x34,0x3C,0x3C,1.0,1.0,4,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e4:b4,bit_mapping,fp8_e5m2,synthetic,4,exponent,4,4,4,0.25,0x34,0x24,0x24,0.015625,0.015625,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e4:b5,bit_mapping,fp8_e5m2,synthetic,4,exponent,5,4,5,0.25,0x34,0x14,0x14,0.00097656,0.00097656,0.00390625,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e4:b6,bit_mapping,fp8_e5m2,synthetic,4,exponent,6,4,6,0.25,0x34,0x74,0x74,16384.0,16384.0,65536,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e4:b7,bit_mapping,fp8_e5m2,synthetic,4,sign,7,4,7,0.25,0x34,0xB4,0xB4,-0.25,-0.25,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e5:b0,bit_mapping,fp8_e5m2,synthetic,5,fraction,0,5,0,0.00097656,0x14,0x15,0x15,0.0012207,0.0012207,1.25,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e5:b1,bit_mapping,fp8_e5m2,synthetic,5,fraction,1,5,1,0.00097656,0x14,0x16,0x16,0.00146484,0.00146484,1.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e5:b2,bit_mapping,fp8_e5m2,synthetic,5,exponent,2,5,2,0.00097656,0x14,0x10,0x10,0.00048828,0.00048828,0.5,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e5:b3,bit_mapping,fp8_e5m2,synthetic,5,exponent,3,5,3,0.00097656,0x14,0x1C,0x1C,0.00390625,0.00390625,4,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e5:b4,bit_mapping,fp8_e5m2,synthetic,5,exponent,4,5,4,0.00097656,0x14,0x04,0x04,6.104e-05,6.104e-05,0.0625,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e5:b5,bit_mapping,fp8_e5m2,synthetic,5,exponent,5,5,5,0.00097656,0x14,0x34,0x34,0.25,0.25,256,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e5:b6,bit_mapping,fp8_e5m2,synthetic,5,exponent,6,5,6,0.00097656,0x14,0x54,0x54,64.0,64.0,65536,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:bitmap:e5:b7,bit_mapping,fp8_e5m2,synthetic,5,sign,7,5,7,0.00097656,0x14,0x94,0x94,-0.00097656,-0.00097656,-1,PASS,only this element changed; stored byte/bit as expected
+fp8_e5m2:special:0,special_value,fp8_e5m2,synthetic,0,exponent,6,0,6,1.0,0x3C,0x7C,0x7C,inf,inf,,PASS,exponent MSB flip of 1.0 (0x3C) gives +inf (0x7C)
+fp8_e5m2:special:1,special_value,fp8_e5m2,synthetic,0,exponent,6,0,6,1.25,0x3D,0x7D,0x7D,nan,nan,,PASS,exponent MSB flip of 0x3D gives NaN (0x7D)
+int8_pt:bitmap:e0:b0,bit_mapping,int8_pt,synthetic,0,value,0,0,0,0.69999999,0x7F,0x7E,0x7E,0.69448817,0.69448817,0.992126,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e0:b1,bit_mapping,int8_pt,synthetic,0,value,1,0,1,0.69999999,0x7F,0x7D,0x7D,0.68897635,0.68897635,0.984252,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e0:b2,bit_mapping,int8_pt,synthetic,0,value,2,0,2,0.69999999,0x7F,0x7B,0x7B,0.67795277,0.67795277,0.968504,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e0:b3,bit_mapping,int8_pt,synthetic,0,value,3,0,3,0.69999999,0x7F,0x77,0x77,0.65590549,0.65590549,0.937008,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e0:b4,bit_mapping,int8_pt,synthetic,0,value,4,0,4,0.69999999,0x7F,0x6F,0x6F,0.61181104,0.61181104,0.874016,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e0:b5,bit_mapping,int8_pt,synthetic,0,value,5,0,5,0.69999999,0x7F,0x5F,0x5F,0.52362204,0.52362204,0.748031,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e0:b6,bit_mapping,int8_pt,synthetic,0,value,6,0,6,0.69999999,0x7F,0x3F,0x3F,0.34724408,0.34724408,0.496063,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e0:b7,bit_mapping,int8_pt,synthetic,0,sign,7,0,7,0.69999999,0x7F,0xFF,0xFF,-0.00551181,-0.00551181,-0.00787402,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e1:b0,bit_mapping,int8_pt,synthetic,1,value,0,1,0,-0.69999999,0x81,0x80,0x80,-0.70551181,-0.70551181,1.00787,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e1:b1,bit_mapping,int8_pt,synthetic,1,value,1,1,1,-0.69999999,0x81,0x83,0x83,-0.68897635,-0.68897635,0.984252,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e1:b2,bit_mapping,int8_pt,synthetic,1,value,2,1,2,-0.69999999,0x81,0x85,0x85,-0.67795277,-0.67795277,0.968504,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e1:b3,bit_mapping,int8_pt,synthetic,1,value,3,1,3,-0.69999999,0x81,0x89,0x89,-0.65590549,-0.65590549,0.937008,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e1:b4,bit_mapping,int8_pt,synthetic,1,value,4,1,4,-0.69999999,0x81,0x91,0x91,-0.61181104,-0.61181104,0.874016,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e1:b5,bit_mapping,int8_pt,synthetic,1,value,5,1,5,-0.69999999,0x81,0xA1,0xA1,-0.52362204,-0.52362204,0.748031,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e1:b6,bit_mapping,int8_pt,synthetic,1,value,6,1,6,-0.69999999,0x81,0xC1,0xC1,-0.34724408,-0.34724408,0.496063,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e1:b7,bit_mapping,int8_pt,synthetic,1,sign,7,1,7,-0.69999999,0x81,0x01,0x01,0.00551181,0.00551181,-0.00787402,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e2:b0,bit_mapping,int8_pt,synthetic,2,value,0,2,0,0.0992126,0x12,0x13,0x13,0.10472441,0.10472441,1.05556,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e2:b1,bit_mapping,int8_pt,synthetic,2,value,1,2,1,0.0992126,0x12,0x10,0x10,0.08818898,0.08818898,0.888889,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e2:b2,bit_mapping,int8_pt,synthetic,2,value,2,2,2,0.0992126,0x12,0x16,0x16,0.12125984,0.12125984,1.22222,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e2:b3,bit_mapping,int8_pt,synthetic,2,value,3,2,3,0.0992126,0x12,0x1A,0x1A,0.14330709,0.14330709,1.44444,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e2:b4,bit_mapping,int8_pt,synthetic,2,value,4,2,4,0.0992126,0x12,0x02,0x02,0.01102362,0.01102362,0.111111,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e2:b5,bit_mapping,int8_pt,synthetic,2,value,5,2,5,0.0992126,0x12,0x32,0x32,0.27559054,0.27559054,2.77778,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e2:b6,bit_mapping,int8_pt,synthetic,2,value,6,2,6,0.0992126,0x12,0x52,0x52,0.45196849,0.45196849,4.55556,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e2:b7,bit_mapping,int8_pt,synthetic,2,sign,7,2,7,0.0992126,0x12,0x92,0x92,-0.60629922,-0.60629922,-6.11111,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e3:b0,bit_mapping,int8_pt,synthetic,3,value,0,3,0,0.0,0x00,0x01,0x01,0.00551181,0.00551181,,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e3:b1,bit_mapping,int8_pt,synthetic,3,value,1,3,1,0.0,0x00,0x02,0x02,0.01102362,0.01102362,,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e3:b2,bit_mapping,int8_pt,synthetic,3,value,2,3,2,0.0,0x00,0x04,0x04,0.02204724,0.02204724,,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e3:b3,bit_mapping,int8_pt,synthetic,3,value,3,3,3,0.0,0x00,0x08,0x08,0.04409449,0.04409449,,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e3:b4,bit_mapping,int8_pt,synthetic,3,value,4,3,4,0.0,0x00,0x10,0x10,0.08818898,0.08818898,,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e3:b5,bit_mapping,int8_pt,synthetic,3,value,5,3,5,0.0,0x00,0x20,0x20,0.17637795,0.17637795,,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e3:b6,bit_mapping,int8_pt,synthetic,3,value,6,3,6,0.0,0x00,0x40,0x40,0.3527559,0.3527559,,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e3:b7,bit_mapping,int8_pt,synthetic,3,sign,7,3,7,0.0,0x00,0x80,0x80,-0.70551181,-0.70551181,,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e4:b0,bit_mapping,int8_pt,synthetic,4,value,0,4,0,0.34724408,0x3F,0x3E,0x3E,0.34173229,0.34173229,0.984127,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e4:b1,bit_mapping,int8_pt,synthetic,4,value,1,4,1,0.34724408,0x3F,0x3D,0x3D,0.33622047,0.33622047,0.968254,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e4:b2,bit_mapping,int8_pt,synthetic,4,value,2,4,2,0.34724408,0x3F,0x3B,0x3B,0.32519686,0.32519686,0.936508,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e4:b3,bit_mapping,int8_pt,synthetic,4,value,3,4,3,0.34724408,0x3F,0x37,0x37,0.30314961,0.30314961,0.873016,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e4:b4,bit_mapping,int8_pt,synthetic,4,value,4,4,4,0.34724408,0x3F,0x2F,0x2F,0.25905511,0.25905511,0.746032,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e4:b5,bit_mapping,int8_pt,synthetic,4,value,5,4,5,0.34724408,0x3F,0x1F,0x1F,0.17086615,0.17086615,0.492064,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e4:b6,bit_mapping,int8_pt,synthetic,4,value,6,4,6,0.34724408,0x3F,0x7F,0x7F,0.69999999,0.69999999,2.01587,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e4:b7,bit_mapping,int8_pt,synthetic,4,sign,7,4,7,0.34724408,0x3F,0xBF,0xBF,-0.35826772,-0.35826772,-1.03175,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e5:b0,bit_mapping,int8_pt,synthetic,5,value,0,5,0,-0.0496063,0xF7,0xF6,0xF6,-0.05511811,-0.05511811,1.11111,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e5:b1,bit_mapping,int8_pt,synthetic,5,value,1,5,1,-0.0496063,0xF7,0xF5,0xF5,-0.06062992,-0.06062992,1.22222,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e5:b2,bit_mapping,int8_pt,synthetic,5,value,2,5,2,-0.0496063,0xF7,0xF3,0xF3,-0.07165354,-0.07165354,1.44444,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e5:b3,bit_mapping,int8_pt,synthetic,5,value,3,5,3,-0.0496063,0xF7,0xFF,0xFF,-0.00551181,-0.00551181,0.111111,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e5:b4,bit_mapping,int8_pt,synthetic,5,value,4,5,4,-0.0496063,0xF7,0xE7,0xE7,-0.13779527,-0.13779527,2.77778,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e5:b5,bit_mapping,int8_pt,synthetic,5,value,5,5,5,-0.0496063,0xF7,0xD7,0xD7,-0.22598425,-0.22598425,4.55556,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e5:b6,bit_mapping,int8_pt,synthetic,5,value,6,5,6,-0.0496063,0xF7,0xB7,0xB7,-0.4023622,-0.4023622,8.11111,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e5:b7,bit_mapping,int8_pt,synthetic,5,sign,7,5,7,-0.0496063,0xF7,0x77,0x77,0.65590549,0.65590549,-13.2222,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e6:b0,bit_mapping,int8_pt,synthetic,6,value,0,6,0,0.6007874,0x6D,0x6C,0x6C,0.59527558,0.59527558,0.990826,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e6:b1,bit_mapping,int8_pt,synthetic,6,value,1,6,1,0.6007874,0x6D,0x6F,0x6F,0.61181104,0.61181104,1.01835,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e6:b2,bit_mapping,int8_pt,synthetic,6,value,2,6,2,0.6007874,0x6D,0x69,0x69,0.57874018,0.57874018,0.963303,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e6:b3,bit_mapping,int8_pt,synthetic,6,value,3,6,3,0.6007874,0x6D,0x65,0x65,0.5566929,0.5566929,0.926605,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e6:b4,bit_mapping,int8_pt,synthetic,6,value,4,6,4,0.6007874,0x6D,0x7D,0x7D,0.68897635,0.68897635,1.14679,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e6:b5,bit_mapping,int8_pt,synthetic,6,value,5,6,5,0.6007874,0x6D,0x4D,0x4D,0.42440945,0.42440945,0.706422,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e6:b6,bit_mapping,int8_pt,synthetic,6,value,6,6,6,0.6007874,0x6D,0x2D,0x2D,0.2480315,0.2480315,0.412844,PASS,only this element changed; stored byte/bit as expected
+int8_pt:bitmap:e6:b7,bit_mapping,int8_pt,synthetic,6,sign,7,6,7,0.6007874,0x6D,0xED,0xED,-0.10472441,-0.10472441,-0.174312,PASS,only this element changed; stored byte/bit as expected
+int8_pt:special:0,special_value,int8_pt,synthetic,0,sign,7,0,7,0.5,0x05,0x85,0x85,-12.30000019,-12.30000019,-24.6,PASS,sign bit (bit 7) of code +5 (0x05) gives code 0x85 = -123
+int8_pt:special:1,special_value,int8_pt,synthetic,0,sign,7,0,7,-0.1,0xFF,0x7F,0x7F,12.69999981,12.69999981,-127,PASS,sign bit of code -1 (0xFF) gives code +127 (0x7F)
+int8_pt:scale:b0,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,0,0,0,0.00551181,0x3BB49C6C,0x3BB49C6D,0x3BB49C6D,0.00551181,0.00551181,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b1,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,1,0,1,0.00551181,0x3BB49C6C,0x3BB49C6E,0x3BB49C6E,0.00551181,0.00551181,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b2,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,2,0,2,0.00551181,0x3BB49C6C,0x3BB49C68,0x3BB49C68,0.00551181,0.00551181,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b3,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,3,0,3,0.00551181,0x3BB49C6C,0x3BB49C64,0x3BB49C64,0.00551181,0.00551181,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b4,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,4,0,4,0.00551181,0x3BB49C6C,0x3BB49C7C,0x3BB49C7C,0.00551182,0.00551182,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b5,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,5,0,5,0.00551181,0x3BB49C6C,0x3BB49C4C,0x3BB49C4C,0.0055118,0.0055118,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b6,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,6,0,6,0.00551181,0x3BB49C6C,0x3BB49C2C,0x3BB49C2C,0.00551178,0.00551178,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b7,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,7,0,7,0.00551181,0x3BB49C6C,0x3BB49CEC,0x3BB49CEC,0.00551187,0.00551187,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b8,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,8,0,8,0.00551181,0x3BB49C6C,0x3BB49D6C,0x3BB49D6C,0.00551193,0.00551193,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b9,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,9,0,9,0.00551181,0x3BB49C6C,0x3BB49E6C,0x3BB49E6C,0.00551205,0.00551205,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b10,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,10,0,10,0.00551181,0x3BB49C6C,0x3BB4986C,0x3BB4986C,0.00551133,0.00551133,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b11,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,11,0,11,0.00551181,0x3BB49C6C,0x3BB4946C,0x3BB4946C,0.00551086,0.00551086,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b12,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,12,0,12,0.00551181,0x3BB49C6C,0x3BB48C6C,0x3BB48C6C,0.0055099,0.0055099,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b13,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,13,0,13,0.00551181,0x3BB49C6C,0x3BB4BC6C,0x3BB4BC6C,0.00551563,0.00551563,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b14,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,14,0,14,0.00551181,0x3BB49C6C,0x3BB4DC6C,0x3BB4DC6C,0.00551944,0.00551944,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b15,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,15,0,15,0.00551181,0x3BB49C6C,0x3BB41C6C,0x3BB41C6C,0.00549655,0.00549655,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b16,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,16,0,16,0.00551181,0x3BB49C6C,0x3BB59C6C,0x3BB59C6C,0.00554233,0.00554233,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b17,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,17,0,17,0.00551181,0x3BB49C6C,0x3BB69C6C,0x3BB69C6C,0.00557285,0.00557285,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b18,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,18,0,18,0.00551181,0x3BB49C6C,0x3BB09C6C,0x3BB09C6C,0.00538974,0.00538974,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b19,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,19,0,19,0.00551181,0x3BB49C6C,0x3BBC9C6C,0x3BBC9C6C,0.00575595,0.00575595,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b20,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,20,0,20,0.00551181,0x3BB49C6C,0x3BA49C6C,0x3BA49C6C,0.00502353,0.00502353,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b21,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,21,0,21,0.00551181,0x3BB49C6C,0x3B949C6C,0x3B949C6C,0.00453525,0.00453525,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b22,scale_bit_mapping,int8_pt,synthetic scale,ALL,fraction,22,0,22,0.00551181,0x3BB49C6C,0x3BF49C6C,0x3BF49C6C,0.00746494,0.00746494,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b23,scale_bit_mapping,int8_pt,synthetic scale,ALL,exponent,23,0,23,0.00551181,0x3BB49C6C,0x3B349C6C,0x3B349C6C,0.00275591,0.00275591,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b24,scale_bit_mapping,int8_pt,synthetic scale,ALL,exponent,24,0,24,0.00551181,0x3BB49C6C,0x3AB49C6C,0x3AB49C6C,0.00137795,0.00137795,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b25,scale_bit_mapping,int8_pt,synthetic scale,ALL,exponent,25,0,25,0.00551181,0x3BB49C6C,0x39B49C6C,0x39B49C6C,0.00034449,0.00034449,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b26,scale_bit_mapping,int8_pt,synthetic scale,ALL,exponent,26,0,26,0.00551181,0x3BB49C6C,0x3FB49C6C,0x3FB49C6C,1.41102362,1.41102362,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b27,scale_bit_mapping,int8_pt,synthetic scale,ALL,exponent,27,0,27,0.00551181,0x3BB49C6C,0x33B49C6C,0x33B49C6C,8e-08,8e-08,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b28,scale_bit_mapping,int8_pt,synthetic scale,ALL,exponent,28,0,28,0.00551181,0x3BB49C6C,0x2BB49C6C,0x2BB49C6C,0.0,0.0,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b29,scale_bit_mapping,int8_pt,synthetic scale,ALL,exponent,29,0,29,0.00551181,0x3BB49C6C,0x1BB49C6C,0x1BB49C6C,0.0,0.0,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b30,scale_bit_mapping,int8_pt,synthetic scale,ALL,exponent,30,0,30,0.00551181,0x3BB49C6C,0x7BB49C6C,0x7BB49C6C,1.8755720941519803e+36,1.8755720941519803e+36,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int8_pt:scale:b31,scale_bit_mapping,int8_pt,synthetic scale,ALL,sign,31,0,31,0.00551181,0x3BB49C6C,0xBBB49C6C,0xBBB49C6C,-0.00551181,-0.00551181,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:bitmap:e0:b0,bit_mapping,int4_pt,synthetic,0,value,0,0,0,0.69999999,0x7,0x6,0x6,0.60000002,0.60000002,0.857143,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e0:b1,bit_mapping,int4_pt,synthetic,0,value,1,0,1,0.69999999,0x7,0x5,0x5,0.5,0.5,0.714286,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e0:b2,bit_mapping,int4_pt,synthetic,0,value,2,0,2,0.69999999,0x7,0x3,0x3,0.30000001,0.30000001,0.428571,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e0:b3,bit_mapping,int4_pt,synthetic,0,sign,3,0,3,0.69999999,0x7,0xF,0xF,-0.1,-0.1,-0.142857,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e1:b0,bit_mapping,int4_pt,synthetic,1,value,0,0,4,-0.69999999,0x9,0x8,0x8,-0.80000001,-0.80000001,1.14286,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e1:b1,bit_mapping,int4_pt,synthetic,1,value,1,0,5,-0.69999999,0x9,0xB,0xB,-0.5,-0.5,0.714286,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e1:b2,bit_mapping,int4_pt,synthetic,1,value,2,0,6,-0.69999999,0x9,0xD,0xD,-0.30000001,-0.30000001,0.428571,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e1:b3,bit_mapping,int4_pt,synthetic,1,sign,3,0,7,-0.69999999,0x9,0x1,0x1,0.1,0.1,-0.142857,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e2:b0,bit_mapping,int4_pt,synthetic,2,value,0,1,0,0.1,0x1,0x0,0x0,0.0,0.0,0,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e2:b1,bit_mapping,int4_pt,synthetic,2,value,1,1,1,0.1,0x1,0x3,0x3,0.30000001,0.30000001,3,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e2:b2,bit_mapping,int4_pt,synthetic,2,value,2,1,2,0.1,0x1,0x5,0x5,0.5,0.5,5,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e2:b3,bit_mapping,int4_pt,synthetic,2,sign,3,1,3,0.1,0x1,0x9,0x9,-0.69999999,-0.69999999,-7,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e3:b0,bit_mapping,int4_pt,synthetic,3,value,0,1,4,0.0,0x0,0x1,0x1,0.1,0.1,,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e3:b1,bit_mapping,int4_pt,synthetic,3,value,1,1,5,0.0,0x0,0x2,0x2,0.2,0.2,,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e3:b2,bit_mapping,int4_pt,synthetic,3,value,2,1,6,0.0,0x0,0x4,0x4,0.40000001,0.40000001,,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e3:b3,bit_mapping,int4_pt,synthetic,3,sign,3,1,7,0.0,0x0,0x8,0x8,-0.80000001,-0.80000001,,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e4:b0,bit_mapping,int4_pt,synthetic,4,value,0,2,0,0.30000001,0x3,0x2,0x2,0.2,0.2,0.666667,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e4:b1,bit_mapping,int4_pt,synthetic,4,value,1,2,1,0.30000001,0x3,0x1,0x1,0.1,0.1,0.333333,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e4:b2,bit_mapping,int4_pt,synthetic,4,value,2,2,2,0.30000001,0x3,0x7,0x7,0.69999999,0.69999999,2.33333,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e4:b3,bit_mapping,int4_pt,synthetic,4,sign,3,2,3,0.30000001,0x3,0xB,0xB,-0.5,-0.5,-1.66667,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e5:b0,bit_mapping,int4_pt,synthetic,5,value,0,2,4,0.0,0x0,0x1,0x1,0.1,0.1,,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e5:b1,bit_mapping,int4_pt,synthetic,5,value,1,2,5,0.0,0x0,0x2,0x2,0.2,0.2,,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e5:b2,bit_mapping,int4_pt,synthetic,5,value,2,2,6,0.0,0x0,0x4,0x4,0.40000001,0.40000001,,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e5:b3,bit_mapping,int4_pt,synthetic,5,sign,3,2,7,0.0,0x0,0x8,0x8,-0.80000001,-0.80000001,,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e6:b0,bit_mapping,int4_pt,synthetic,6,value,0,3,0,0.60000002,0x6,0x7,0x7,0.69999999,0.69999999,1.16667,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e6:b1,bit_mapping,int4_pt,synthetic,6,value,1,3,1,0.60000002,0x6,0x4,0x4,0.40000001,0.40000001,0.666667,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e6:b2,bit_mapping,int4_pt,synthetic,6,value,2,3,2,0.60000002,0x6,0x2,0x2,0.2,0.2,0.333333,PASS,only this element changed; stored byte/bit as expected
+int4_pt:bitmap:e6:b3,bit_mapping,int4_pt,synthetic,6,sign,3,3,3,0.60000002,0x6,0xE,0xE,-0.2,-0.2,-0.333333,PASS,only this element changed; stored byte/bit as expected
+int4_pt:special:0,special_value,int4_pt,synthetic,0,sign,3,0,3,0.69999999,0x7,0xF,0xF,-0.1,-0.1,-0.142857,PASS,sign bit (bit 3) of code +7 (0x7) gives code 0xF = -1
+int4_pt:special:1,special_value,int4_pt,synthetic,0,sign,3,0,3,-0.80000001,0x8,0x0,0x0,0.0,0.0,-0,PASS,sign bit of code -8 (0x8) gives code +0 (0x0)
+int4_pt:scale:b0,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,0,0,0,0.1,0x3DCCCCCD,0x3DCCCCCC,0x3DCCCCCC,0.09999999,0.09999999,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b1,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,1,0,1,0.1,0x3DCCCCCD,0x3DCCCCCF,0x3DCCCCCF,0.10000002,0.10000002,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b2,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,2,0,2,0.1,0x3DCCCCCD,0x3DCCCCC9,0x3DCCCCC9,0.09999997,0.09999997,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b3,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,3,0,3,0.1,0x3DCCCCCD,0x3DCCCCC5,0x3DCCCCC5,0.09999994,0.09999994,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b4,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,4,0,4,0.1,0x3DCCCCCD,0x3DCCCCDD,0x3DCCCCDD,0.10000012,0.10000012,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b5,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,5,0,5,0.1,0x3DCCCCCD,0x3DCCCCED,0x3DCCCCED,0.10000024,0.10000024,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b6,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,6,0,6,0.1,0x3DCCCCCD,0x3DCCCC8D,0x3DCCCC8D,0.09999952,0.09999952,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b7,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,7,0,7,0.1,0x3DCCCCCD,0x3DCCCC4D,0x3DCCCC4D,0.09999905,0.09999905,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b8,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,8,0,8,0.1,0x3DCCCCCD,0x3DCCCDCD,0x3DCCCDCD,0.10000191,0.10000191,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b9,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,9,0,9,0.1,0x3DCCCCCD,0x3DCCCECD,0x3DCCCECD,0.10000382,0.10000382,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b10,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,10,0,10,0.1,0x3DCCCCCD,0x3DCCC8CD,0x3DCCC8CD,0.09999237,0.09999237,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b11,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,11,0,11,0.1,0x3DCCCCCD,0x3DCCC4CD,0x3DCCC4CD,0.09998474,0.09998474,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b12,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,12,0,12,0.1,0x3DCCCCCD,0x3DCCDCCD,0x3DCCDCCD,0.10003052,0.10003052,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b13,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,13,0,13,0.1,0x3DCCCCCD,0x3DCCECCD,0x3DCCECCD,0.10006104,0.10006104,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b14,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,14,0,14,0.1,0x3DCCCCCD,0x3DCC8CCD,0x3DCC8CCD,0.09987793,0.09987793,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b15,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,15,0,15,0.1,0x3DCCCCCD,0x3DCC4CCD,0x3DCC4CCD,0.09975586,0.09975586,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b16,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,16,0,16,0.1,0x3DCCCCCD,0x3DCDCCCD,0x3DCDCCCD,0.10048828,0.10048828,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b17,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,17,0,17,0.1,0x3DCCCCCD,0x3DCECCCD,0x3DCECCCD,0.10097656,0.10097656,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b18,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,18,0,18,0.1,0x3DCCCCCD,0x3DC8CCCD,0x3DC8CCCD,0.09804688,0.09804688,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b19,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,19,0,19,0.1,0x3DCCCCCD,0x3DC4CCCD,0x3DC4CCCD,0.09609375,0.09609375,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b20,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,20,0,20,0.1,0x3DCCCCCD,0x3DDCCCCD,0x3DDCCCCD,0.1078125,0.1078125,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b21,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,21,0,21,0.1,0x3DCCCCCD,0x3DECCCCD,0x3DECCCCD,0.115625,0.115625,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b22,scale_bit_mapping,int4_pt,synthetic scale,ALL,fraction,22,0,22,0.1,0x3DCCCCCD,0x3D8CCCCD,0x3D8CCCCD,0.06875,0.06875,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b23,scale_bit_mapping,int4_pt,synthetic scale,ALL,exponent,23,0,23,0.1,0x3DCCCCCD,0x3D4CCCCD,0x3D4CCCCD,0.05,0.05,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b24,scale_bit_mapping,int4_pt,synthetic scale,ALL,exponent,24,0,24,0.1,0x3DCCCCCD,0x3CCCCCCD,0x3CCCCCCD,0.025,0.025,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b25,scale_bit_mapping,int4_pt,synthetic scale,ALL,exponent,25,0,25,0.1,0x3DCCCCCD,0x3FCCCCCD,0x3FCCCCCD,1.60000002,1.60000002,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b26,scale_bit_mapping,int4_pt,synthetic scale,ALL,exponent,26,0,26,0.1,0x3DCCCCCD,0x39CCCCCD,0x39CCCCCD,0.00039063,0.00039063,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b27,scale_bit_mapping,int4_pt,synthetic scale,ALL,exponent,27,0,27,0.1,0x3DCCCCCD,0x35CCCCCD,0x35CCCCCD,1.53e-06,1.53e-06,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b28,scale_bit_mapping,int4_pt,synthetic scale,ALL,exponent,28,0,28,0.1,0x3DCCCCCD,0x2DCCCCCD,0x2DCCCCCD,0.0,0.0,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b29,scale_bit_mapping,int4_pt,synthetic scale,ALL,exponent,29,0,29,0.1,0x3DCCCCCD,0x1DCCCCCD,0x1DCCCCCD,0.0,0.0,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b30,scale_bit_mapping,int4_pt,synthetic scale,ALL,exponent,30,0,30,0.1,0x3DCCCCCD,0x7DCCCCCD,0x7DCCCCCD,3.4028237199154086e+37,3.4028237199154086e+37,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:scale:b31,scale_bit_mapping,int4_pt,synthetic scale,ALL,sign,31,0,31,0.1,0x3DCCCCCD,0xBDCCCCCD,0xBDCCCCCD,-0.1,-0.1,,PASS,all weights of the tensor rescale by the new scale (float32 bit flip)
+int4_pt:packing:padding,packing,int4_pt,synthetic (7 elements),0..6,all,0..3,0..3,0..7,,padding nibble 0x0,padding nibble stays 0x0,unchanged,,,,PASS,"20,000 random flips: element index always < 7, padding nibble (high nibble of the last byte) never touched"
