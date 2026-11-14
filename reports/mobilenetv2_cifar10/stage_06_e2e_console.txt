@@ -1,0 +1,59 @@
+Files already downloaded and verified
+run 20261114T111006Z-a6072325: 5000 validation images (clean), 1000 for fault trials (stratified-1000-seed42), device cuda
+FP32 reference: 92.16 % / loss 0.2528 on 5000 validation images
+  clean: 10/173 assignments
+  clean: 20/173 assignments
+  clean: 30/173 assignments
+  clean: 40/173 assignments
+  clean: 50/173 assignments
+  clean: 60/173 assignments
+  clean: 70/173 assignments
+  clean: 80/173 assignments
+  clean: 90/173 assignments
+  clean: 100/173 assignments
+  clean: 110/173 assignments
+  clean: 120/173 assignments
+  clean: 130/173 assignments
+  clean: 140/173 assignments
+  clean: 150/173 assignments
+  clean: 160/173 assignments
+  clean: 170/173 assignments
+A. clean measurements: 173 assignments (173 new)
+B. fault shortlist (35): ['A121', 'A122', 'A125', 'A055', 'A052', 'A061', 'A058', 'A124', 'A038', 'A062', 'A063', 'A010', 'A109', 'A151', 'A080', 'A152', 'A072', 'A110', 'A015', 'A160', 'A082', 'A157', 'A064', 'A000', 'U_FP16', 'U_BF16', 'U_E4M11', 'U_FP8N', 'U_FP8E5', 'U_INT8', 'U_INT4', 'U_INT8_TMR', 'U_INT4_TMR', 'U_INT8_SECDED', 'U_FP8N_SECDED']
+  A121: 200 trials in 48 s (clean 92.10 % on 1000 images)
+  A122: 200 trials in 48 s (clean 92.10 % on 1000 images)
+  A125: 200 trials in 48 s (clean 92.00 % on 1000 images)
+  A055: 200 trials in 48 s (clean 91.70 % on 1000 images)
+  A052: 200 trials in 48 s (clean 92.20 % on 1000 images)
+  A061: 200 trials in 48 s (clean 91.90 % on 1000 images)
+  A058: 200 trials in 48 s (clean 91.80 % on 1000 images)
+  A124: 200 trials in 48 s (clean 92.60 % on 1000 images)
+  A038: 200 trials in 48 s (clean 92.80 % on 1000 images)
+  A062: 200 trials in 48 s (clean 92.40 % on 1000 images)
+  A063: 200 trials in 48 s (clean 92.20 % on 1000 images)
+  A010: 200 trials in 48 s (clean 92.50 % on 1000 images)
+  A109: 200 trials in 48 s (clean 92.10 % on 1000 images)
+  A151: 200 trials in 48 s (clean 92.10 % on 1000 images)
+  A080: 200 trials in 48 s (clean 91.80 % on 1000 images)
+  A152: 200 trials in 48 s (clean 92.00 % on 1000 images)
+  A072: 200 trials in 48 s (clean 92.10 % on 1000 images)
+  A110: 200 trials in 48 s (clean 92.90 % on 1000 images)
+  A015: 200 trials in 48 s (clean 92.30 % on 1000 images)
+  A160: 200 trials in 48 s (clean 92.50 % on 1000 images)
+  A082: 200 trials in 48 s (clean 92.70 % on 1000 images)
+  A157: 200 trials in 48 s (clean 92.80 % on 1000 images)
+  A064: 200 trials in 48 s (clean 93.00 % on 1000 images)
+  A000: 200 trials in 48 s (clean 92.80 % on 1000 images)
+  U_FP16: 100 trials in 24 s (clean 92.50 % on 1000 images)
+  U_BF16: 100 trials in 24 s (clean 92.50 % on 1000 images)
+  U_E4M11: 100 trials in 24 s (clean 92.50 % on 1000 images)
+  U_FP8N: 100 trials in 24 s (clean 92.50 % on 1000 images)
+  U_FP8E5: 100 trials in 24 s (clean 90.30 % on 1000 images)
+  U_INT8: 200 trials in 48 s (clean 92.20 % on 1000 images)
+  U_INT4: 200 trials in 48 s (clean 83.80 % on 1000 images)
+  U_INT8_TMR: 200 trials in 48 s (clean 92.20 % on 1000 images)
+  U_INT4_TMR: 200 trials in 48 s (clean 83.80 % on 1000 images)
+  U_INT8_SECDED: 200 trials in 48 s (clean 92.20 % on 1000 images)
+  U_FP8N_SECDED: 100 trials in 24 s (clean 92.50 % on 1000 images)
+C. fault trials: 6400 new
+summaries written to reports/mobilenetv2_cifar10/stage_06_optimization  (incomplete trial cells: 0)
