@@ -1,0 +1,333 @@
+{
+  "stage": "MobileNetV2 protocol Section 4 - encoded-weight fault injection, targeted campaign",
+  "label": "targeted follow-up (selection bias: configurations were chosen from screening results)",
+  "experiment_id": "jfamp-mobilenetv2-cifar10-stage4-encoded-fault-injection",
+  "checkpoint_sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+  "stage2_frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561",
+  "validation_gate": {
+    "run_id": "20261114T063537Z-8902d6b0",
+    "per_format": {
+      "fp16": "PASS",
+      "bf16": "PASS",
+      "e4m11_sn": "PASS",
+      "fp8_e4m3fn": "PASS",
+      "fp8_e5m2": "PASS",
+      "int8_pt": "PASS",
+      "int4_pt": "PASS"
+    }
+  },
+  "settings": {
+    "trials_per_configuration": 100,
+    "protocol_budget": 100,
+    "budget_overridden": false,
+    "k_values": [
+      1,
+      8
+    ],
+    "formats": [
+      "fp16",
+      "bf16",
+      "e4m11_sn",
+      "fp8_e4m3fn",
+      "fp8_e5m2",
+      "int8_pt",
+      "int4_pt"
+    ],
+    "eval_subset": {
+      "name": "full-validation",
+      "images": 5000,
+      "positions_in_validation_set_sha256": "a3d44437f284b46e5d827df6101e63efe16f752040ad67db809c061bc367bde5",
+      "class_counts": [
+        496,
+        507,
+        489,
+        491,
+        482,
+        507,
+        514,
+        486,
+        515,
+        513
+      ],
+      "seed": 42,
+      "declared_in_advance": true
+    },
+    "base_seed": 42,
+    "groups": {
+      "fp16": [
+        "sign",
+        "exponent",
+        "fraction"
+      ],
+      "bf16": [
+        "sign",
+        "exponent",
+        "fraction"
+      ],
+      "e4m11_sn": [
+        "sign",
+        "exponent",
+        "fraction"
+      ],
+      "fp8_e4m3fn": [
+        "sign",
+        "exponent",
+        "fraction"
+      ],
+      "fp8_e5m2": [
+        "sign",
+        "exponent",
+        "fraction"
+      ],
+      "int8_pt": [
+        "sign",
+        "value"
+      ],
+      "int4_pt": [
+        "sign",
+        "value"
+      ]
+    },
+    "int_scale_policy": {
+      "primary": "per_tensor",
+      "comparison": "per_channel",
+      "note": "per-tensor and per-output-channel results are never mixed: every table row carries the granularity in its variant label and a role (primary | comparison). Protocol rule: if the previous JFAMP implementation used another policy than per-output-channel it is retained for both datasets and documented; the ResNet-18 implementation used per-tensor."
+    },
+    "fault_scope": "stored weight codes only; the INT float32 scale words are NOT faulted in this campaign",
+    "sampling": "k DISTINCT weights without replacement from the declared scope (global: all weights of all 53 layers; layer-wise: the target layer), one bit per weight, uniform within the fault group; one derived seed per trial",
+    "non_finite_policy": "images with non-finite logits count as incorrect; fault_loss is null when any logit is non-finite; such trials are kept, flagged and counted as failures",
+    "evaluation_images_note": "screening results (subset) are not comparable with full-validation results"
+  },
+  "clean_per_format": {
+    "fp16": {
+      "accuracy": 92.15999841690063,
+      "loss": 0.25285694003105164
+    },
+    "bf16": {
+      "accuracy": 92.15999841690063,
+      "loss": 0.25310376286506653
+    },
+    "e4m11_sn": {
+      "accuracy": 92.15999841690063,
+      "loss": 0.2530241310596466
+    },
+    "fp8_e4m3fn": {
+      "accuracy": 92.13999509811401,
+      "loss": 0.2556566298007965
+    },
+    "fp8_e5m2": {
+      "accuracy": 90.61999917030334,
+      "loss": 0.2968098521232605
+    },
+    "int8_pt": {
+      "accuracy": 92.21999645233154,
+      "loss": 0.25246888399124146
+    },
+    "int4_pt": {
+      "accuracy": 84.31999683380127,
+      "loss": 0.5340190529823303
+    }
+  },
+  "per_format": {
+    "fp16": {
+      "configurations": 5,
+      "expected_trials": 500,
+      "recorded_trials": 500,
+      "accuracy": 92.15999841690063,
+      "loss": 0.25285694003105164
+    },
+    "bf16": {
+      "configurations": 5,
+      "expected_trials": 500,
+      "recorded_trials": 500,
+      "accuracy": 92.15999841690063,
+      "loss": 0.25310376286506653
+    },
+    "e4m11_sn": {
+      "configurations": 5,
+      "expected_trials": 500,
+      "recorded_trials": 500,
+      "accuracy": 92.15999841690063,
+      "loss": 0.2530241310596466
+    },
+    "fp8_e4m3fn": {
+      "configurations": 5,
+      "expected_trials": 500,
+      "recorded_trials": 500,
+      "accuracy": 92.13999509811401,
+      "loss": 0.2556566298007965
+    },
+    "fp8_e5m2": {
+      "configurations": 5,
+      "expected_trials": 500,
+      "recorded_trials": 500,
+      "accuracy": 90.61999917030334,
+      "loss": 0.2968098521232605
+    },
+    "int8_pt": {
+      "configurations": 5,
+      "expected_trials": 500,
+      "recorded_trials": 500,
+      "accuracy": 92.21999645233154,
+      "loss": 0.25246888399124146
+    },
+    "int4_pt": {
+      "configurations": 5,
+      "expected_trials": 500,
+      "recorded_trials": 500,
+      "accuracy": 84.31999683380127,
+      "loss": 0.5340190529823303
+    }
+  },
+  "no_fault_controls_this_session": [
+    {
+      "campaign": "targeted",
+      "format": "fp16",
+      "flips": 0,
+      "eval_images": 5000,
+      "clean_accuracy": 92.15999841690063,
+      "control_accuracy": 92.15999841690063,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "1277dc15e7bbd4142451cb759e500ce602daf520e9c1ca1e803fac4f95f6b451",
+      "encoded_hash_after": "1277dc15e7bbd4142451cb759e500ce602daf520e9c1ca1e803fac4f95f6b451",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "targeted",
+      "format": "bf16",
+      "flips": 0,
+      "eval_images": 5000,
+      "clean_accuracy": 92.15999841690063,
+      "control_accuracy": 92.15999841690063,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "dabb8e13266f2350463dd6353499867edf7f499aa5ee9e447ade56ae9cfff196",
+      "encoded_hash_after": "dabb8e13266f2350463dd6353499867edf7f499aa5ee9e447ade56ae9cfff196",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "targeted",
+      "format": "e4m11_sn",
+      "flips": 0,
+      "eval_images": 5000,
+      "clean_accuracy": 92.15999841690063,
+      "control_accuracy": 92.15999841690063,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "969564429d78df68fc056e2679031d1afae94fe01c4a6fc97e861256ad46a5ba",
+      "encoded_hash_after": "969564429d78df68fc056e2679031d1afae94fe01c4a6fc97e861256ad46a5ba",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "targeted",
+      "format": "fp8_e4m3fn",
+      "flips": 0,
+      "eval_images": 5000,
+      "clean_accuracy": 92.13999509811401,
+      "control_accuracy": 92.13999509811401,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "9a8de2433c8bb4991c6fc1d925bb09313cbc89930985ab71d7f3d9c3242ae580",
+      "encoded_hash_after": "9a8de2433c8bb4991c6fc1d925bb09313cbc89930985ab71d7f3d9c3242ae580",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "targeted",
+      "format": "fp8_e5m2",
+      "flips": 0,
+      "eval_images": 5000,
+      "clean_accuracy": 90.61999917030334,
+      "control_accuracy": 90.61999917030334,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "9da8841d3707ce2f31b4520a95396be7d5afde66fc3d50c657572864968e4817",
+      "encoded_hash_after": "9da8841d3707ce2f31b4520a95396be7d5afde66fc3d50c657572864968e4817",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "targeted",
+      "format": "int8_pt",
+      "flips": 0,
+      "eval_images": 5000,
+      "clean_accuracy": 92.21999645233154,
+      "control_accuracy": 92.21999645233154,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "1b96765dda409e9ea5d69121647517422a1a428abff0a305f1bcd8a6d6eba02d",
+      "encoded_hash_after": "1b96765dda409e9ea5d69121647517422a1a428abff0a305f1bcd8a6d6eba02d",
+      "restored_exactly": true,
+      "passed": true
+    },
+    {
+      "campaign": "targeted",
+      "format": "int4_pt",
+      "flips": 0,
+      "eval_images": 5000,
+      "clean_accuracy": 84.31999683380127,
+      "control_accuracy": 84.31999683380127,
+      "max_abs_logit_diff": 0.0,
+      "tolerance": 1e-05,
+      "encoded_hash_before": "6f4ae1e771d88d3745e0213d5f0212561b5114e61314583eac5e903c3e51a194",
+      "encoded_hash_after": "6f4ae1e771d88d3745e0213d5f0212561b5114e61314583eac5e903c3e51a194",
+      "restored_exactly": true,
+      "passed": true
+    }
+  ],
+  "completion": {
+    "expected": 3500,
+    "recorded": 3500,
+    "duplicates": [],
+    "missing": [],
+    "n_missing": 0,
+    "unexpected": [],
+    "n_unexpected": 0,
+    "complete": true
+  },
+  "failure_counts_by_cause": {
+    "weights_nonfinite": 0,
+    "activations_nonfinite": 16,
+    "logits_nonfinite": 1,
+    "loss_nonfinite": 1
+  },
+  "skipped_configurations": [],
+  "trials_recorded": 3500,
+  "sessions": [
+    {
+      "run_id": "20261114T084101Z-cb28eb6e",
+      "started_utc": "2026-11-14T08:41:01+00:00",
+      "new_trials": 3500,
+      "skipped_already_done": 0,
+      "seconds": 4106.089625120163,
+      "git": {
+        "commit": "0b07089d51a3ce2b529486ec477c93c4e8311a8a",
+        "dirty": true
+      },
+      "summarize_only": false
+    }
+  ],
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "0b07089d51a3ce2b529486ec477c93c4e8311a8a",
+      "dirty": true
+    }
+  },
+  "git": {
+    "commit": "0b07089d51a3ce2b529486ec477c93c4e8311a8a",
+    "dirty": true
+  }
+}

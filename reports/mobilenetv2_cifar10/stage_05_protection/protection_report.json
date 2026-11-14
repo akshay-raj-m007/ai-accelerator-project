@@ -1,0 +1,47 @@
+{
+  "stage": "JFAMP Stage 5 protection analysis",
+  "status": "complete",
+  "experiment_id": "jfamp-mobilenetv2-cifar10-stage5-protection-analysis",
+  "raw_records": 444264,
+  "formats": [
+    "fp16",
+    "bf16",
+    "e4m11_sn",
+    "fp8_e4m3fn",
+    "fp8_e5m2",
+    "int8_pt",
+    "int4_pt"
+  ],
+  "layers": 53,
+  "codewords_sampled": 37022,
+  "words_per_layer": 100,
+  "seed": 42,
+  "checkpoint_sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+  "stage2_frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561",
+  "validation_gate": "PASS",
+  "seconds": 6.085245847702026,
+  "file_sha256": {
+    "ecc_validation.json": "ae5716f416c99853520fb0c9dcac40d231f4b2887f3ef8dce2146fe9197c271d",
+    "fault_protocol.json": "6b9682f1c4e8d40f0d254efce23ccadad3e93297d17db0b6985bc1cc9633503c",
+    "protection_raw_records.csv.gz": "3a2a28ac513c4eb48c8627eda60aff22ba7671dca0f23156823863bc97a1b2f3",
+    "protection_summary.csv": "72eedd2722c1af37b4fd9a64ca1db3d898e273aa27162c5497a8afce1194e561",
+    "protection_layer_summary.csv": "871624d70da4a7b5eac5f6cd2a8e32a4fd73ff9cf032c5337b80efb869b84d60",
+    "protection_storage.csv": "e64ada952be6f65b526825c60193c890e12dc8e5698e763631e2d6ce32fa07cb",
+    "protection_storage_summary.csv": "1ed9ea437d00519c54f8b2366447ab056869068f77444376e50910519f121cb6"
+  },
+  "environment": {
+    "python": "3.12.3",
+    "platform": "Linux-7.0.0-42-generic-x86_64-with-glibc2.39",
+    "torch": "2.5.1+cu121",
+    "torchvision": "0.20.1+cu121",
+    "numpy": "2.5.4",
+    "cuda_available": true,
+    "cuda_version": "12.1",
+    "cudnn_version": 90100,
+    "gpu": "NVIDIA GeForce RTX 3050 OEM",
+    "git": {
+      "commit": "e97a8c5a386132c7321ad314a58656a17cc1a560",
+      "dirty": true
+    }
+  }
+}

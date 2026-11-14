@@ -1,0 +1,108 @@
+{
+  "stage": "JFAMP Stage 5 protection-code validation",
+  "gate": "PASS",
+  "tests": [
+    {
+      "test": "secded_known_answer",
+      "passed": true,
+      "detail": "codeword 0x4000000007"
+    },
+    {
+      "test": "secded_zero_word",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "secded_matches_independent_reference_encoder",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "secded_clean_roundtrip",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "secded_corrects_every_single_bit_error_of_the_39_stored_bits",
+      "passed": true,
+      "detail": "200 words x 39 positions"
+    },
+    {
+      "test": "secded_detects_every_double_bit_error_and_never_miscorrects_it",
+      "passed": true,
+      "detail": "40 words x 741 pairs"
+    },
+    {
+      "test": "secded_never_accepts_a_triple_error_silently (minimum distance 4)",
+      "passed": true,
+      "detail": "9139 triples, 6332 miscorrected as a single"
+    },
+    {
+      "test": "parity_detects_every_single_stored_bit_error_and_corrects_none",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "parity_misses_every_even_weight_pattern (double)",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "dmr_detects_a_flip_in_copy_A_and_returns_it_uncorrected",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "dmr_detects_a_flip_in_copy_B_and_data_stays_correct",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "none_never_detects_and_keeps_every_flip",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "secded_data_bit_to_stored_position_map",
+      "passed": true,
+      "detail": ""
+    },
+    {
+      "test": "word_view_matches_stage4_injector[fp16]",
+      "passed": true,
+      "detail": "300 random (layer, element, bit), 0 mismatches"
+    },
+    {
+      "test": "word_view_matches_stage4_injector[bf16]",
+      "passed": true,
+      "detail": "300 random (layer, element, bit), 0 mismatches"
+    },
+    {
+      "test": "word_view_matches_stage4_injector[e4m11_sn]",
+      "passed": true,
+      "detail": "300 random (layer, element, bit), 0 mismatches"
+    },
+    {
+      "test": "word_view_matches_stage4_injector[fp8_e4m3fn]",
+      "passed": true,
+      "detail": "300 random (layer, element, bit), 0 mismatches"
+    },
+    {
+      "test": "word_view_matches_stage4_injector[fp8_e5m2]",
+      "passed": true,
+      "detail": "300 random (layer, element, bit), 0 mismatches"
+    },
+    {
+      "test": "word_view_matches_stage4_injector[int8_pt]",
+      "passed": true,
+      "detail": "300 random (layer, element, bit), 0 mismatches"
+    },
+    {
+      "test": "word_view_matches_stage4_injector[int4_pt]",
+      "passed": true,
+      "detail": "300 random (layer, element, bit), 0 mismatches"
+    }
+  ],
+  "checkpoint_sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+  "stage2_frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561"
+}
