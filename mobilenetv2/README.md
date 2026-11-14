@@ -92,5 +92,24 @@ python scripts/stage5_protection_analysis.py --checkpoint $CK --run-name $RUN --
 ```
 Codeword = one 32-bit word of the little-endian serialized encoded payload of a layer (last word zero-padded, padding never a target); the float32 INT scale is one more protected word. Parity = 1 even-parity bit per word (33 stored bits), SECDED = extended Hamming (39,32) (7 redundancy bits), DMR = two copies (detect-only, an extension beyond the protocol table). 100 codewords per layer and format (all of them if the layer has fewer), the same words for every scenario and strategy; primary scenarios flip 1 or 2 distinct DATA bits at identical positions for every strategy; supplementary scenarios (parity and SECDED only) may also hit the stored redundancy bits. Detected-but-uncorrected words are consumed as read (residual error). Before any campaign the script validates the codes (known answer, independent reference encoder, every single/double/triple error pattern of the 39 stored bits) and cross-checks that the word view addresses the same physical bit as the Stage 4 injector. Byte overhead is reported as actual (alignment padding + densely packed redundancy bits rounded up per layer) and nominal. Output: `protection_raw_records.csv.gz` (ECC raw records), `protection_summary.csv`, `protection_layer_summary.csv`, `protection_storage.csv` (per layer x format x strategy: the S(l,d,p) needed by an allocation step), `protection_storage_summary.csv`, `fault_protocol.json` (codeword definition and the map from the protocol's required artifact names to the Stage 4/5 files), `ecc_validation.json`, `protection_report.json`.
 
+## Section 6 (joint datatype-protection optimisation, assignment and final accuracy)
+```bash
+S6D=reports/$RUN/stage_06_optimization
+# 1. GPU: exhaustive single-bit faults of every INT layer's float32 scale word (R_scale input; 53 layers x 2 formats x 32 bits = 3,392 evaluations)
+python -u scripts/stage6_scale_faults.py --checkpoint $CK --run-name $RUN --out-dir $S6D/scale_faults | tee reports/$RUN/stage_06_scale_console.txt
+# 2. CPU, about a minute, reads only files that are in git: candidate table (53 x 30 = 1,590), lambda / B / tau sweep, predicted assignment
+python scripts/stage6_optimize.py --reports reports/$RUN
+# 3. GPU: assemble every optimal assignment, measure clean accuracy (5,000 validation images), fault trials through the real decoders, constraint grid
+python -u scripts/stage6_end_to_end.py --checkpoint $CK --run-name $RUN --opt-dir $S6D | tee reports/$RUN/stage_06_e2e_console.txt
+# 4. freeze ONE assignment at the declared operating point (declared_constants.json), more validation fault trials, then the TEST set once
+python -u scripts/stage6_end_to_end.py --checkpoint $CK --run-name $RUN --opt-dir $S6D --finalize | tee reports/$RUN/stage_06_final_console.txt
+```
+Objective, constraints and constants: see the docstrings of `src/fr/stage6.py` and `scripts/stage6_optimize.py`. Q = one-layer-at-a-time validation CE change (Stage 3), R = Stage 4 layer-wise fault drops
+(declared distribution: 8 random weight bits over the whole model) times the measured residual rate of each protection (Stage 5), S = actual stored bytes (Stage 5, scale TMR +8 bytes), min-max normalisation, lambda = 1,
+B = 8 bits per quantized weight (quantized Conv/Linear weights only), tau_fault = 0.5 pp (predicted, then measured), tau_scale = 1.0 pp, delta_clean = 0.5 pp (measured on the assembled model); constants are the ResNet-18
+optimiser's defaults (protocol continuation, not an exact numeric reproduction). Protections: none, parity, SECDED, DMR (word level, Stage 5) and scale TMR (INT, as in the ResNet-18 run). The assembled model is
+measured end to end: faults are drawn on the STORED bits (data, check bits, copies, scale words), passed through each layer's real decoder, and only the residual flips reach the decoded weights. The assignment is frozen
+from validation data (`assignment.json` is written before the test set is read); `--finalize` refuses to run twice (the test set is evaluated once).
+
 ## Limits to state in any report
 Weights-only; encoded weights are decoded to FP32 for evaluation (no native low-precision kernels); one checkpoint, one seed; INT3 deferred; the baseline is trained here with the ResNet-18 recipe, not tuned for MobileNetV2.
