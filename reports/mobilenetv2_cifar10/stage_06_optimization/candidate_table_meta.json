@@ -1,0 +1,68 @@
+{
+  "layers": 53,
+  "options_per_layer": 30,
+  "candidates": 1590,
+  "quantized_weights_N": 2202560,
+  "definitions": "MobileNetV2 protocol Section 6: joint datatype-protection optimisation (candidate table, constrained assignment, protected end-to-end faults).\n\nCandidate = (layer l, datatype d, protection p). Datatypes: the 7 primary formats. Protections (all implemented and measured):\n  none      unprotected store\n  parity    one even-parity bit per 32-bit word (Stage 5; detect-only, a detected word is consumed as read)\n  secded    extended Hamming (39,32) per 32-bit word (Stage 5)\n  dmr       two copies (Stage 5; detect-only)\n  scale_tmr INT formats only: the float32 scale word stored three times, read by bit-wise majority (fr.protect, as in the ResNet-18 run); payload unprotected\n28 word-level options + 2 scale_tmr options = 30 options per layer, 53 x 30 = 1,590 candidates. Unsupported combinations (scale_tmr on a float format) do not exist.\n\n  Q(l,d)    one-layer-at-a-time clean penalty: max(0, CE change on the 5,000 validation images when ONLY layer l is stored in d)   (Stage 3, the empirical\n            proxy the protocol prefers). No fault damage in Q.\n  R(l,d,p)  residual fault risk (pp of validation accuracy) under the DECLARED distribution: k = 8 distinct weights drawn over all quantizable weights of the model,\n            one uniformly drawn bit of each weight's own encoding. R_exposure(l,d,none) = 8 (n_l / N) * per_flip(l,d), per_flip = sum over fault groups g of\n            (bits_g / width) * max(0, mean(drop_k1_g, drop_k8_g / 8))   (Stage 4 layer-wise group results, 10 trials x 1,000 validation images each); additive\n            over layers. R(l,d,p) = R(l,d,none) * residual_rate(l,d,p), where residual_rate is the MEASURED fraction of single-bit data faults whose error is still\n            present after the protection's decoder (Stage 5 protection_layer_summary: parity 1, secded 0, dmr 1; scale_tmr leaves the payload unprotected: 1).\n            This is a derived estimate; the assembled model is then measured end to end through the real decoders.\n  R_scale   SECOND metric, never merged into R: mean accuracy drop of ONE flipped bit of the layer's float32 scale word (all 32 bits, exhaustive,\n            stage6_scale_faults.py) times the measured residual rate of the protection on the scale word (parity 1, secded 0, dmr 1; scale_tmr 0 by construction,\n            checked exhaustively in tests). Options with R_scale above tau_scale are inadmissible.\n  S(l,d,p)  actual stored bytes: payload + scale word(s) + 32-bit alignment padding + packed redundancy bits (Stage 5 protection_storage.csv); scale_tmr: + 8 bytes.\n  Normalisation: global min-max over all candidates (as the ResNet-18 optimiser), lambda = 1.\n",
+  "per_flip_group_detail_example": {
+    "sign": {
+      "weight": 0.25,
+      "k1_drop_pp": 0.0,
+      "k8_drop_pp": -0.00999928,
+      "per_flip_pp": 0.0
+    },
+    "value": {
+      "weight": 0.75,
+      "k1_drop_pp": 0.0,
+      "k8_drop_pp": -0.01999974,
+      "per_flip_pp": 0.0
+    }
+  },
+  "checkpoint_sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+  "stage2_frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561",
+  "inputs": {
+    "stage3": {
+      "path": "reports\\mobilenetv2_cifar10\\stage_03_layerwise_sensitivity\\layerwise_sensitivity_results.csv",
+      "sha256": "7fba19b6e44b9a290182746c406f5f459b7814ea6df85318edd3cb49d70675a1"
+    },
+    "stage4": {
+      "path": "reports\\mobilenetv2_cifar10\\stage_04_encoded_fault_injection\\layerwise_summary.csv",
+      "sha256": "fb190d5ae6468ea7329fec5c9c55c1ced7dad78d3b8e0d291ff0a96c2d239161"
+    },
+    "storage": {
+      "path": "reports\\mobilenetv2_cifar10\\stage_05_protection\\protection_storage.csv",
+      "sha256": "e64ada952be6f65b526825c60193c890e12dc8e5698e763631e2d6ce32fa07cb"
+    },
+    "prot_layer": {
+      "path": "reports\\mobilenetv2_cifar10\\stage_05_protection\\protection_layer_summary.csv",
+      "sha256": "871624d70da4a7b5eac5f6cd2a8e32a4fd73ff9cf032c5337b80efb869b84d60"
+    },
+    "prot_summary": {
+      "path": "reports\\mobilenetv2_cifar10\\stage_05_protection\\protection_summary.csv",
+      "sha256": "72eedd2722c1af37b4fd9a64ca1db3d898e273aa27162c5497a8afce1194e561"
+    },
+    "scale": {
+      "path": "reports\\mobilenetv2_cifar10\\stage_06_optimization\\scale_faults\\scale_summary.csv",
+      "sha256": "c93a964d58418d2f172a151dd1e3b03369f6ce83855063d89340b80e735e386f"
+    }
+  },
+  "source_commit": {
+    "commit": "5fa85bb80972abf1ae7a672773d2d50afc270b9e",
+    "dirty": true
+  },
+  "declared_constants": {
+    "lambda": 1.0,
+    "normalization": "minmax",
+    "B_avg_bits_per_weight": 8.0,
+    "tau_fault_pp": 0.5,
+    "tau_scale_pp": 1.0,
+    "delta_clean_pp": 0.5,
+    "source": "ResNet-18 JFAMP optimiser defaults (scripts/stage5_optimize.py: --select-lambda 1.0, --select-norm minmax, --select-bits 8.0, --select-tau 0.5, --tau-scale 1.0; delta_clean 0.5 in its assignment.json). Protocol continuation, not an exact numeric reproduction.",
+    "B_scope": "quantized Conv2d/Linear weights only (2,202,560 weights); biases, BatchNorm and buffers are FP32 and not counted",
+    "friend_setting_for_comparison": {
+      "B_fraction_of_fp32_weight_bytes": 0.6,
+      "B_avg_bits_per_weight": 4.8,
+      "lambda": 1.0
+    }
+  }
+}

@@ -1,0 +1,15 @@
+{
+  "lambda": 1.0,
+  "normalization": "minmax",
+  "B_avg_bits_per_weight": 8.0,
+  "tau_fault_pp": 0.5,
+  "tau_scale_pp": 1.0,
+  "delta_clean_pp": 0.5,
+  "source": "ResNet-18 JFAMP optimiser defaults (scripts/stage5_optimize.py: --select-lambda 1.0, --select-norm minmax, --select-bits 8.0, --select-tau 0.5, --tau-scale 1.0; delta_clean 0.5 in its assignment.json). Protocol continuation, not an exact numeric reproduction.",
+  "B_scope": "quantized Conv2d/Linear weights only (2,202,560 weights); biases, BatchNorm and buffers are FP32 and not counted",
+  "friend_setting_for_comparison": {
+    "B_fraction_of_fp32_weight_bytes": 0.6,
+    "B_avg_bits_per_weight": 4.8,
+    "lambda": 1.0
+  }
+}
