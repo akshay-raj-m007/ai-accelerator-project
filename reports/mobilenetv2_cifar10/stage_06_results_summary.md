@@ -34,11 +34,11 @@ Four mechanisms on the serialized little-endian payload of the frozen encodings,
 | 2 data bits | SECDED | 100 % | 0 (detected) | 100 % | 0 |
 | 2 data bits | DMR | 100 % | 0 | 100 % | 0 |
 
-Actual storage overhead (measured bytes, not nominal): parity 3.1 %, SECDED 21.9 %, DMR 100 %. Plot: `figures/06_protection_outcomes_and_overhead.png`.
+Actual storage overhead (measured bytes, not nominal): parity 3.1 %, SECDED 21.9 %, DMR 100 %. Plot: `figures/stage5_protection/mobilenetv2_cifar10_s5_1_protection_outcomes_and_overhead.png`.
 Additional option implemented for INT layers: **scale TMR** (the scale stored 3x, bit-wise majority on read; +8 bytes per layer). It protects the scale word only, not the integer codes.
 
 Scale-word campaign (`stage_06_optimization/scale_faults/`, all 32 bits of every INT layer scale): every one of the 106 INT layer/format cases has a mean drop above 1 pp (mean over layers 12.0 pp for INT8,
-11.3 pp for INT4). INT layers are therefore inadmissible without SECDED or scale TMR (`figures/03_scale_word_faults.png`).
+11.3 pp for INT4). INT layers are therefore inadmissible without SECDED or scale TMR (`figures/stage4/mobilenetv2_cifar10_3_global_screening_scales.png`).
 
 ## 6B - Joint candidate generation (`stage_06_fisher/jfamp_candidate_table.csv`)
 Candidates = layer x datatype x protection: 53 layers x 7 datatypes x {none, parity, SECDED, DMR} = 1,484, plus scale TMR for the INT formats (2 x 53 = 106) = **1,590 candidates** (30 options per layer).
@@ -50,7 +50,7 @@ Per candidate:
 - **S** = actual stored bytes (payload + scales + alignment + redundancy), reconciled against the assembled model for every assignment.
 
 Fisher Q against the measured one-layer-at-a-time loss change (Spearman over 53 layers): INT4 +0.84, E4M11 +0.61, FP8 E5M2 +0.55, FP16 +0.44, BF16 +0.42, FP8 E4M3FN +0.40, INT8 +0.12. Sum of 0.5 Q for INT4 0.334 vs measured
-0.249 (`figures/08_Q_predicted_vs_measured.png`). Only INT4 carries a clear signal; the 16-bit formats and INT8 are below the noise of a 5,000-image evaluation (the same finding as for ResNet-18).
+0.249 (`figures/stage6/mobilenetv2_cifar10_s6_5_Q_validation_predicted_vs_measured.png`). Only INT4 carries a clear signal; the 16-bit formats and INT8 are below the noise of a 5,000-image evaluation (the same finding as for ResNet-18).
 
 ## 6C - Constrained joint optimisation (`stage_06_fisher/`)
 Binary x[l,d,p], exactly one option per layer, minimise sum x (Qn + lambda Rn) (global min-max normalisation) subject to sum x S <= B and the predicted sum of R <= tau_fault; options with R_scale > tau_scale
@@ -64,7 +64,7 @@ images 2,048-4,999 (2,952 images, disjoint from the Fisher images). 33 assignmen
 The constraint grid (168 settings of delta_clean, tau_fault, B, tau_scale) selected, among assignments that pass the MEASURED limits, the lowest objective: **A000** at the declared point (10 feasible).
 Other grid points (delta 0.5, tau 0.5, tau_scale 1): B = 5 bit -> A007 (5.00 bit, clean drop 0.24 pp); B = 4.8 bit -> A006 (4.80 bit, 0.14 pp).
 The assignment was frozen (`assignment.json`) before the test set was read; then 300 more validation trials per distribution and one test evaluation (`final_test_evaluation.json`).
-Predicted vs measured: weight-fault drop Spearman +0.62 (mean predicted 0.93 pp, measured 1.01 pp over the 33); clean accuracy loss +0.51; clean loss change only +0.10 (`figures/11_predicted_vs_measured_assignments.png`).
+Predicted vs measured: weight-fault drop Spearman +0.62 (mean predicted 0.93 pp, measured 1.01 pp over the 33); clean accuracy loss +0.51; clean loss change only +0.10 (`figures/stage6/mobilenetv2_cifar10_s6_8_predicted_vs_measured_assignments.png`).
 
 ### Final allocation (A000)
 Datatype mix: 23 layers E4M11-SN + SECDED, 24 layers INT8 + scale TMR, 6 layers INT4 + scale TMR. Payload 1,616,000 B, scales 120 B, redundancy 34,820 B.
@@ -146,7 +146,7 @@ Every layer in one format, no protection, same assembled-model protocol (validat
 | **A000 (assigned, all protected)** | **6.00** | **1,650,940** | **91.80 %** | **0.07 pp** | **0.005 pp** | **0.0 pp** |
 
 Reading: no single uniform format passes everything. FP16, BF16, FP8 and E4M11-SN break the 0.5 pp fault limit; unprotected INT breaks the scale-word limit; INT4 breaks the clean limit; the protected uniform
-INT8 / FP8 references pass but cost 8.0-9.75 bit/weight, 33-63 % more than A000. A000 is smaller than every uniform model that meets all limits (`figures/14_assigned_vs_uniform_unprotected.png`).
+INT8 / FP8 references pass but cost 8.0-9.75 bit/weight, 33-63 % more than A000. A000 is smaller than every uniform model that meets all limits (`figures/stage6/mobilenetv2_cifar10_s6_11_assigned_vs_uniform.png`).
 The official test accuracy of the uniform formats was not measured (`stage2_quantize.py --stage test` has not been run for MobileNetV2), so this comparison is on validation data only.
 
 ## Comparison variant: measured Q (`stage_06_optimization/`)
@@ -169,7 +169,11 @@ this choice does not rest on the test numbers.
 - **Scope.** One checkpoint (FP32 92.16 % validation / 91.69 % test), one seed, weights only (biases, BatchNorm and activations stay FP32).
 
 ## Figures (`figures/`, produced by `scripts/plot_mobilenetv2_summary.py` from the committed CSV/JSON files)
-01 format overview, 02 global screening, 03 scale-word faults, 04 layer fault-sensitivity heatmap, 05 quality vs robustness, 06 protection outcomes and overhead, 07 Q and R heatmaps,
-08 Fisher Q vs measured, 09 selected assignment per layer, 10 storage / accuracy / fault trade-off, 11 predicted vs measured, 12 fault-trial distributions of A000, 13 lambda sweep, 14 assigned vs uniform, 15 test accuracy of both variants.
-Not reproduced from the ResNet-18 figure set: the weight / activation / logit distribution and activation-growth plots (they need per-trial tensors that the MobileNetV2 campaigns did not save) and the
-datatype-only vs protected pairs figure.
+Same design as the ResNet-18 figures (`plot_stage4_summary.py` look for `stage4/`, `plot_stage5_summary.py` look for `stage5_protection/` and `stage6/`; BF16 and FP8 E5M2, which ResNet-18 did not have, take the next colours of the same palettes).
+- `stage4/`: 1 format overview, 2 global screening (weights), 3 global screening (scale words), 4 layer heatmaps (53 layers, value in every cell), 5 quality vs robustness.
+- `stage5_protection/`: s5_1 protection outcomes and overhead.
+- `stage6/`: s6_1 overview, s6_2 layer sensitivity profile, s6_3 Q heatmap, s6_4 R heatmaps (weights and scale words), s6_5 Q predicted vs measured, s6_6 selected assignments per layer,
+  s6_7 storage / accuracy / fault trade-off, s6_8 predicted vs measured assignments, s6_9 fault-trial distributions of A000, s6_10 lambda sweep, s6_11 assigned vs uniform, s6_12 test accuracy of both variants.
+Differences that follow from the data: Stage 4 of MobileNetV2 used the protocol's sign / exponent / fraction groups (30 global, 10 layer-wise trials) and has no "any bit" group, so figures 2, 4 and 5 show the groups
+(figure 5 pools them bit-weighted); the R heatmap shows 8 x the group-weighted per-flip drop. Not reproduced from the ResNet-18 set: weight / activation / logit distributions, activation growth and feature-map figures
+(they need per-trial tensors that the MobileNetV2 runs did not save) and the datatype-only vs protected pairs figure.
