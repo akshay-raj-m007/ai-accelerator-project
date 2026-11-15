@@ -1,0 +1,2 @@
+Files already downloaded and verified
+exact Fisher on 2048 validation images (indices 0..2047): trace 3.5188e+03, 20479 backward passes, 55 s -> /home/ssl25/fr_runs/results/mobilenetv2_cifar10/sensitivity_heldout

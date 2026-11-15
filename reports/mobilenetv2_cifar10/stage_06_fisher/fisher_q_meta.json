@@ -1,0 +1,20 @@
+{
+  "Q_definition": "PRIMARY Q (Q_fisher_val_exact) = sum_i F_i (w_i - w_hat_i)^2 with F = diagonal Fisher of the FP32 model, expectation over labels computed EXACTLY, on held-out validation images 0..2047; w_hat = decoded frozen Stage 2 encoding. ALTERNATIVE (Q_fisher_train_sampled): same with the sampled-label true Fisher on 1,024 training images (this network is saturated on its training images and the sampled estimator undercounts; see phase5/Q_ANALYSIS.md)",
+  "checkpoint_sha256": "268f8b52cf01d791a48e557b41c6d67cfe7de44b272de99bba8e21f01c243f9e",
+  "stage2_frozen_config_sha256": "471bc4806924657bccce430f38a2fb7eab43b8c64cb8e0b4e455189fde907561",
+  "fisher_file": "/home/ssl25/fr_runs/results/mobilenetv2_cifar10/sensitivity_heldout/fisher_exact_val.pt",
+  "fisher_sha256": "c2f4f6496a7db88b36f8f52e205d4ac41c8e2f733dea7de2127f5076403cecf9",
+  "fisher_kind": "exact",
+  "fisher_source": "val",
+  "fisher_n_samples": 2048,
+  "fisher_val_index_range": [
+    0,
+    2048
+  ],
+  "fisher_min_prob": 1e-08,
+  "rows": 371,
+  "source_commit": {
+    "commit": "06b7c93f89cf520c25eea41d1f1c3318cdaef7f6",
+    "dirty": true
+  }
+}
