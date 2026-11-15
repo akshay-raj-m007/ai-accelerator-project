@@ -1,0 +1,11 @@
+Files already downloaded and verified
+run 20261115T111623Z-51fe1045: 2952 validation images (clean), 1000 for fault trials (stratified-1000-seed42), device cuda
+FP32 reference: 91.87 % / loss 0.2655 on 2952 validation images
+A. clean measurements: 212 assignments (0 new)
+B. fault shortlist (33): ['A104', 'A019', 'A037', 'A082', 'A099', 'A016', 'A087', 'A039', 'A058', 'A021', 'A168', 'A143', 'A027', 'A144', 'A017', 'A041', 'A006', 'A028', 'A131', 'A007', 'A000', 'A008', 'U_FP16', 'U_BF16', 'U_E4M11', 'U_FP8N', 'U_FP8E5', 'U_INT8', 'U_INT4', 'U_INT8_TMR', 'U_INT4_TMR', 'U_INT8_SECDED', 'U_FP8N_SECDED']
+C. fault trials: 0 new
+summaries written to reports/mobilenetv2_cifar10/stage_06_fisher  (incomplete trial cells: 0)
+Files already downloaded and verified
+FROZEN: A000 (91.80 % clean validation, 5.996 bits/weight); evaluating the test set once
+Files already downloaded and verified
+FINAL: test accuracy 91.62 % (FP32 91.69 %) -> assignment.json, final_test_evaluation.json
