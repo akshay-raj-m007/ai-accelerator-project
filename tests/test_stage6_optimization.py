@@ -285,3 +285,39 @@ def test_trials_are_reproducible_from_the_seed(assembled):
     a = S6.draw_trial_faults(pf, "stored_k8", 12345, 8)
     b = S6.draw_trial_faults(pf, "stored_k8", 12345, 8)
     assert a == b
+
+
+# ------------------------------------------------------------------------------------------------ Fisher Q
+@needs_reports
+def test_fisher_q_column_is_carried_and_selects_the_objective_q():
+    s5 = REP / "stage_05_protection"
+    storage = rd(s5 / "protection_storage.csv")
+    layers = list(OrderedDict.fromkeys(r["layer_name"] for r in sorted(storage, key=lambda r: int(r["layer_index"]))))
+    rng = np.random.default_rng(1)
+    fq = {(l, f): float(rng.uniform(0, 1)) * (1e-3 if f.startswith("fp") else 1e-1) for l in layers for f in S6.FORMATS}
+    rows, _ = S6.build_candidates(rd(REP / "stage_03_layerwise_sensitivity/layerwise_sensitivity_results.csv"), rd(REP / "stage_04_encoded_fault_injection/layerwise_summary.csv"),
+                                  storage, rd(s5 / "protection_layer_summary.csv"), rd(s5 / "protection_summary.csv"), fake_scale_rows(layers), fisher_q=fq)
+    assert len(rows) == 1590 and all("Q_fisher_val_exact" in r and "Q_ce_loss_change" in r for r in rows)
+    r0 = rows[0]
+    assert r0["Q_fisher_val_exact"] == fq[(r0["layer_name"], r0["datatype"])] and r0["Q_pred_dCE_fisher"] == 0.5 * r0["Q_fisher_val_exact"]
+    pf, _ = S6.rows_to_problem(rows, "joint", q_col="Q_fisher_val_exact")
+    pm, _ = S6.rows_to_problem(rows, "joint")
+    j = pf.formats.index("int4_pt+secded")
+    assert pf.Q[0, j] == fq[(layers[0], "int4_pt")] and pm.Q[0, j] != pf.Q[0, j]
+    # protection does not change Q: every option of one (layer, datatype) shares its Fisher Q
+    for l in range(3):
+        for fmt in ("int8_pt", "fp16"):
+            vals = {pf.Q[l, k] for k, o in enumerate(pf.formats) if S6.parse_option(o)[0] == fmt}
+            assert len(vals) == 1
+    # a different Q column gives a different exact optimum (Q really enters the objective)
+    kw = dict(max_bytes=8.0 * 2202560 / 8, max_sum_R=None, tau_scale=1.0)
+    a = S5.solve(pf, 1.0, "minmax", "weights", **kw)
+    b = S5.solve(pm, 1.0, "minmax", "weights", **kw)
+    assert a["choice"] is not None and b["choice"] is not None and list(a["choice"]) != list(b["choice"])
+
+
+def test_fisher_q_helper_matches_definition():
+    w = np.array([1.0, -2.0, 0.5])
+    wh = np.array([0.9, -2.1, 0.5])
+    f = np.array([2.0, 3.0, 100.0])
+    assert S5.fisher_q(w, wh, f) == pytest.approx(2.0 * 0.01 + 3.0 * 0.01 + 0.0)

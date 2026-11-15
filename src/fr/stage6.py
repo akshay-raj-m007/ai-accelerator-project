@@ -108,8 +108,12 @@ def per_flip_drop(fmt: str, s4: Dict[tuple, dict], layer: str) -> Tuple[float, d
 
 
 def build_candidates(s3_rows: Sequence[dict], s4_rows: Sequence[dict], storage_rows: Sequence[dict], prot_layer_rows: Sequence[dict],
-                     prot_summary_rows: Sequence[dict], scale_rows: Sequence[dict]) -> Tuple[List[dict], dict]:
-    """The 1,590-row candidate table from the Stage 3 / 4 / 5 outputs and the scale-word campaign (all plain CSV rows)."""
+                     prot_summary_rows: Sequence[dict], scale_rows: Sequence[dict],
+                     fisher_q: Optional[Dict[Tuple[str, str], float]] = None) -> Tuple[List[dict], dict]:
+    """The 1,590-row candidate table from the Stage 3 / 4 / 5 outputs and the scale-word campaign (all plain CSV rows).
+
+    ``fisher_q`` = {(layer_name, format_key): sum_i F_i (w_i - w_hat_i)^2} (scripts/stage6_fisher_q.py). When given, every row also carries ``Q_fisher_val_exact`` (the
+    ResNet-18 optimiser's primary Q) next to the measured ``Q_ce_loss_change``; which of the two enters the objective is chosen by the ``q_col`` of rows_to_problem."""
     q3 = {(r["layer_name"], r["format_key"]): r for r in s3_rows}
     s4 = {}
     for r in s4_rows:
@@ -149,7 +153,9 @@ def build_candidates(s3_rows: Sequence[dict], s4_rows: Sequence[dict], storage_r
                     parts_b = {"payload_bytes": int(sr["payload_bytes"]), "scale_bytes": int(sr["scale_bytes"]),
                                "alignment_padding_bytes": int(sr["alignment_padding_bytes"]), "redundancy_bytes": int(sr["redundancy_bytes"])}
                 rows.append({"layer_index": info["layer_index"], "layer_name": lname, "layer_type": q["layer_type"], "num_weights": n_l, "datatype": fmt, "protection": prot,
-                             "option": option_token(fmt, prot), "Q_ce_loss_change": Q, "Q_raw_ce_loss_change": _f(q["loss_change"]), "isolated_accuracy_change_pp": _f(q["accuracy_change_pp"]),
+                             "option": option_token(fmt, prot),
+                             **({} if fisher_q is None else {"Q_fisher_val_exact": fisher_q[(lname, fmt)], "Q_pred_dCE_fisher": 0.5 * fisher_q[(lname, fmt)]}),
+                             "Q_ce_loss_change": Q, "Q_raw_ce_loss_change": _f(q["loss_change"]), "isolated_accuracy_change_pp": _f(q["accuracy_change_pp"]),
                              "per_flip_drop_pp": pf, "R_exposure_unprotected_pp": R_none, "residual_rate_single_bit": f_w, "R_exposure_pp": R_none * f_w,
                              "R_scale_unprotected_pp": Rs_none, "residual_rate_scale_word": f_s, "R_scale_pp": Rs_none * f_s,
                              "S_total_bytes": S, **{f"S_{k}": v for k, v in parts_b.items()}})

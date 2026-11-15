@@ -113,3 +113,22 @@ from validation data (`assignment.json` is written before the test set is read);
 
 ## Limits to state in any report
 Weights-only; encoded weights are decoded to FP32 for evaluation (no native low-precision kernels); one checkpoint, one seed; INT3 deferred; the baseline is trained here with the ResNet-18 recipe, not tuned for MobileNetV2.
+
+### Section 6, variant B: Fisher-weighted Q (as in the ResNet-18 optimiser)
+Variant A above uses the measured one-layer-at-a-time CE change as Q (`reports/$RUN/stage_06_optimization`, git tag `mobilenetv2-measuredQ-stage6`). Variant B uses the
+ResNet-18 optimiser's primary Q, `Q_fisher_val_exact = sum_i F_i (w_i - w_hat_i)^2` (exact-expectation diagonal Fisher on validation images 0..2047), and measures the clean
+accuracy of the assembled assignments on validation images 2,048..4,999 so that Q and the clean check never share an image. R, S, the scale-word campaign and all constants are
+shared with variant A. Variant B writes into `reports/$RUN/stage_06_fisher` and never touches variant A's files.
+```bash
+RUN=mobilenetv2_cifar10; CK=$FR_ROOT/checkpoints/$RUN/best.pth; S6F=reports/$RUN/stage_06_fisher
+# 1 (GPU, minutes) exact Fisher on validation images 0..2047
+python -u scripts/fisher_exact.py --checkpoint $CK --run-name $RUN | tee reports/$RUN/stage_03_fisher_console.txt
+# 2 (CPU) Q_fisher_val_exact per layer x format from the frozen Stage 2 encodings
+python scripts/stage6_fisher_q.py --checkpoint $CK --run-name $RUN --out-dir $S6F
+# 3 (CPU) candidate table + sweep with Q = Q_fisher_val_exact
+python scripts/stage6_optimize.py --reports reports/$RUN --q-source fisher
+# 4 (GPU) assemble + measure all assignments (clean on images 2048..4999), then freeze and test ONCE
+python -u scripts/stage6_end_to_end.py --checkpoint $CK --run-name $RUN --opt-dir $S6F | tee reports/$RUN/stage_06_fisher_e2e_console.txt
+python -u scripts/stage6_end_to_end.py --checkpoint $CK --run-name $RUN --opt-dir $S6F --finalize | tee reports/$RUN/stage_06_fisher_final_console.txt
+```
+The official test set is read once per variant; which variant is reported must be decided from validation results only.

@@ -60,7 +60,12 @@ def write_csv(path, rows, fields=None):
 def main(argv=None):
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     ap.add_argument("--reports", default="reports/mobilenetv2_cifar10")
-    ap.add_argument("--out-dir", default=None)
+    ap.add_argument("--out-dir", default=None, help="default <reports>/stage_06_optimization (measured Q) or <reports>/stage_06_fisher (Fisher Q)")
+    ap.add_argument("--q-source", choices=["measured", "fisher"], default="measured",
+                    help="Q in the objective: 'measured' = Stage 3 one-layer-at-a-time CE change (all 5,000 validation images); 'fisher' = Q_fisher_val_exact of the ResNet-18 optimiser "
+                         "(scripts/stage6_fisher_q.py), clean checks then use the validation images that the Fisher did not see")
+    ap.add_argument("--fisher-q", default=None, help="fisher_q.csv (default <out-dir>/fisher_q.csv; required for --q-source fisher)")
+    ap.add_argument("--scale-dir", default=None, help="scale-word campaign (default <reports>/stage_06_optimization/scale_faults; independent of Q)")
     ap.add_argument("--lambdas", type=float, nargs="+", default=LAMBDAS)
     ap.add_argument("--avg-bits", type=float, nargs="+", default=AVG_BITS)
     ap.add_argument("--tau", type=float, nargs="*", default=TAUS)
@@ -68,35 +73,50 @@ def main(argv=None):
     ap.add_argument("--no-protection", action="store_true", help="datatype-only run only")
     args = ap.parse_args(argv)
     rep = Path(args.reports)
-    out = Path(args.out_dir) if args.out_dir else rep / "stage_06_optimization"
+    out = Path(args.out_dir) if args.out_dir else rep / ("stage_06_fisher" if args.q_source == "fisher" else "stage_06_optimization")
+    scale_dir = Path(args.scale_dir) if args.scale_dir else rep / "stage_06_optimization" / "scale_faults"
     out.mkdir(parents=True, exist_ok=True)
     t0 = time.time()
     paths = {"stage3": rep / "stage_03_layerwise_sensitivity/layerwise_sensitivity_results.csv", "stage4": rep / "stage_04_encoded_fault_injection/layerwise_summary.csv",
              "storage": rep / "stage_05_protection/protection_storage.csv", "prot_layer": rep / "stage_05_protection/protection_layer_summary.csv",
-             "prot_summary": rep / "stage_05_protection/protection_summary.csv", "scale": rep / "stage_06_optimization/scale_faults/scale_summary.csv"}
+             "prot_summary": rep / "stage_05_protection/protection_summary.csv", "scale": scale_dir / "scale_summary.csv"}
+    fq_path = Path(args.fisher_q) if args.fisher_q else out / "fisher_q.csv"
+    if args.q_source == "fisher":
+        paths["fisher_q"] = fq_path
     missing = [k for k, v in paths.items() if not v.exists()]
     if missing:
         sys.exit(f"missing inputs: {[str(paths[k]) for k in missing]} (the scale campaign is stage6_scale_faults.py)")
     # ---- provenance: every input must come from the same checkpoint and frozen quantizer configuration
     frozen = {"stage3": json.load(open(rep / "stage_03_layerwise_sensitivity/stage3_progress.json")), "stage4": json.load(open(rep / "stage_04_encoded_fault_injection/layerwise_manifest.json")),
-              "stage5": json.load(open(rep / "stage_05_protection/protection_report.json")), "scale": json.load(open(rep / "stage_06_optimization/scale_faults/scale_manifest.json"))}
+              "stage5": json.load(open(rep / "stage_05_protection/protection_report.json")), "scale": json.load(open(scale_dir / "scale_manifest.json"))}
     cks = {k: v["checkpoint_sha256"] for k, v in frozen.items()}
     fz = {k: v["quantizer_frozen_config_sha256"] if k == "stage3" else v["stage2_frozen_config_sha256"] for k, v in frozen.items()}
     if len(set(cks.values())) != 1 or len(set(fz.values())) != 1:
         sys.exit(f"inputs come from different checkpoints / frozen configurations: {cks} {fz}")
     ck_sha, fz_sha = next(iter(cks.values())), next(iter(fz.values()))
+    fisher_q = None
+    if args.q_source == "fisher":
+        fq_meta = json.load(open(fq_path.with_name("fisher_q_meta.json")))
+        if fq_meta["checkpoint_sha256"] != ck_sha or fq_meta["stage2_frozen_config_sha256"] != fz_sha:
+            sys.exit("fisher_q.csv was computed on a different checkpoint / frozen configuration")
+        fisher_q = {(r["layer_name"], r["format_key"]): float(r["Q_fisher_val_exact"]) for r in read_csv(fq_path)}
     rows, meta = S6.build_candidates(read_csv(paths["stage3"]), read_csv(paths["stage4"]), read_csv(paths["storage"]), read_csv(paths["prot_layer"]),
-                                     read_csv(paths["prot_summary"]), read_csv(paths["scale"]))
+                                     read_csv(paths["prot_summary"]), read_csv(paths["scale"]), fisher_q=fisher_q)
+    q_col = "Q_fisher_val_exact" if args.q_source == "fisher" else "Q_ce_loss_change"
+    declared = dict(DECLARED, q_source=args.q_source, q_column=q_col,
+                    clean_val_skip=2048 if args.q_source == "fisher" else 0,
+                    clean_val_note=("clean accuracy of assembled assignments is measured on validation images 2,048..4,999 (disjoint from the Fisher images 0..2,047), as in the ResNet-18 run"
+                                    if args.q_source == "fisher" else "clean accuracy measured on all 5,000 validation images"))
     write_csv(out / "jfamp_candidate_table.csv", rows)
     modes = ["datatype_only"] if args.no_protection else ["datatype_only", "joint"]
-    problems = {m: S6.rows_to_problem(rows, m) for m in modes}
+    problems = {m: S6.rows_to_problem(rows, m, q_col=q_col) for m in modes}
     N = float(next(iter(problems.values()))[1].sum())
     for m, (p, _) in problems.items():
         print(f"{m}: {len(p.layers)} layers x {len(p.formats)} options = {len(p.layers) * len(p.formats)} candidates, {int(N):,} quantized weights")
     meta.update({"checkpoint_sha256": ck_sha, "stage2_frozen_config_sha256": fz_sha, "inputs": {k: {"path": str(v), "sha256": hashlib.sha256(open(v, "rb").read()).hexdigest()} for k, v in paths.items()},
-                 "source_commit": git_info(), "declared_constants": DECLARED})
+                 "source_commit": git_info(), "declared_constants": declared})
     dump_json(meta, out / "candidate_table_meta.json")
-    dump_json(DECLARED, out / "declared_constants.json")
+    dump_json(declared, out / "declared_constants.json")
     sweep = S6.run_sweep(problems, args.lambdas, args.avg_bits, args.tau, args.norms, DECLARED["tau_scale_pp"])
     write_csv(out / "normalization_lambda_sweep.csv", sweep)
     ok = [r for r in sweep if r["status"] == "optimal"]

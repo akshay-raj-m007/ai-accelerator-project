@@ -117,7 +117,9 @@ def main(argv=None):
            "avg_bits": args.final_avg_bits if args.final_avg_bits is not None else declared["B_avg_bits_per_weight"],
            "tau_scale": args.final_tau_scale if args.final_tau_scale is not None else declared["tau_scale_pp"]}
     table_rows = list(csv.DictReader(open(odir / "jfamp_candidate_table.csv", encoding="utf-8")))
-    p, nw = S6.rows_to_problem(table_rows, "joint")
+    q_col = declared.get("q_column", "Q_ce_loss_change")
+    val_skip = int(declared.get("clean_val_skip", 0))      # Fisher run: the first 2,048 validation images belong to the Fisher and are not used for any check
+    p, nw = S6.rows_to_problem(table_rows, "joint", q_col=q_col)
     L, N = len(p.layers), float(nw.sum())
     asg = OrderedDict()
     for r in csv.DictReader(open(odir / "distinct_assignments.csv", encoding="utf-8")):
@@ -156,7 +158,7 @@ def main(argv=None):
     def load_data(model, ckpt):
         norm = fdata.resolve_normalization(cfg.normalize, "checkpoint", ckpt.get("config"))
         val_size, split_seed = split_params(ckpt, cfg)
-        Xv, yv = load_tensors(fdata.get_val_loader(cfg.data_path(), norm, cfg.eval_batch_size, val_size, split_seed, cfg.num_workers, False, subset=args.val_images), device)
+        Xv, yv = load_tensors(fdata.get_val_loader(cfg.data_path(), norm, cfg.eval_batch_size, val_size, split_seed, cfg.num_workers, False, subset=args.val_images, skip=val_skip), device)
         sel = stratified_subset(yv.cpu().numpy(), args.n_fault_images, args.eval_seed)
         idx = torch.from_numpy(sel).to(device)
         return norm, Xv, yv, Xv[idx], yv[idx], {"name": f"stratified-{len(sel)}-seed{args.eval_seed}" if len(sel) < int(yv.numel()) else "full-validation", "images": int(len(sel)),
@@ -327,7 +329,7 @@ def main(argv=None):
                                  "scales_k1_pp": "" if not b else (b["fault_end_to_end"].get("scales_k1", {}).get("drop_pp_mean", 0.0)), "n_protected_layers": "" if not b else b["n_protected_layers"]})
     write_csv(odir / "constraint_grid_selection.csv", grid)
     dump_json({"label": "Measured end to end on assembled models (validation data only unless final_test_evaluation.json exists).", "fp32_reference": fp32,
-               "protocol": {"clean": "all 5,000 validation images", "fault": f"{prev['eval_subset']['name']} ({prev['eval_subset']['images']} images), {trials_expected} trials per distribution",
+               "protocol": {"clean": f"{fp32['val_samples']} validation images" + (f" (validation indices {val_skip}.. , disjoint from the Fisher images)" if val_skip else " (all)"), "q_column": q_col, "fault": f"{prev['eval_subset']['name']} ({prev['eval_subset']['images']} images), {trials_expected} trials per distribution",
                             "distributions": "weights_k8 (PRIMARY), scales_k1 (SECOND metric); stored_k8 (incl. redundancy bits) only for the frozen assignment"},
                "fault_shortlist_rule": "non-dominated front (storage, predicted weight-fault drop, largest scale-word risk, measured clean drop) of the datatype-only assignments and of the "
                                        "protected assignments, each evenly thinned to half the size limit, plus the references", "shortlist": shortlist, "incomplete_cells": problems,
