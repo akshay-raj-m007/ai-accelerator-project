@@ -64,7 +64,7 @@ def main(argv=None):
     if list(F) != lnames:
         sys.exit("Fisher layer names / order differ from the model's Conv2d/Linear weights")
     W = {f"{n}.weight": m.weight.detach().cpu().numpy() for n, m in mods}
-    codecs = S2.make_codecs(True)
+    codecs = S2.codec_registry()
     rows = []
     for fmt in S6.FORMATS:
         stored = S2.load_encoded(qdir / man["formats"][fmt]["encoded_file"], lnames)
