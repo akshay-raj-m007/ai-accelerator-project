@@ -180,4 +180,140 @@
   \end{itemize}
 \end{frame}
 
+% ================================================================== EXPERIMENT 2: MobileNetV2
+% ------------------------------------------------------------------ 9. baseline
+\begin{frame}{Experiment 2: MobileNetV2 on CIFAR-10, the FP32 baseline}
+  \small
+  \textbf{Setup.} A MobileNetV2 (torchvision, 3$\times$32$\times$32 input, stem stride 1) with 2\,236\,682 parameters is initialised from ImageNet weights and fine-tuned for 100 epochs
+  (SGD with Nesterov momentum, learning rate 0.05, weight decay 5e-4, batch size 128, 3 warm-up epochs) on CIFAR-10: 10 classes, 45\,000 training, 5\,000 validation and 10\,000 test images.
+  It has 53 Conv/Linear layers (17 depthwise, 34 pointwise, the stem and the classifier) holding 2\,202\,560 weights (8.81 MB in FP32); these weights are the ones we quantize,
+  while biases and BatchNorm parameters (34\,122) stay FP32.\\[5mm]
+  \centering
+  \textbf{Baseline accuracy} (highlighted = reference values used later)\\[2mm]
+  \begin{tabular}{lrrr}
+    \toprule
+    split & images & accuracy & cross-entropy\\
+    \midrule
+    \hlrow \textbf{test (official)} & 10\,000 & \textbf{91.69\,\%} & 0.2806\\
+    \hlrow \textbf{validation (holdout)} & 5\,000 & \textbf{92.16\,\%} & 0.2528\\
+    \bottomrule
+  \end{tabular}\\[6mm]
+  \textbf{Range of the trained weights}\\[2mm]
+  \begin{tabular}{lr}
+    \toprule
+    minimum / maximum & $-0.683$ / $+0.692$\\
+    mean / standard deviation & $-0.00006$ / $0.0175$\\
+    std per layer (smallest / largest) & $0.0022$ / $0.177$\\
+    \bottomrule
+  \end{tabular}
+\end{frame}
+
+% ------------------------------------------------------------------ 10. datatype table
+\begin{frame}{Clean quantization: every layer stored in one format}
+  \centering
+  \small
+  Weights-only quantization, FP32 compute on the decoded weights; validation set of 5\,000 images.\\[3mm]
+  \begin{tabular}{@{}lrrrr@{}}
+    \toprule
+    datatype & bit/weight & validation accuracy & drop from FP32 (pp) & global SQNR (dB)\\
+    \midrule
+    \hlrow \textbf{FP32 (baseline)} & 32 & \textbf{92.16\,\%} & -- & $+\infty$\\
+    FP16 & 16 & 92.16\,\% & 0.00 & 73.70\\
+    BF16 & 16 & 92.16\,\% & 0.00 & 55.56\\
+    E4M11-SN & 16 & 92.16\,\% & 0.00 & 76.12\\
+    FP8 E4M3FN & 8 & 92.14\,\% & 0.02 & 28.05\\
+    FP8 E5M2 & 8 & 90.62\,\% & 1.54 & 25.56\\
+    INT8 (per-tensor) & 8 & 92.22\,\% & $-0.06$ & 36.14\\
+    INT4 (per-tensor) & 4 & 84.32\,\% & 7.84 & 13.38\\
+    \bottomrule
+  \end{tabular}\\[4mm]
+  \begin{itemize}\small
+    \item FP16, BF16 and E4M11-SN reproduce FP32 exactly; FP8 E4M3FN and INT8 lose at most 0.02 pp (INT8's $-0.06$ pp is noise).
+    \item FP8 E5M2 loses 1.54 pp and INT4 loses 7.84 pp, much more than INT4 on ResNet-18 (1.18 pp): MobileNetV2 is far more sensitive to coarse weights.
+    \item \textbf{SQNR does not rank accuracy}: BF16 (55.6 dB) and INT8 (36.1 dB) lose nothing, FP8 E5M2 (25.6 dB) loses 1.54 pp and INT4 (13.4 dB) loses 7.84 pp.
+  \end{itemize}
+\end{frame}
+
+% ------------------------------------------------------------------ 11. heatmaps
+\begin{frame}{Where do bit flips hurt? Accuracy lost per layer and format}
+  \begin{columns}[c]
+    \begin{column}{0.46\textwidth}
+      \centering
+      \includegraphics[width=\textwidth,height=0.86\textheight,keepaspectratio]{mn_layer_heatmaps.png}
+    \end{column}
+    \begin{column}{0.50\textwidth}
+      \small
+      Faults injected into one layer at a time, 8 flips, mean of 10 trials; rows = the 53 layers from the first (top) to the last (bottom).
+      \begin{itemize}\footnotesize
+        \item \textbf{Exponent bits of the float formats are the worst}: up to 80 pp lost (FP8 E5M2, FP16, BF16), mostly in the early and middle layers, especially the 1$\times$1 projection layers (\texttt{proj}).
+        \item In the early layers every float format loses 20 to 65 pp (E4M11-SN worst: b2.proj 65.5 pp). From b8 on, E4M11-SN and FP8 E4M3 mostly lose under 15 pp.
+        \item \textbf{Sign-bit flips} matter only in the first layers (e.g.\ b1.dw: INT4 13.2 pp, FP16 15.4 pp).
+        \item \textbf{Fraction / value bits} are almost harmless in every format, including INT8 and INT4.
+        \item FP16, BF16 and FP8 E5M2 still lose 20 to 60 pp in many late \texttt{proj} layers and in the classifier.
+        \item This is the measurement behind $R$.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------ 12. Fisher
+\begin{frame}{Fisher sensitivity of each layer: MobileNetV2}
+  \begin{columns}[c]
+    \begin{column}{0.56\textwidth}
+      \centering
+      \includegraphics[width=\textwidth,height=0.86\textheight,keepaspectratio]{mn_sensitivity_profile.png}
+    \end{column}
+    \begin{column}{0.41\textwidth}
+      \small
+      b = Fisher per weight (log), c = predicted loss increase $\tfrac12 Q$ if only this layer is INT4, d = measured. \texttt{b}$n$ = block $n$ (\texttt{exp} 1$\times$1 expansion, \texttt{dw} depthwise 3$\times$3, \texttt{proj} 1$\times$1 projection).
+      \begin{itemize}\footnotesize
+        \item Fisher per weight falls by about four orders of magnitude from the first to the last layers.
+        \item Depthwise layers are usually the most sensitive in their block.
+        \item Predicted vs measured one-layer loss change (Spearman over 53 layers): INT4 $+0.84$, E4M11 $+0.61$, FP16 $+0.44$, INT8 $+0.12$. Only INT4 has a clear signal; the other formats are below the noise of the evaluation.
+      \end{itemize}
+    \end{column}
+  \end{columns}
+\end{frame}
+
+% ------------------------------------------------------------------ 13. final assignment
+\begin{frame}{Final assignment A000: Fisher sensitivity and the format each layer gets}
+  \centering
+  \includegraphics[width=0.97\textwidth,height=0.72\textheight,keepaspectratio]{mobilenetv2_fisher_vs_assignment.png}\\[-1mm]
+  {\scriptsize Top: Fisher sensitivity per weight (log); bottom: weights in the layer. Colour = assigned format. 23 layers E4M11-SN with SECDED (the sensitive early layers), 24 layers INT8 and 6 layers INT4 (b15.exp, b15.proj, b16.exp, b16.proj, b17.proj, head),
+  INT layers with scale TMR. Early layers get more bits, the large late layers fewer.}
+\end{frame}
+
+% ------------------------------------------------------------------ 14. metrics
+\begin{frame}{A000 compared with the FP32 model}
+  \small
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    & FP32 baseline & A000 & change\\
+    \midrule
+    \hlrow \textbf{test accuracy (10\,000 images)} & \textbf{91.69\,\%} & \textbf{91.62\,\%} & $-0.07$ pp\\
+    validation accuracy (2\,952 images) & 91.87\,\% & 91.80\,\% & $-0.07$ pp\\
+    validation cross-entropy & 0.2655 & 0.2654 & $-0.0001$\\
+    global SQNR & $+\infty$ dB & 22.85 dB & --\\
+    weight storage & 8.81 MB & 1.65 MB & $5.3\times$ smaller\\
+    average bits per weight & 32 & 6.00 & $-81.3\,\%$\\
+    \bottomrule
+  \end{tabular}\\[3mm]
+  \textbf{Accuracy drop after random bit flips}\\[1mm]
+  \begin{tabular}{@{}lrr@{}}
+    \toprule
+    & mean & worst\\
+    \midrule
+    8 weight bits, validation & 0.009 pp & 0.30 pp\\
+    8 weight bits, test & $-0.015$ pp & 0.01 pp\\
+    1 scale-word bit, test & 0.000 pp & 0.00 pp\\
+    \bottomrule
+  \end{tabular}\\[1mm]
+  {\scriptsize Validation: 300 trials on 1\,000 images. Test: 100 trials on 10\,000 images.}
+  \begin{itemize}\footnotesize
+    \item SQNR after 8 flips: median 22.84 dB, worst 22.73 dB.
+    \item All constraints hold: 6.00 bit $\le 8$, clean loss 0.07 pp $\le 0.5$, fault drop 0.009 pp $\le 0.5$, scale-flip drop 0 $\le 1.0$.
+    \item Stored size includes the protection overhead (SECDED check bits, scale copies).
+  \end{itemize}
+\end{frame}
+
 \end{document}
