@@ -75,7 +75,7 @@
         \bottomrule
       \end{tabular}\\[1mm]
       \footnotesize The trained FP32 weights are the reference, so their quantization error is 0 and SQNR is $+\infty$.
-      Every SQNR on the next slides is measured against these weights.\\[3mm]
+      Every SQNR on the next slides is measured against these weights; as in the paper (Eq.\ 6), infinite SQNR means lossless storage.\\[3mm]
       \small
       \textbf{Reading}
       \begin{itemize}\footnotesize
@@ -112,42 +112,48 @@
 \end{frame}
 
 % ------------------------------------------------------------------ 3. optimization
-\begin{frame}{Optimization function: which format for which layer?}
-  Choose one datatype $d$ for every layer $l$ (binary $x_{l,d}$):
+\begin{frame}{Optimization function: which format and protection for which layer?}
+  Choose one datatype $d$ and protection $p$ for every layer $l$ (binary $x_{l,d,p}$):
   \[
-    \min_{x}\ \sum_{l}\sum_{d} x_{l,d}\Big(\widetilde{Q}(l,d)+\lambda\,\widetilde{R}(l,d)\Big)
-    \quad\text{s.t.}\quad \sum_{d} x_{l,d}=1\ \ \forall l,\qquad \sum_{l,d} x_{l,d}\,S(l,d)\le B\cdot\tfrac{N}{8}
+    \min_{x}\ \sum_{l}\sum_{d,p} x_{l,d,p}\Big(\widetilde{Q}(l,d)+\lambda\,\widetilde{R}(l,d,p)\Big)
   \]
-  \vspace{-3mm}
-  {\footnotesize $\widetilde{\cdot}$ = min--max normalised, $\lambda=1$, $N$ = number of quantized weights, budget $B=8$ bit/weight. Solved exactly as an integer linear programme (HiGHS); every solution is then assembled and measured end to end.}
-  \vspace{1mm}
+  \vspace{-5mm}
+  \begin{align*}
+    \text{s.t.}\quad & \textstyle\sum_{d,p} x_{l,d,p}=1\ \ \forall l && \text{one option per layer}\\
+    & \textstyle\sum_{l,d,p} x_{l,d,p}\,S(l,d,p)\le B\cdot N/8 && \text{storage budget, } B=8\text{ bit/weight}\\
+    & \textstyle\sum_{l,d,p} x_{l,d,p}\,R(l,d,p)\le \tau_{\text{fault}} && \text{predicted fault drop} \le 0.5\text{ pp}\\
+    & x_{l,d,p}=0\ \text{ if } R_{\text{scale}}(l,d,p)>\tau_{\text{scale}} && \text{scale-word risk} \le 1.0\text{ pp}
+  \end{align*}
+  \vspace{-4mm}
+  {\footnotesize $\widetilde{\cdot}$ = min--max normalised, $\lambda=1$, $N$ = number of quantized weights. Solved exactly as an integer linear programme (HiGHS);
+  each solution is assembled and measured end to end, and the final choice must also keep the measured clean loss $\le 0.5$ pp.}
+  \vspace{0mm}
   \begin{columns}[T]
     \begin{column}{0.33\textwidth}
       \begin{block}{$Q$: quantization penalty}
-        \small
+        \footnotesize
         $Q(l,d)=\sum_{i\in l}F_i\,(w_i-\hat w_i)^2$\\[1mm]
-        Rounding error of layer $l$ in format $d$, weighted by the \textbf{Fisher information} $F_i$ (how sharply the loss curves in the direction of weight $i$).
+        Rounding error of layer $l$ in format $d$, weighted by the \textbf{Fisher information} $F_i$ (how sharply the loss curves along weight $i$).
         Large for coarse formats in sensitive layers.
       \end{block}
     \end{column}
     \begin{column}{0.33\textwidth}
       \begin{block}{$R$: fault risk}
-        \small
-        $R(l,d)\approx$ accuracy drop when random bits of layer $l$ stored in format $d$ flip (8 flips)\\[1mm]
-        Measured by fault injection into the stored bytes. Large for float formats with exponent bits (FP16), tiny for INT.
+        \footnotesize
+        $R(l,d,p)=8\cdot\frac{n_l}{N}\cdot\delta(l,d)\cdot\rho(p)$\\[1mm]
+        $\delta$ = measured accuracy drop per flipped bit in layer $l$ (format $d$); $n_l/N$ = share of the weights; $\rho(p)$ = residual after protection.
+        Large for FP16, tiny for INT weights.
+        $R_{\text{scale}}$: the same for one flipped scale-word bit.
       \end{block}
     \end{column}
     \begin{column}{0.33\textwidth}
       \begin{block}{$S$: storage}
-        \small
-        $S(l,d)$ = real stored bytes of layer $l$ in format $d$ (payload + scales)\\[1mm]
-        E4M11, FP16: 16 bit; FP8, INT8: 8 bit; INT4: 4 bit per weight.
-        The budget keeps the whole model $\le 8$ bit/weight on average.
+        \footnotesize
+        $S(l,d,p)$ = real stored bytes: payload + scales + protection copies\\[1mm]
+        16 bit (E4M11, FP16), 8 bit (FP8, INT8), 4 bit (INT4) per weight; scale TMR adds 8 bytes per INT layer.
       \end{block}
     \end{column}
   \end{columns}
-  \vspace{1mm}
-  {\footnotesize $Q$ and $R$ pull in opposite directions: $Q$ favours fine formats, $R$ favours formats whose bits are harmless to flip, and $S$ limits the size.}
 \end{frame}
 
 % ------------------------------------------------------------------ 4. heatmaps
@@ -173,38 +179,45 @@
   {\scriptsize b = Fisher per weight (log), c = predicted loss increase $\tfrac12 Q$ if only this layer is INT4, d = measured. Early layers are small but sensitive; late layers hold most weights and are least sensitive.}
 \end{frame}
 
-% ------------------------------------------------------------------ 7. A051 figure
-\begin{frame}{Selected assignment A051: which format does each layer get?}
+% ------------------------------------------------------------------ 7. A128 figure
+\begin{frame}{Final assignment A128: Fisher sensitivity and the format each layer gets}
   \centering
-  \includegraphics[width=0.78\textwidth,height=0.8\textheight,keepaspectratio]{rn_assignments_A051.png}\\[-1mm]
-  {\scriptsize A051 (framed): 10 layers INT8, 10 layers INT4, 1 layer FP8 E4M3FN. Most early layers stay INT8 (exceptions: L1.0.c1, L1.0.c2, L2.0.ds are INT4); the large late layers become INT4, with L4.0.ds in FP8 and fc in INT8.
-  Left: Fisher sensitivity of each layer for INT4 ($\tfrac12 Q$).}
+  \includegraphics[width=0.95\textwidth,height=0.72\textheight,keepaspectratio]{resnet18_fisher_vs_assignment.png}\\[-1mm]
+  {\scriptsize Left: Fisher sensitivity per weight (log); right: weights in the layer. Colour = assigned format. 19 layers INT8, 1 layer INT4 (L4.1.c2, the least sensitive layer), 1 layer E4M11-SN (L3.1.c2).
+  All INT layers have their scale word stored three times (scale TMR).}
 \end{frame}
 
-% ------------------------------------------------------------------ 8. A051 metrics
-\begin{frame}{A051 compared with the FP32 model}
+% ------------------------------------------------------------------ 8. A128 metrics
+\begin{frame}{A128 compared with the FP32 model}
   \small
-  Clean accuracy and SQNR on the 2\,952 validation images not used for the Fisher (images 2048--4999); faults on a 1\,000-image subset.\\[2mm]
   \begin{tabular}{@{}lrrr@{}}
     \toprule
-    & FP32 baseline & A051 & change\\
+    & FP32 baseline & A128 & change\\
     \midrule
-    validation accuracy & 95.29\,\% & 94.28\,\% & $-1.02$ pp\\
-    cross-entropy loss & 0.1760 & 0.1810 & $+0.0050$\\
-    global SQNR & $+\infty$ dB & 9.38 dB & --\\
-    weight storage & 44\,657\,408 B & 6\,109\,968 B & $7.3\times$ smaller ($-86.3\,\%$)\\
-    average bits per weight & 32 & 4.38 & --\\
-    8 random weight-bit flips, mean drop & -- & 0.002 pp & worst of 50 trials: 0.10 pp\\
+    \hlrow \textbf{test accuracy (10\,000 images)} & \textbf{95.11\,\%} & \textbf{95.20\,\%} & $+0.09$ pp\\
+    validation accuracy (2\,952 images) & 95.29\,\% & 95.16\,\% & $-0.14$ pp\\
+    validation cross-entropy & 0.1760 & 0.1707 & $-0.0052$\\
+    global SQNR & $+\infty$ dB & 24.82 dB & --\\
+    weight storage & 44\,657\,408 B & 10\,574\,768 B & $4.2\times$ smaller ($-76.3\,\%$)\\
+    average bits per weight & 32 & 7.58 & --\\
     \bottomrule
   \end{tabular}\\[3mm]
-  \begin{itemize}\small
-    \item A051 is about as small as uniform INT4 (4.00 bit) but loses 1.02 pp instead of 1.22 pp, with a higher SQNR than uniform INT4 (9.38 vs 7.85 dB): it keeps INT8 in most early layers.
-    \item Its SQNR is far below uniform INT8 (32.58 dB), yet the accuracy loss is only 1 pp: SQNR is not a good accuracy predictor.
-    \item 8 random bit flips in the stored weights do not change its accuracy measurably (50 trials).
-    \item \textbf{Caveat}: its INT layers keep an unprotected float32 scale; one flipped scale bit costs 8.7 pp on average (worst 71.7 pp, 50 trials).
-    \item Test-set accuracy was not measured for A051 (the test set is read once, for the frozen final assignment).
+  \textbf{After random bit flips in the stored weights}\\[1mm]
+  \begin{tabular}{@{}lrrr@{}}
+    \toprule
+    & mean drop & worst drop & SQNR after (median / worst)\\
+    \midrule
+    8 weight-bit flips, validation (300 trials, 1\,000 images) & 0.008 pp & 0.60 pp & 24.81 / 13.30 dB\\
+    8 weight-bit flips, test (100 trials, 10\,000 images) & 0.005 pp & 0.33 pp & \\
+    1 scale-word bit flip, test (100 trials) & 0.000 pp & 0.00 pp & 24.82 / 24.82 dB\\
+    \bottomrule
+  \end{tabular}\\[2mm]
+  \begin{itemize}\footnotesize
+    \item All four constraints hold: $B=8$ (7.58 bit), clean loss $\le0.5$ pp (0.14 pp), fault drop $\le0.5$ pp (0.008 pp), scale-word drop $\le1.0$ pp (0.00 pp).
+    \item The test accuracy gain of 0.09 pp is within test-set noise (about 0.22 pp), not a benefit of quantization.
+    \item SQNR (24.8 dB) is below uniform INT8 (32.6 dB) because of the INT4 layer, yet the accuracy is unchanged: SQNR does not predict accuracy.
+    \item SQNR of the initial FP32 model is $+\infty$: error 0, lossless storage (definition of the paper, Eq.\ 6).
   \end{itemize}
-  {\footnotesize A051 comes from the first, datatype-only optimisation round (risk $R$ = mean single-layer 8-flip drop); a later round with protected scales supersedes it for the final assignment.}
 \end{frame}
 
 \end{document}
