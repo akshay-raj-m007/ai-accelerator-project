@@ -236,24 +236,12 @@
 
 % ------------------------------------------------------------------ 11. heatmaps
 \begin{frame}{Where do bit flips hurt? Accuracy lost per layer and format}
-  \begin{columns}[c]
-    \begin{column}{0.46\textwidth}
-      \centering
-      \includegraphics[width=\textwidth,height=0.86\textheight,keepaspectratio]{mn_layer_heatmaps.png}
-    \end{column}
-    \begin{column}{0.50\textwidth}
-      \small
-      Faults injected into one layer at a time, 8 flips, mean of 10 trials; rows = the 53 layers from the first (top) to the last (bottom).
-      \begin{itemize}\footnotesize
-        \item \textbf{Exponent bits of the float formats are the worst}: up to 80 pp lost (FP8 E5M2, FP16, BF16), mostly in the early and middle layers, especially the 1$\times$1 projection layers (\texttt{proj}).
-        \item In the early layers every float format loses 20 to 65 pp (E4M11-SN worst: b2.proj 65.5 pp). From b8 on, E4M11-SN and FP8 E4M3 mostly lose under 15 pp.
-        \item \textbf{Sign-bit flips} matter only in the first layers (e.g.\ b1.dw: INT4 13.2 pp, FP16 15.4 pp).
-        \item \textbf{Fraction / value bits} are almost harmless in every format, including INT8 and INT4.
-        \item FP16, BF16 and FP8 E5M2 still lose 20 to 60 pp in many late \texttt{proj} layers and in the classifier.
-        \item This is the measurement behind $R$.
-      \end{itemize}
-    \end{column}
-  \end{columns}
+  \centering
+  \includegraphics[width=0.495\textwidth,height=0.70\textheight,keepaspectratio]{mn_layer_heatmaps_top.png}\hfill
+  \includegraphics[width=0.495\textwidth,height=0.70\textheight,keepaspectratio]{mn_layer_heatmaps_bottom.png}\\[1mm]
+  {\scriptsize Left: layers stem to b9; right: b10 to fc. Faults injected into one layer at a time, 8 flips, mean of 10 trials; darker red = more accuracy lost (pp, colour capped at 60).
+  Exponent bits of the float formats are the worst (up to 80 pp), mostly in early and middle layers; sign-bit flips matter only in the first layers; fraction/value bits are almost harmless in every format, including INT8 and INT4.
+  E4M11-SN and FP8 E4M3 mostly lose under 15 pp from b8 on; FP16, BF16 and FP8 E5M2 still lose 20 to 60 pp in many late \texttt{proj} layers and the classifier. This is the measurement behind $R$.}
 \end{frame}
 
 % ------------------------------------------------------------------ 12. Fisher
