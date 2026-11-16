@@ -1,0 +1,9 @@
+U_E4M11SN      clean   69.27 dB  | weights_k8: median 43.89, worst 8.16, non-finite 0/100   [vs Stage 2 GLOBAL +0.0000 dB]
+U_FP16         clean   73.67 dB  | weights_k8: median 36.58, worst -38.81, non-finite 0/100   [vs Stage 2 GLOBAL +0.0000 dB]
+U_FP8          clean   21.20 dB  | weights_k8: median 17.34, worst 8.66, non-finite 0/100   [vs Stage 2 GLOBAL -0.0000 dB]
+U_INT8         clean   32.58 dB  | scales_k1: median 32.56, worst -762.64, non-finite 0/100  | weights_k8: median 32.50, worst 31.22, non-finite 0/100   [vs Stage 2 GLOBAL -0.0000 dB]
+U_INT4         clean    7.85 dB  | scales_k1: median 7.85, worst -760.57, non-finite 0/100  | weights_k8: median 7.85, worst 7.85, non-finite 0/100   [vs Stage 2 GLOBAL -0.0000 dB]
+U_INT8_TMR     clean   32.58 dB  | scales_k1: median 32.58, worst 32.58, non-finite 0/100  | weights_k8: median 32.51, worst 32.12, non-finite 0/100
+U_INT4_TMR     clean    7.85 dB  | scales_k1: median 7.85, worst 7.85, non-finite 0/100  | weights_k8: median 7.85, worst 7.85, non-finite 0/100
+A128           clean   24.82 dB  | scales_k1: median 24.82, worst 24.82, non-finite 0/100  | weights_k8: median 24.81, worst 13.30, non-finite 0/100
+1300 trials, 0 restoration failures, 0 trials differing from the recorded end-to-end trials -> reports/scratch/jfamp/sqnr

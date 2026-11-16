@@ -1,0 +1,13 @@
+U_FP16         clean   73.70 dB  | weights_k8: median 33.06, worst -37.54, non-finite 0/100   [vs Stage 2 GLOBAL +0.0000 dB]
+U_BF16         clean   55.56 dB  | weights_k8: median 34.43, worst -729.91, non-finite 0/100   [vs Stage 2 GLOBAL +0.0000 dB]
+U_E4M11        clean   76.12 dB  | weights_k8: median 43.02, worst -9.37, non-finite 0/100   [vs Stage 2 GLOBAL +0.0000 dB]
+U_FP8N         clean   28.05 dB  | weights_k8: median 20.28, worst 2.18, non-finite 0/100   [vs Stage 2 GLOBAL +0.0000 dB]
+U_FP8E5        clean   25.56 dB  | weights_k8: median -7.32, worst -49.14, non-finite 0/100   [vs Stage 2 GLOBAL +0.0000 dB]
+U_INT8         clean   36.14 dB  | scales_k1: median 36.10, worst -751.71, non-finite 0/100  | weights_k8: median 35.89, worst 34.68, non-finite 0/100   [vs Stage 2 GLOBAL +0.0000 dB]
+U_INT4         clean   13.38 dB  | scales_k1: median 13.38, worst -753.16, non-finite 0/100  | weights_k8: median 13.37, worst 13.34, non-finite 0/100   [vs Stage 2 GLOBAL +0.0000 dB]
+U_INT8_TMR     clean   36.14 dB  | scales_k1: median 36.14, worst 36.14, non-finite 0/100  | weights_k8: median 35.85, worst 30.13, non-finite 0/100
+U_INT4_TMR     clean   13.38 dB  | scales_k1: median 13.38, worst 13.38, non-finite 0/100  | weights_k8: median 13.37, worst 13.34, non-finite 0/100
+U_INT8_SECDED  clean   36.14 dB  | scales_k1: median 36.14, worst 36.14, non-finite 0/100  | weights_k8: median 36.14, worst 36.14, non-finite 0/100
+U_FP8N_SECDED  clean   28.05 dB  | weights_k8: median 28.05, worst 28.05, non-finite 0/100
+A000           clean   22.85 dB  | scales_k1: median 22.85, worst 22.85, non-finite 0/100  | weights_k8: median 22.84, worst 22.73, non-finite 0/100
+1800 trials, 0 restoration failures, 0 trials differing from the recorded end-to-end trials -> reports/mobilenetv2_cifar10/sqnr

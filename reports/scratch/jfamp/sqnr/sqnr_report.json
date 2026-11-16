@@ -1,0 +1,26 @@
+{
+  "checkpoint_sha256": "c612da6a4b20c34fd864f236a3bd5564cb3ce253c162e479bcbfa56d80aafb3f",
+  "stage2_frozen_config_sha256": "387ff9741de4a14dbea7073b9a968ccca0fee13ee94c611444e71f264ae1514a",
+  "assignments": [
+    "U_E4M11SN",
+    "U_FP16",
+    "U_FP8",
+    "U_INT8",
+    "U_INT4",
+    "U_INT8_TMR",
+    "U_INT4_TMR",
+    "A128"
+  ],
+  "trials_per_distribution": 100,
+  "base_seed": 0,
+  "draw_mode": "e2",
+  "trials_total": 1300,
+  "restoration_failures": 0,
+  "trials_not_identical_to_recorded": 0,
+  "definition": "Weight-space SQNR of an assembled (mixed datatype + protection) model, clean and after bit flips in the stored bytes.\n\n    SQNR = 10 log10( sum_l ||w_l||^2 / sum_l ||w_l - w_hat_l||^2 )     over all quantized Conv2d / Linear weights, w = FP32 checkpoint, w_hat = decoded stored weights\n\n\"Initial\" (FP32) has no quantization noise: error 0, SQNR = +inf (reference). \"After quantization\" = decoded frozen Stage 2 encodings. \"After bit flips\" = the decoded weights after\nthe faults of one trial (flips drawn on the stored bits, passed through each layer's protection, residual flips applied to the stored bytes, exactly as in the end-to-end accuracy\ntrials); a trial in which a decoded weight is non-finite has SQNR = -inf and is counted separately, never dropped.\n",
+  "seconds": 18.75748300552368,
+  "source_commit": {
+    "commit": "e51390327ed6c21bdf62c465ea1bb993e862617d",
+    "dirty": true
+  }
+}
