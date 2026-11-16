@@ -237,11 +237,8 @@
 % ------------------------------------------------------------------ 11. heatmaps
 \begin{frame}{Where do bit flips hurt? Accuracy lost per layer and format}
   \centering
-  \includegraphics[width=0.495\textwidth,height=0.70\textheight,keepaspectratio]{mn_layer_heatmaps_top.png}\hfill
-  \includegraphics[width=0.495\textwidth,height=0.70\textheight,keepaspectratio]{mn_layer_heatmaps_bottom.png}\\[1mm]
-  {\scriptsize Left: layers stem to b9; right: b10 to fc. Faults injected into one layer at a time, 8 flips, mean of 10 trials; darker red = more accuracy lost (pp, colour capped at 60).
-  Exponent bits of the float formats are the worst (up to 80 pp), mostly in early and middle layers; sign-bit flips matter only in the first layers; fraction/value bits are almost harmless in every format, including INT8 and INT4.
-  E4M11-SN and FP8 E4M3 mostly lose under 15 pp from b8 on; FP16, BF16 and FP8 E5M2 still lose 20 to 60 pp in many late \texttt{proj} layers and the classifier. This is the measurement behind $R$.}
+  \includegraphics[width=\textwidth,height=0.74\textheight,keepaspectratio]{mn_layer_heatmaps_h.png}\\[1mm]
+  {\small One layer faulted at a time, 8 flips, mean of 10 trials (accuracy lost, pp): exponent-bit flips in float formats hurt most, sign and fraction bits barely.}
 \end{frame}
 
 % ------------------------------------------------------------------ 12. Fisher

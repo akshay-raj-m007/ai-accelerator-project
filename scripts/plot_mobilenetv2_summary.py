@@ -275,6 +275,45 @@ def s4_heatmaps(d, out):
     print("  ", path.name)
 
 
+def s4_heatmaps_horizontal(d, out):
+    """Same data as s4_heatmaps, transposed: layers along the x axis (input side left), the three fault groups stacked, so every layer can be compared across the panels."""
+    layers = d.layers
+    panels = [("exponent", 8, [k for k in FORMATS if not k.startswith("int")], "8 flips, exponent bits only (floating-point formats)"),
+              ("sign", 8, FORMATS, "8 flips, sign bit only"),
+              ("fraction", 8, FORMATS, "8 flips, fraction bits (INT: value bits)")]
+    n = len(panels)
+    fig, axes = plt.subplots(n, 1, figsize=(17, 6.4), sharex=True, gridspec_kw={"height_ratios": [len(p[2]) for p in panels], "hspace": 0.32})
+    im = None
+    for ax, (g, k, fmts, ttl) in zip(axes, panels):
+        M = np.full((len(fmts), len(layers)), np.nan)
+        for r in d.ls:
+            if int(r["k"]) == k and r["format"] in fmts and (r["fault_group"] == g or (g == "fraction" and r["fault_group"] == "value")):
+                M[fmts.index(r["format"]), layers.index(r["layer_name"])] = f(r["drop_pp_mean"])
+        im = ax.imshow(M, cmap="Reds", vmin=0, vmax=60, aspect="auto")
+        for i in range(M.shape[0]):
+            for j in range(M.shape[1]):
+                v = M[i, j]
+                if np.isnan(v):
+                    continue
+                ax.text(j, i, "0" if abs(v) < 0.05 else (f"{v:.0f}" if abs(v) >= 9.5 else f"{v:.1f}"), ha="center", va="center", fontsize=5.6, color="white" if v > 35 else "black")
+        ax.set_yticks(range(len(fmts)))
+        ax.set_yticklabels([NAME4[k_] for k_ in fmts], fontsize=8)
+        ax.set_title(ttl, fontsize=9.5, loc="left", pad=3)
+        ax.spines[:].set_visible(False)
+        ax.tick_params(length=0)
+    axes[-1].set_xticks(range(len(layers)))
+    axes[-1].set_xticklabels([short(l) for l in layers], rotation=90, fontsize=7)
+    cax = fig.add_axes([0.93, 0.25, 0.008, 0.5])
+    cb = fig.colorbar(im, cax=cax)
+    cb.set_label("accuracy lost (pp, capped at 60)", fontsize=8)
+    cb.ax.tick_params(labelsize=7)
+    path = out / "mobilenetv2_cifar10_4_layer_heatmaps_horizontal.png"
+    path.parent.mkdir(parents=True, exist_ok=True)
+    fig.savefig(path, dpi=170, bbox_inches="tight")
+    plt.close(fig)
+    print("  ", path.name)
+
+
 def pooled(d, fm, k):
     """Bit-weighted pooled accuracy over the fault groups of the format (stands in for the 'any bit' group that the MobileNetV2 protocol does not have)."""
     cl = fa = ws = 0.0
@@ -728,7 +767,7 @@ def main():
     print("figures ->", out)
     with plt.rc_context(RC4):
         print(" stage4 look")
-        for fn in (s4_overview, s4_global, s4_scales, s4_heatmaps, s4_quality):
+        for fn in (s4_overview, s4_global, s4_scales, s4_heatmaps, s4_heatmaps_horizontal, s4_quality):
             fn(d, out / "stage4")
     with plt.rc_context(RC5):
         print(" stage5/6 look")
