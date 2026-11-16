@@ -119,6 +119,7 @@
 \end{frame}
 
 \begin{frame}{The three terms}
+  \footnotesize
   \begin{block}{$Q$: quantization penalty from the Fisher information}
     \[
       Q(l,d)=\sum_{i\in l}F_i\,(w_i-\hat w_i)^2,\qquad
@@ -130,7 +131,7 @@
   \begin{block}{$R$: fault risk}
     \[
       R(l,d,p)=8\cdot\frac{n_l}{N}\cdot \delta(l,d)\cdot\rho(p),\qquad
-      \delta(l,d)=\text{measured accuracy drop per flipped bit in layer } l,\ \ \rho(p)=\text{residual rate after protection}
+      \delta(l,d)=\text{measured drop per flipped bit},\ \ \rho(p)=\text{residual rate}
     \]
     $\rho=1$ for none/parity/DMR/scale TMR, $\rho=0$ for SECDED (single flips corrected). $R_{\text{scale}}$ comes from an exhaustive scale-word campaign.
   \end{block}
@@ -148,7 +149,7 @@
 
 \begin{frame}{Fisher sensitivity of each layer: MobileNetV2}
   \centering
-  \includegraphics[width=0.52\textwidth,height=0.86\textheight,keepaspectratio]{mn_sensitivity_profile.png}
+  \includegraphics[width=0.52\textwidth,height=0.80\textheight,keepaspectratio]{mn_sensitivity_profile.png}
   \hfill
   \begin{minipage}[c]{0.43\textwidth}\small
     \begin{itemize}
@@ -237,10 +238,10 @@
         \toprule
         model & measurement & FP32 & final & change (pp)\\
         \midrule
-        ResNet-18 & test, 10\,000 images & \multicolumn{3}{l}{\rnTestAcc}\\
-        ResNet-18 & validation, 2\,952 & \multicolumn{3}{l}{\rnValAcc}\\
-        MobileNetV2 & test, 10\,000 images & \multicolumn{3}{l}{\mnTestAcc}\\
-        MobileNetV2 & validation, 2\,952 & \multicolumn{3}{l}{\mnValAcc}\\
+        ResNet-18 & test, 10\,000 images & \rnTestAcc\\
+        ResNet-18 & validation, 2\,952 & \rnValAcc\\
+        MobileNetV2 & test, 10\,000 images & \mnTestAcc\\
+        MobileNetV2 & validation, 2\,952 & \mnValAcc\\
         \bottomrule
       \end{tabular}\\[3mm]
       \footnotesize The ResNet-18 test accuracy rises by 0.09 pp: this is within the noise of a 10\,000-image test set, not a gain from quantization.
