@@ -73,6 +73,8 @@ def main():
     ap.add_argument("--model-tag", default="resnet18_cifar10", help="model + dataset tag used in folder and file names")
     ap.add_argument("--index", type=int, default=None, help="validation image index; default: first image (of the first 300) correctly classified by all four models")
     ap.add_argument("--only-fig12", action="store_true", help="draw only the feature-map figure (fast)")
+    ap.add_argument("--fig12-name", default="12_feature_maps_one_image.png", help="file name of the feature-map figure (use another name to keep the existing one)")
+    ap.add_argument("--list-candidates", default=None, help="class name: write a contact sheet of the validation images of this class that all four models classify correctly, then stop")
     ap.add_argument("--n-error", type=int, default=500, help="validation images for the error-versus-depth figure")
     ap.add_argument("--opt-dir", default="reports/scratch/jfamp/optimization_round1", help="folder with q_layerwise_validation.csv (measured per-layer loss change)")
     args = ap.parse_args()
@@ -89,6 +91,23 @@ def main():
     models = {k: quantized_copy(model, k, codecs) for k, _, _ in FORMATS}
     with torch.no_grad():
         preds = {k: torch.cat([m(X[i:i + 250]).argmax(1) for i in range(0, len(X), 250)]) for k, m in models.items()}
+    if args.list_candidates:
+        cid = CLASSES.index(args.list_candidates)
+        ok = np.ones(len(y), dtype=bool)
+        for k in models:
+            ok &= (preds[k] == y).numpy()
+        cand = [i for i in range(len(y)) if ok[i] and int(y[i]) == cid][:48]
+        mean_, std_ = (torch.tensor(norm[0]).view(1, 3, 1, 1), torch.tensor(norm[1]).view(1, 3, 1, 1)) if norm else (0, 1)
+        fig, axs = plt.subplots(6, 8, figsize=(16, 12.5))
+        for a_, i in zip(axs.ravel(), cand):
+            a_.imshow((X[i:i + 1] * std_ + mean_)[0].permute(1, 2, 0).clamp(0, 1).numpy(), interpolation="nearest")
+            a_.set_title(f"index {i}", fontsize=10)
+            a_.axis("off")
+        for a_ in axs.ravel()[len(cand):]:
+            a_.axis("off")
+        fig.savefig(out / f"candidates_{args.list_candidates}.png", dpi=100)
+        print("candidate indices:", cand)
+        return
     if args.index is None:
         ok = np.ones(300, dtype=bool)
         for k in models:
@@ -144,9 +163,9 @@ def main():
         ytop = axs_[0].get_position().y1 + 0.028
         fig.text((x0 + x1) / 2, ytop + 0.004, f"channel group {ci + 1}  (same channel, 4 formats)", ha="center", va="bottom", fontsize=9.4, fontweight="bold")
         fig.add_artist(matplotlib.lines.Line2D([x0, x1], [ytop, ytop], color=INK2, lw=1.2))
-    fig.savefig(out / P("12_feature_maps_one_image.png"), dpi=150)
+    fig.savefig(out / P(args.fig12_name), dpi=150)
     plt.close(fig)
-    print("wrote", out / P("12_feature_maps_one_image.png"))
+    print("wrote", out / P(args.fig12_name))
     if args.only_fig12:
         return
 
