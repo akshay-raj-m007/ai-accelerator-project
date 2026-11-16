@@ -100,8 +100,11 @@
 \begin{frame}{Optimization problem}
   For each layer $l$, datatype $d$, protection $p$ choose binary $x_{l,d,p}$:
   \[
-    \min_{x}\ \sum_{l}\sum_{d,p} x_{l,d,p}\Big(\widetilde{Q}(l,d)+\lambda\,\widetilde{R}(l,d,p)\Big)
+    \min_{x}\ \sum_{l}\sum_{d,p} x_{l,d,p}\Big(\widetilde{Q}(l,d)+\lambda\,\widetilde{R}(l,d,p)\Big),
+    \qquad
+    \boxed{\,Q(l,d)=\sum_{i\in l}F_i\,(w_i-\hat w_i)^2\,}
   \]
+  {\small The \textbf{Fisher information} $F_i$ (diagonal Fisher of the FP32 model, weight $i$ of layer $l$) enters through $Q$: it weights the squared quantization error of every weight by how much the loss curves in that direction. $\hat w_i$ is the weight decoded from format $d$.}
   \vspace{-4mm}
   \begin{align*}
     \text{s.t.}\quad & \textstyle\sum_{d,p} x_{l,d,p}=1 \ \ \forall l && \text{(one option per layer)}\\
