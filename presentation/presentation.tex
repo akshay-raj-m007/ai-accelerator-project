@@ -142,13 +142,13 @@
 % ------------------------------------------------------------------ 4. Fisher per layer
 \begin{frame}{Fisher sensitivity of each layer: ResNet-18}
   \centering
-  \includegraphics[width=0.97\textwidth,height=0.78\textheight,keepaspect=true]{rn_sensitivity_profile.png}\\[-1mm]
+  \includegraphics[width=0.97\textwidth,height=0.78\textheight,keepaspectratio]{rn_sensitivity_profile.png}\\[-1mm]
   {\scriptsize b = Fisher per weight (log), c = predicted loss increase $\tfrac12 Q$ if only this layer is INT4, d = measured. Early layers are small but sensitive; late layers hold most weights and are least sensitive.}
 \end{frame}
 
 \begin{frame}{Fisher sensitivity of each layer: MobileNetV2}
   \centering
-  \includegraphics[width=0.52\textwidth,height=0.86\textheight,keepaspect=true]{mn_sensitivity_profile.png}
+  \includegraphics[width=0.52\textwidth,height=0.86\textheight,keepaspectratio]{mn_sensitivity_profile.png}
   \hfill
   \begin{minipage}[c]{0.43\textwidth}\small
     \begin{itemize}
@@ -186,7 +186,7 @@
 
 \begin{frame}{Fisher vs allocation: ResNet-18}
   \centering
-  \includegraphics[width=0.9\textwidth,height=0.8\textheight,keepaspect=true]{resnet18_fisher_vs_assignment.png}
+  \includegraphics[width=0.9\textwidth,height=0.8\textheight,keepaspectratio]{resnet18_fisher_vs_assignment.png}
 \end{frame}
 
 \begin{frame}{Final allocation: MobileNetV2 (A000)}
@@ -213,7 +213,7 @@
   \textbf{ResNet-18}\ \ (FP32 validation accuracy 95.29\,\% on the 2\,952 clean-check images)\\[1mm]
   \begin{tabular}{@{}lrrrrrr@{}}
     \toprule
-    & bit/weight & clean acc.\,\% & 8-flip mean drop (pp) & worst (pp) & SQNR clean (dB) & SQNR after flips, median (dB)\\
+    & bit/w & clean acc.\,\% & 8-flip drop (pp) & worst (pp) & SQNR (dB) & SQNR after (dB)\\
     \midrule
     \rnFormatTable
     \bottomrule
@@ -221,7 +221,7 @@
   \textbf{MobileNetV2}\ \ (FP32 validation accuracy 91.87\,\%)\\[1mm]
   \begin{tabular}{@{}lrrrrrr@{}}
     \toprule
-    & bit/weight & clean acc.\,\% & 8-flip mean drop (pp) & worst (pp) & SQNR clean (dB) & SQNR after flips, median (dB)\\
+    & bit/w & clean acc.\,\% & 8-flip drop (pp) & worst (pp) & SQNR (dB) & SQNR after (dB)\\
     \midrule
     \mnFormatTable
     \bottomrule
@@ -284,7 +284,7 @@
   \]
   \begin{tabular}{@{}lrrrr@{}}
     \toprule
-    model & initial FP32 & after allocation & after 8 flips, median & after 8 flips, worst of 100\\
+    model & initial FP32 & allocated & 8 flips, median & 8 flips, worst\\
     \midrule
     ResNet-18 & \rnSqnr\\
     MobileNetV2 & \mnSqnr\\
