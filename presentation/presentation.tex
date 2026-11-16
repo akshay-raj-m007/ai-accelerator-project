@@ -30,46 +30,33 @@
 
 % ------------------------------------------------------------------ 1. baseline
 \begin{frame}{Experiment 1: ResNet-18 on CIFAR-10, the FP32 baseline}
-  \begin{columns}[T]
-    \begin{column}{0.48\textwidth}
-      \textbf{Range of the trained weights}\\[1mm]
-      \small
-      \begin{tabular}{@{}lr@{}}
-        \toprule
-        minimum / maximum & $-0.411$ / $+0.556$\\
-        mean / standard deviation & $-0.0005$ / $0.0064$\\
-        std per layer (conv1 $\to$ layer4) & $0.067 \to 0.0014$\\
-        weights with $|w|<2^{-7}$ & 87.2\,\%\\
-        \bottomrule
-      \end{tabular}\\[5mm]
-      \textbf{Reading}
-      \begin{itemize}\small
-        \item Weights are small and shrink with depth: layer4 holds 75\,\% of all weights, std below 0.0064.
-        \item Weakest class: cat (88.4\,\%), mostly confused with dog.
-        \item Validation and test accuracy differ by 0.37 pp, within the noise of a 5\,000-image set (about 0.3 pp).
-      \end{itemize}
-    \end{column}
-    \begin{column}{0.48\textwidth}
-      \textbf{Baseline accuracy} (highlighted = reference values used later)\\[1mm]
-      \small
-      \begin{tabular}{@{}lrrr@{}}
-        \toprule
-        split & images & accuracy & cross-entropy\\
-        \midrule
-        \hlrow \textbf{test (official)} & 10\,000 & \textbf{95.11\,\%} & 0.1855\\
-        \hlrow \textbf{validation (holdout)} & 5\,000 & \textbf{95.48\,\%} & 0.1704\\
-        \bottomrule
-      \end{tabular}\\[5mm]
-      \textbf{SQNR after training}\\[1mm]
-      \begin{tabular}{@{}lr@{}}
-        \toprule
-        \hlrow \textbf{FP32 trained weights (reference)} & \textbf{$+\infty$ dB}\\
-        \bottomrule
-      \end{tabular}\\[2mm]
-      \footnotesize The trained weights are the reference: error 0, so SQNR is $+\infty$ (lossless storage, paper Eq.\ 6).
-      Every later SQNR is measured against them.
-    \end{column}
-  \end{columns}
+  \centering
+  \small
+  \textbf{Baseline accuracy} (highlighted = reference values used later)\\[2mm]
+  \begin{tabular}{lrrr}
+    \toprule
+    split & images & accuracy & cross-entropy\\
+    \midrule
+    \hlrow \textbf{test (official)} & 10\,000 & \textbf{95.11\,\%} & 0.1855\\
+    \hlrow \textbf{validation (holdout)} & 5\,000 & \textbf{95.48\,\%} & 0.1704\\
+    \bottomrule
+  \end{tabular}\\[6mm]
+  \textbf{Range of the trained weights}\\[2mm]
+  \begin{tabular}{lr}
+    \toprule
+    minimum / maximum & $-0.411$ / $+0.556$\\
+    mean / standard deviation & $-0.0005$ / $0.0064$\\
+    std per layer (conv1 $\to$ layer4) & $0.067 \to 0.0014$\\
+    weights with $|w|<2^{-7}$ & 87.2\,\%\\
+    \bottomrule
+  \end{tabular}\\[6mm]
+  \textbf{SQNR after training}\\[2mm]
+  \begin{tabular}{lr}
+    \toprule
+    \hlrow \textbf{FP32 trained weights (reference)} & \textbf{$+\infty$ dB}\\
+    \bottomrule
+  \end{tabular}\\[2mm]
+  {\footnotesize The trained weights are the reference: error 0, so SQNR is $+\infty$ (lossless storage, paper Eq.\ 6). Every later SQNR is measured against them.}
 \end{frame}
 
 % ------------------------------------------------------------------ 2. datatype table
@@ -109,9 +96,7 @@
     & \textstyle\sum_{l,d,p} x_{l,d,p}\,R(l,d,p)\le \tau_{\text{fault}} && \text{predicted fault drop} \le 0.5\text{ pp}\\
     & x_{l,d,p}=0\ \text{ if } R_{\text{scale}}(l,d,p)>\tau_{\text{scale}} && \text{scale-word risk} \le 1.0\text{ pp}
   \end{align*}
-  \vspace{-4mm}
-  {\footnotesize $\widetilde{\cdot}$ = min--max normalised, $\lambda=1$, $N$ = number of quantized weights.}
-  \vspace{1mm}
+  \vspace{-2mm}
   \begin{columns}[T]
     \begin{column}{0.33\textwidth}
       \begin{block}{$Q$: quantization penalty}
