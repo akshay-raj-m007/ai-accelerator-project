@@ -1,5 +1,6 @@
-% Compile (from this folder):  pdflatex presentation.tex  (twice)   -- standard packages only (beamer, amsmath, booktabs, graphicx, tikz)
-% Numbers in tables come from generated_numbers.tex, written by  python scripts/make_presentation_assets.py  (do not edit by hand).
+% ResNet-18 / CIFAR-10 part of the presentation (second presenter: no title page, no general introduction).
+% Compile: pdflatex presentation.tex (twice).  Standard packages only (beamer, amsmath, booktabs, graphicx, colortbl).
+% MobileNetV2 slides were removed for now; they are in the git history (commit c675d27 and earlier).
 \documentclass[aspectratio=169,10pt]{beamer}
 \usetheme{default}
 \usecolortheme{default}
@@ -9,13 +10,12 @@
 \usepackage{booktabs}
 \usepackage{graphicx}
 \usepackage{array}
+\usepackage{colortbl}
 \graphicspath{{figures/}}
-\input{generated_numbers.tex}
 
 \definecolor{ink}{RGB}{11,11,11}
 \definecolor{accent}{RGB}{42,120,214}
-\definecolor{warm}{RGB}{235,104,52}
-\setbeamercolor{title}{fg=ink}
+\definecolor{hl}{RGB}{255,236,170}
 \setbeamercolor{frametitle}{fg=ink}
 \setbeamercolor{structure}{fg=accent}
 \setbeamercolor{block title}{fg=white,bg=accent}
@@ -24,309 +24,187 @@
 \setbeamertemplate{navigation symbols}{}
 \setbeamertemplate{footline}{\hfill\insertframenumber\,/\,\inserttotalframenumber\hspace{2mm}\vspace{1mm}}
 \setbeamertemplate{itemize items}[circle]
-
-\newcommand{\Q}{Q}
-\newcommand{\R}{R}
-\newcommand{\Sz}{S}
-
-\title{Joint fault-aware mixed-precision quantization and protection\\[1mm]
-\large Fisher-guided datatype allocation (LAMPQ-style) for ResNet-18 and MobileNetV2 on CIFAR-10}
-\author{Weights stored in memory subject to random bit flips}
-\date{}
+\newcommand{\hlrow}{\rowcolor{hl}}
 
 \begin{document}
 
-\begin{frame}
-  \titlepage
-\end{frame}
-
-% ------------------------------------------------------------------ 1. problem
-\begin{frame}{What we are trying to do}
-  \begin{itemize}
-    \item A trained network keeps its \textbf{weights in memory} (e.g.\ DRAM). Two costs matter:
-      \begin{itemize}
-        \item \textbf{size}: fewer bits per weight $\Rightarrow$ smaller memory;
-        \item \textbf{reliability}: random bit flips in the stored weights can destroy accuracy.
-      \end{itemize}
-    \item Layers differ: some tolerate 4-bit storage, others do not; some formats are fragile under bit flips.
-    \item \textbf{Goal}: choose, \emph{per layer}, a storage format (datatype) and a protection scheme so that the whole model is
-      \begin{itemize}
-        \item as small as possible,
-        \item within a small accuracy loss when clean, and
-        \item within a small accuracy loss after random bit flips (8 flips, 1 flip in a scale word).
-      \end{itemize}
-    \item Method: a \textbf{Fisher-information} estimate of how much each layer's quantization error costs, combined with a measured
-      \textbf{fault-risk} and the real \textbf{storage cost}, solved exactly as an integer linear programme.
-  \end{itemize}
-\end{frame}
-
-% ------------------------------------------------------------------ 2. setup
-\begin{frame}{Candidate formats, protections and fault model}
+% ------------------------------------------------------------------ 1. baseline
+\begin{frame}{Experiment 1: ResNet-18 on CIFAR-10, the FP32 baseline}
   \begin{columns}[T]
-    \begin{column}{0.5\textwidth}
-      \textbf{Datatypes} (weights only; biases, BatchNorm, activations stay FP32)
-      \begin{itemize}\small
-        \item E4M11-SN, FP16 (16 bit)
-        \item FP8 E4M3 (8 bit)
-        \item INT8, INT4: symmetric, per-tensor, FP32 scale
-        \item MobileNetV2 also: BF16, FP8 E5M2
-      \end{itemize}
-      \textbf{Protection} (extra stored bits)
-      \begin{itemize}\small
-        \item \textbf{scale TMR}: the INT scale word stored $3\times$, bit-wise majority (+8 B per layer)
-        \item MobileNetV2 also: parity (+3\%), \textbf{SECDED} Hamming(39,32) (+22\%), DMR (+100\%) on 32-bit codewords
-        \item ResNet-18 has only none / scale TMR: $7$ options per layer; MobileNetV2: $30$ options per layer
-      \end{itemize}
+    \begin{column}{0.49\textwidth}
+      \textbf{Model and data}\\[1mm]
+      \small
+      \begin{tabular}{@{}ll@{}}
+        \toprule
+        architecture & ResNet-18, CIFAR variant (3$\times$3 stem, no max-pool)\\
+        Conv/Linear layers (quantized) & 21\\
+        parameters & 11\,173\,962\\
+        \quad quantized weights & 11\,164\,352\\
+        \quad biases + BatchNorm (kept FP32) & 9\,610\\
+        FP32 weight storage & 44\,657\,408 B (44.7 MB)\\
+        classes & 10\\
+        images: train / validation / test & 45\,000 / 5\,000 / 10\,000\\
+        training & from scratch, 200 epochs\\
+        \bottomrule
+      \end{tabular}\\[3mm]
+      \textbf{Range of the trained weights}\\[1mm]
+      \begin{tabular}{@{}lr@{}}
+        \toprule
+        minimum / maximum & $-0.411$ / $+0.556$\\
+        mean / standard deviation & $-0.0005$ / $0.0064$\\
+        std per layer (conv1 $\to$ layer4) & $0.067 \to 0.0014$ (fc 0.081)\\
+        weights with $|w|<2^{-7}$ & 87.2\,\%\\
+        \bottomrule
+      \end{tabular}
     \end{column}
-    \begin{column}{0.5\textwidth}
-      \textbf{Fault model}
-      \begin{itemize}\small
-        \item random bit flips in the \emph{stored encoded} bytes; weights decoded from the faulted bytes
-        \item \texttt{weights\_k8}: 8 random flips over all weights (main metric)
-        \item \texttt{scales\_k1}: 1 flipped bit in a scale word (INT layers; reported separately)
-        \item 100 trials per distribution (300 for the frozen result), stored bytes restored after every trial
-        \item NaN/Inf logits count as errors; trials are never dropped
-      \end{itemize}
-      \textbf{Data}
-      \begin{itemize}\small
-        \item CIFAR-10; 5\,000 validation images held out, official test set read once after the assignment was frozen
-        \item Fisher / $Q$ on validation images 0--2047; clean checks on 2048--4999 (disjoint)
+    \begin{column}{0.49\textwidth}
+      \textbf{Baseline accuracy} (highlighted = the reference values used everywhere later)\\[1mm]
+      \small
+      \begin{tabular}{@{}lrrr@{}}
+        \toprule
+        split & images & accuracy & cross-entropy\\
+        \midrule
+        \hlrow \textbf{test (official)} & 10\,000 & \textbf{95.11\,\%} & 0.1855\\
+        \hlrow \textbf{validation (holdout)} & 5\,000 & \textbf{95.48\,\%} & 0.1704\\
+        \bottomrule
+      \end{tabular}\\[3mm]
+      \textbf{SQNR after training}\\[1mm]
+      \begin{tabular}{@{}lr@{}}
+        \toprule
+        \hlrow \textbf{FP32 trained weights (reference)} & \textbf{$+\infty$ dB}\\
+        \bottomrule
+      \end{tabular}\\[1mm]
+      \footnotesize The trained FP32 weights are the reference, so their quantization error is 0 and SQNR is $+\infty$.
+      Every SQNR on the next slides is measured against these weights.\\[3mm]
+      \small
+      \textbf{Reading}
+      \begin{itemize}\footnotesize
+        \item Weights are small, and shrink with depth: layer4 holds 75\,\% of all weights with std below 0.0064.
+        \item Weakest class: cat (88.4\,\%), mostly confused with dog.
+        \item Validation and test accuracy differ by 0.37 pp, within noise of a 5\,000-image set (std.\ error about 0.3 pp).
       \end{itemize}
     \end{column}
   \end{columns}
 \end{frame}
 
-% ------------------------------------------------------------------ 3. equation
-\begin{frame}{Optimization problem}
-  For each layer $l$, datatype $d$, protection $p$ choose binary $x_{l,d,p}$:
-  \[
-    \min_{x}\ \sum_{l}\sum_{d,p} x_{l,d,p}\Big(\widetilde{Q}(l,d)+\lambda\,\widetilde{R}(l,d,p)\Big),
-    \qquad
-    \boxed{\,Q(l,d)=\sum_{i\in l}F_i\,(w_i-\hat w_i)^2\,}
-  \]
-  {\small The \textbf{Fisher information} $F_i$ (diagonal Fisher of the FP32 model, weight $i$ of layer $l$) enters through $Q$: it weights the squared quantization error of every weight by how much the loss curves in that direction. $\hat w_i$ is the weight decoded from format $d$.}
-  \vspace{-4mm}
-  \begin{align*}
-    \text{s.t.}\quad & \textstyle\sum_{d,p} x_{l,d,p}=1 \ \ \forall l && \text{(one option per layer)}\\
-    & \textstyle\sum_{l,d,p} x_{l,d,p}\,S(l,d,p)\ \le\ B\cdot N/8 && \text{(storage budget, } B=8\text{ bit/weight)}\\
-    & \textstyle\sum_{l,d,p} x_{l,d,p}\,R(l,d,p)\ \le\ \tau_{\text{fault}} && \text{(predicted fault drop, 0.5 pp)}\\
-    & x_{l,d,p}=0 \ \text{ if } R_{\text{scale}}(l,d,p)>\tau_{\text{scale}} && \text{(scale-word risk, 1.0 pp)}
-  \end{align*}
-  \vspace{-3mm}
+% ------------------------------------------------------------------ 2. datatype table
+\begin{frame}{Clean quantization: every layer stored in one format}
+  \centering
+  \small
+  Weights-only quantization, FP32 compute on the decoded weights; validation set of 5\,000 images.\\[3mm]
+  \begin{tabular}{@{}lrrrr@{}}
+    \toprule
+    datatype & bit/weight & validation accuracy & drop from FP32 (pp) & global SQNR (dB)\\
+    \midrule
+    \hlrow \textbf{FP32 (baseline)} & 32 & \textbf{95.48\,\%} & -- & $+\infty$\\
+    E4M11-SN & 16 & 95.48\,\% & 0.00 & 69.27\\
+    FP16 (IEEE binary16) & 16 & 95.48\,\% & 0.00 & 73.67\\
+    FP8 E4M3FN & 8 & 95.30\,\% & 0.18 & 21.20\\
+    INT8 (per-tensor) & 8 & 95.36\,\% & 0.12 & 32.58\\
+    INT4 (per-tensor) & 4 & 94.30\,\% & 1.18 & 7.85\\
+    \bottomrule
+  \end{tabular}\\[4mm]
   \begin{itemize}\small
-    \item $\widetilde{\cdot}$ = global min--max normalisation; $\lambda=1$; $N$ = number of quantized weights; $S$ in bytes.
-    \item Solved \emph{exactly} (\texttt{scipy.optimize.milp}, HiGHS) over a sweep of $\lambda$, budgets, $\tau$; each solution is then
-      \textbf{assembled and measured} end to end. The final assignment is picked from \emph{measured} feasibility ($\delta_{\text{clean}}=0.5$ pp)
-      and frozen before the test set is read.
+    \item SQNR $=10\log_{10}\dfrac{\sum_i w_i^2}{\sum_i (w_i-\hat w_i)^2}$ over all 21 layers pooled; $\hat w_i$ = weight decoded from the stored format.
+    \item E4M11-SN and FP16 reproduce FP32 exactly; INT8 and FP8 lose at most 0.18 pp; only INT4 loses clearly (1.18 pp).
+    \item \textbf{SQNR does not rank accuracy}: FP8 (21.2 dB) and INT8 (32.6 dB) are within 0.2 pp of each other; INT4 (7.85 dB) loses 1.18 pp.
   \end{itemize}
 \end{frame}
 
-\begin{frame}{The three terms}
-  \footnotesize
-  \begin{block}{$Q$: quantization penalty from the Fisher information}
-    \[
-      Q(l,d)=\sum_{i\in l}F_i\,(w_i-\hat w_i)^2,\qquad
-      F_i=\mathbb{E}_{x}\,\mathbb{E}_{y\sim p(y|x)}\!\Big[\big(\partial \log p(y|x)/\partial w_i\big)^2\Big]
-    \]
-    $F_i$: diagonal Fisher of the FP32 model (exact expectation over the labels, validation images 0--2047); $\hat w_i$: decoded stored weight.
-    $\tfrac12 Q$ is the second-order prediction of the clean cross-entropy increase if only layer $l$ is stored in format $d$.
-  \end{block}
-  \begin{block}{$R$: fault risk}
-    \[
-      R(l,d,p)=8\cdot\frac{n_l}{N}\cdot \delta(l,d)\cdot\rho(p),\qquad
-      \delta(l,d)=\text{measured drop per flipped bit},\ \ \rho(p)=\text{residual rate}
-    \]
-    $\rho=1$ for none/parity/DMR/scale TMR, $\rho=0$ for SECDED (single flips corrected). $R_{\text{scale}}$ comes from an exhaustive scale-word campaign.
-  \end{block}
-  \begin{block}{$S$: storage}
-    Actual stored bytes of layer $l$: payload + scales + alignment + check bits / copies.
-  \end{block}
+% ------------------------------------------------------------------ 3. optimization
+\begin{frame}{Optimization function: which format for which layer?}
+  Choose one datatype $d$ for every layer $l$ (binary $x_{l,d}$):
+  \[
+    \min_{x}\ \sum_{l}\sum_{d} x_{l,d}\Big(\widetilde{Q}(l,d)+\lambda\,\widetilde{R}(l,d)\Big)
+    \quad\text{s.t.}\quad \sum_{d} x_{l,d}=1\ \ \forall l,\qquad \sum_{l,d} x_{l,d}\,S(l,d)\le B\cdot\tfrac{N}{8}
+  \]
+  \vspace{-3mm}
+  {\footnotesize $\widetilde{\cdot}$ = min--max normalised, $\lambda=1$, $N$ = number of quantized weights, budget $B=8$ bit/weight. Solved exactly as an integer linear programme (HiGHS); every solution is then assembled and measured end to end.}
+  \vspace{1mm}
+  \begin{columns}[T]
+    \begin{column}{0.33\textwidth}
+      \begin{block}{$Q$: quantization penalty}
+        \small
+        $Q(l,d)=\sum_{i\in l}F_i\,(w_i-\hat w_i)^2$\\[1mm]
+        Rounding error of layer $l$ in format $d$, weighted by the \textbf{Fisher information} $F_i$ (how sharply the loss curves in the direction of weight $i$).
+        Large for coarse formats in sensitive layers.
+      \end{block}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \begin{block}{$R$: fault risk}
+        \small
+        $R(l,d)\approx$ accuracy drop when random bits of layer $l$ stored in format $d$ flip (8 flips)\\[1mm]
+        Measured by fault injection into the stored bytes. Large for float formats with exponent bits (FP16), tiny for INT.
+      \end{block}
+    \end{column}
+    \begin{column}{0.33\textwidth}
+      \begin{block}{$S$: storage}
+        \small
+        $S(l,d)$ = real stored bytes of layer $l$ in format $d$ (payload + scales)\\[1mm]
+        E4M11, FP16: 16 bit; FP8, INT8: 8 bit; INT4: 4 bit per weight.
+        The budget keeps the whole model $\le 8$ bit/weight on average.
+      \end{block}
+    \end{column}
+  \end{columns}
+  \vspace{1mm}
+  {\footnotesize $Q$ and $R$ pull in opposite directions: $Q$ favours fine formats, $R$ favours formats whose bits are harmless to flip, and $S$ limits the size.}
 \end{frame}
 
-% ------------------------------------------------------------------ 4. Fisher per layer
+% ------------------------------------------------------------------ 4. heatmaps
+\begin{frame}{Where do bit flips hurt? Accuracy lost per layer and format}
+  \centering
+  \includegraphics[width=0.78\textwidth,height=0.77\textheight,keepaspectratio]{rn_layer_heatmaps.png}\\[-1mm]
+  {\scriptsize Faults injected into one layer at a time, mean of 20 trials. INT8 and INT4 weights are almost unaffected; FP16 is the most fragile, and exponent-bit flips are the worst.
+  The first layers (conv1) are the most exposed. This is the measurement behind $R$.}
+\end{frame}
+
+% ------------------------------------------------------------------ 5. feature maps
+\begin{frame}{What the layers see: feature maps with weights in different formats}
+  \centering
+  \includegraphics[width=0.66\textwidth,height=0.78\textheight,keepaspectratio]{rn_feature_maps.png}\\[-1mm]
+  {\scriptsize One validation image (ship); per stage, three channels shown for FP32, E4M11-SN, FP8 and INT4 weights. Only weights are quantized.
+  E4M11-SN and FP8 are nearly identical to FP32; INT4 deviates more, visibly in the early stages. Early stages look like the photo, later stages are coarse and abstract.}
+\end{frame}
+
+% ------------------------------------------------------------------ 6. Fisher
 \begin{frame}{Fisher sensitivity of each layer: ResNet-18}
   \centering
   \includegraphics[width=0.97\textwidth,height=0.78\textheight,keepaspectratio]{rn_sensitivity_profile.png}\\[-1mm]
   {\scriptsize b = Fisher per weight (log), c = predicted loss increase $\tfrac12 Q$ if only this layer is INT4, d = measured. Early layers are small but sensitive; late layers hold most weights and are least sensitive.}
 \end{frame}
 
-\begin{frame}{Fisher sensitivity of each layer: MobileNetV2}
+% ------------------------------------------------------------------ 7. A051 figure
+\begin{frame}{Selected assignment A051: which format does each layer get?}
   \centering
-  \includegraphics[width=0.52\textwidth,height=0.80\textheight,keepaspectratio]{mn_sensitivity_profile.png}
-  \hfill
-  \begin{minipage}[c]{0.43\textwidth}\small
-    \begin{itemize}
-      \item 53 Conv/Linear layers; \texttt{b$n$} = inverted-residual block $n$ (\texttt{exp} 1$\times$1 expansion, \texttt{dw} depthwise 3$\times$3, \texttt{proj} 1$\times$1 projection).
-      \item Fisher per weight falls by about four orders of magnitude from input to output; depthwise layers are usually the most sensitive in their block.
-      \item Fisher $Q$ vs measured one-layer loss change, Spearman over 53 layers: INT4 $+0.84$, E4M11 $+0.61$, FP16 $+0.44$, INT8 $+0.12$. Only INT4 has a clear signal; the other formats are below the noise of a 5\,000-image evaluation.
-    \end{itemize}
-  \end{minipage}
+  \includegraphics[width=0.78\textwidth,height=0.8\textheight,keepaspectratio]{rn_assignments_A051.png}\\[-1mm]
+  {\scriptsize A051 (framed): 10 layers INT8, 10 layers INT4, 1 layer FP8 E4M3FN. Most early layers stay INT8 (exceptions: L1.0.c1, L1.0.c2, L2.0.ds are INT4); the large late layers become INT4, with L4.0.ds in FP8 and fc in INT8.
+  Left: Fisher sensitivity of each layer for INT4 ($\tfrac12 Q$).}
 \end{frame}
 
-% ------------------------------------------------------------------ 5. allocation
-\begin{frame}{Final allocation: ResNet-18 (A128)}
-  \begin{columns}[T]
-    \begin{column}{0.46\textwidth}
-      \tiny
-      \begin{tabular}{@{}lrrrll@{}}
-        \toprule
-        layer & weights & Fisher/w & rank & datatype & protection\\
-        \midrule
-        \rnLayerRows
-        \bottomrule
-      \end{tabular}
-    \end{column}
-    \begin{column}{0.52\textwidth}
-      \small
-      \rnMix\\[2mm]
-      \begin{itemize}\small
-        \item 19 layers INT8; the least sensitive layer (L4.1.c2, rank 21, 2.4\,M weights) is INT4; L3.1.c2 is E4M11-SN without protection (16 bit); all INT layers carry scale TMR.
-        \item INT layers are unusable without scale protection (one flipped scale bit costs about 9--25 pp), hence scale TMR.
-        \item Rank 1 = most sensitive layer (Fisher per weight).
-      \end{itemize}
-    \end{column}
-  \end{columns}
-\end{frame}
-
-\begin{frame}{Fisher vs allocation: ResNet-18}
-  \centering
-  \includegraphics[width=0.9\textwidth,height=0.8\textheight,keepaspectratio]{resnet18_fisher_vs_assignment.png}
-\end{frame}
-
-\begin{frame}{Final allocation: MobileNetV2 (A000)}
-  \centering
-  \includegraphics[width=0.97\textwidth]{mobilenetv2_fisher_vs_assignment.png}\\[1mm]
-  {\small \mnMix. Sensitive early layers keep E4M11-SN with SECDED; the large, insensitive late layers drop to INT4.}
-\end{frame}
-
-% ------------------------------------------------------------------ 6. datatype comparison
-\begin{frame}{Datatype comparison before / after 8 bit flips: ResNet-18}
-  \centering
-  \includegraphics[width=0.93\textwidth]{resnet18_datatype_before_after_k8.png}\\[-1mm]
-  {\scriptsize Uniform = every layer in one format, no protection. Clean accuracy: validation images 2048--4999. Faults: 100 trials, 8 random weight bits, 1\,000-image subset.}
-\end{frame}
-
-\begin{frame}{Datatype comparison before / after 8 bit flips: MobileNetV2}
-  \centering
-  \includegraphics[width=0.93\textwidth]{mobilenetv2_datatype_before_after_k8.png}\\[-1mm]
-  {\scriptsize Same protocol. FP16, BF16, FP8 and E4M11-SN break the 0.5 pp fault limit; INT4 breaks the clean limit; unprotected INT breaks the scale-word limit.}
-\end{frame}
-
-\begin{frame}{Datatype table: size, accuracy, faults, SQNR}
-  \scriptsize
-  \textbf{ResNet-18}\ \ (FP32 validation accuracy 95.29\,\% on the 2\,952 clean-check images)\\[1mm]
-  \begin{tabular}{@{}lrrrrrr@{}}
-    \toprule
-    & bit/w & clean acc.\,\% & 8-flip drop (pp) & worst (pp) & SQNR (dB) & SQNR after (dB)\\
-    \midrule
-    \rnFormatTable
-    \bottomrule
-  \end{tabular}\\[3mm]
-  \textbf{MobileNetV2}\ \ (FP32 validation accuracy 91.87\,\%)\\[1mm]
-  \begin{tabular}{@{}lrrrrrr@{}}
-    \toprule
-    & bit/w & clean acc.\,\% & 8-flip drop (pp) & worst (pp) & SQNR (dB) & SQNR after (dB)\\
-    \midrule
-    \mnFormatTable
-    \bottomrule
-  \end{tabular}
-\end{frame}
-
-% ------------------------------------------------------------------ 7. final vs initial
-\begin{frame}{Final vs initial accuracy}
-  \begin{columns}[T]
-    \begin{column}{0.55\textwidth}
-      \small
-      \begin{tabular}{@{}llrrr@{}}
-        \toprule
-        model & measurement & FP32 & final & change (pp)\\
-        \midrule
-        ResNet-18 & test, 10\,000 images & \rnTestAcc\\
-        ResNet-18 & validation, 2\,952 & \rnValAcc\\
-        MobileNetV2 & test, 10\,000 images & \mnTestAcc\\
-        MobileNetV2 & validation, 2\,952 & \mnValAcc\\
-        \bottomrule
-      \end{tabular}\\[3mm]
-      \footnotesize The ResNet-18 test accuracy rises by 0.09 pp: this is within the noise of a 10\,000-image test set, not a gain from quantization.
-    \end{column}
-    \begin{column}{0.43\textwidth}
-      \small
-      \textbf{Final assignments after 8 bit flips} (validation, 100 trials): mean drop / p90 / worst (pp) and 1 scale-bit flip
-      \begin{itemize}\footnotesize
-        \item ResNet-18: \rnFaultFinal
-        \item MobileNetV2: \mnFaultFinal
-      \end{itemize}
-      \footnotesize On the test set (100 trials, 10\,000 images): ResNet-18 mean 0.005 pp, worst 0.33 pp; MobileNetV2 mean $-0.015$ pp, worst 0.01 pp.
-    \end{column}
-  \end{columns}
-\end{frame}
-
-% ------------------------------------------------------------------ 8. memory
-\begin{frame}{Final vs initial memory}
-  \centering
+% ------------------------------------------------------------------ 8. A051 metrics
+\begin{frame}{A051 compared with the FP32 model}
   \small
+  Clean accuracy and SQNR on the 2\,952 validation images not used for the Fisher (images 2048--4999); faults on a 1\,000-image subset.\\[2mm]
   \begin{tabular}{@{}lrrr@{}}
     \toprule
-    model & FP32 weights (bytes) & final (bytes) & smaller by (\%)\\
+    & FP32 baseline & A051 & change\\
     \midrule
-    ResNet-18 & \rnBytes\\
-    MobileNetV2 & \mnBytes\\
+    validation accuracy & 95.29\,\% & 94.28\,\% & $-1.02$ pp\\
+    cross-entropy loss & 0.1760 & 0.1810 & $+0.0050$\\
+    global SQNR & $+\infty$ dB & 9.38 dB & --\\
+    weight storage & 44\,657\,408 B & 6\,109\,968 B & $7.3\times$ smaller ($-86.3\,\%$)\\
+    average bits per weight & 32 & 4.38 & --\\
+    8 random weight-bit flips, mean drop & -- & 0.002 pp & worst of 50 trials: 0.10 pp\\
     \bottomrule
   \end{tabular}\\[3mm]
   \begin{itemize}\small
-    \item Final: ResNet-18 7.58 bit/weight ($4.2\times$ smaller), MobileNetV2 6.00 bit/weight ($5.3\times$ smaller).
-    \item Sizes count the real stored bytes: payload + scales + alignment + all protection overhead (scale copies, SECDED check bits).
-    \item Only quantized Conv/Linear weights are counted (11\,164\,352 and 2\,202\,560 weights); biases and BatchNorm stay FP32 in both columns.
+    \item A051 is about as small as uniform INT4 (4.00 bit) but loses 1.02 pp instead of 1.22 pp, with a higher SQNR than uniform INT4 (9.38 vs 7.85 dB): it keeps INT8 in most early layers.
+    \item Its SQNR is far below uniform INT8 (32.58 dB), yet the accuracy loss is only 1 pp: SQNR is not a good accuracy predictor.
+    \item 8 random bit flips in the stored weights do not change its accuracy measurably (50 trials).
+    \item \textbf{Caveat}: its INT layers keep an unprotected float32 scale; one flipped scale bit costs 8.7 pp on average (worst 71.7 pp, 50 trials).
+    \item Test-set accuracy was not measured for A051 (the test set is read once, for the frozen final assignment).
   \end{itemize}
-\end{frame}
-
-% ------------------------------------------------------------------ 9. SQNR
-\begin{frame}{SQNR: initial vs quantized vs after bit flips}
-  \small
-  \[
-    \mathrm{SQNR}=10\log_{10}\frac{\sum_i w_i^2}{\sum_i (w_i-\hat w_i)^2}\ \text{dB over all quantized Conv/Linear weights, } w=\text{FP32 checkpoint}
-  \]
-  \begin{tabular}{@{}lrrrr@{}}
-    \toprule
-    model & initial FP32 & allocated & 8 flips, median & 8 flips, worst\\
-    \midrule
-    ResNet-18 & \rnSqnr\\
-    MobileNetV2 & \mnSqnr\\
-    \bottomrule
-  \end{tabular}\\[2mm]
-  \begin{itemize}\footnotesize
-    \item The initial model is the reference (error 0, SQNR $=+\infty$).
-    \item The allocated models have \emph{lower} SQNR than uniform INT8 (ResNet-18: 24.8 vs 32.6 dB; MobileNetV2: 22.9 vs 36.1 dB) because of their INT4 layers,
-      yet their accuracy is unchanged: SQNR is not a good predictor of accuracy here.
-    \item The final assignments keep their SQNR after flips (MobileNetV2 worst $-0.12$ dB; ResNet-18 worst $-11.5$ dB from its one unprotected E4M11 layer).
-  \end{itemize}
-\end{frame}
-
-\begin{frame}{SQNR figures}
-  \centering
-  \includegraphics[width=0.49\textwidth]{rn_sqnr.png}\hfill\includegraphics[width=0.49\textwidth]{mn_sqnr.png}\\[1mm]
-  {\scriptsize Left ResNet-18, right MobileNetV2. a: 8 weight flips; b: 1 scale-word flip (symmetric-log axis); c: SQNR of each trial vs its accuracy drop.
-  Unprotected INT with a flipped scale bit: about $-750$ dB. TMR and SECDED rows stay at their clean value.}
-\end{frame}
-
-% ------------------------------------------------------------------ 10. headline
-\begin{frame}{Summary: initial vs final}
-  \centering
-  \includegraphics[width=0.97\textwidth]{headline_initial_vs_final.png}\\[1mm]
-  \small Accuracy within 0.1 pp, $4.2\times$ (ResNet-18) and $5.3\times$ (MobileNetV2) less weight memory, and no measurable accuracy loss after 8 random bit flips.
-\end{frame}
-
-% ------------------------------------------------------------------ 11. limits
-\begin{frame}{Limitations to state}
-  \begin{itemize}\small
-    \item \textbf{Constants are not tuned to a target}: $B=8$ bit, $\delta_{\text{clean}}=\tau_{\text{fault}}=0.5$ pp, $\tau_{\text{scale}}=1$ pp, $\lambda=1$ are the ResNet-18 optimiser defaults, reused for MobileNetV2.
-    \item \textbf{The two experiments differ in protection}: ResNet-18 only has scale TMR (one layer stays unprotected E4M11); MobileNetV2 has SECDED, parity, DMR, scale TMR. Compare sizes and accuracy, not the protection mix.
-    \item \textbf{Estimates are approximate}: layer-additive $Q$ and $R$ predict assembled models only moderately (MobileNetV2 Spearman 0.10--0.62); the decision uses measured end-to-end values.
-    \item \textbf{MobileNetV2 selection}: the ILP's own optimum (A002, 7.98 bit/weight) was not fault-tested, so the lowest-objective \emph{fully measured} assignment (A000) was frozen.
-    \item \textbf{Statistics}: 100 (300 for the frozen result) trials per distribution; weight-fault means below about 0.05 pp cannot be ranked.
-    \item \textbf{Scope}: one checkpoint, one seed, CIFAR-10, weights only; software simulation of faults and protection, no claim on hardware fault rates, area or energy.
-    \item MobileNetV2 uniform-format \emph{test} accuracies were not measured (validation only).
-  \end{itemize}
+  {\footnotesize A051 comes from the first, datatype-only optimisation round (risk $R$ = mean single-layer 8-flip drop); a later round with protected scales supersedes it for the final assignment.}
 \end{frame}
 
 \end{document}
