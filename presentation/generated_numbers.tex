@@ -1,0 +1,104 @@
+\newcommand{\rnFormatTable}{%
+E4M11-SN & 16.00 & 95.29 & +0.06 & 2.20 & 69.3 & 43.9 \\
+FP16 & 16.00 & 95.29 & +3.94 & 89.00 & 73.7 & 36.6 \\
+FP8 E4M3 & 8.00 & 95.05 & -0.01 & 1.90 & 21.2 & 17.3 \\
+INT8 & 8.00 & 95.12 & +0.00 & 0.10 & 32.6 & 32.5 \\
+INT4 & 4.00 & 94.07 & +0.01 & 0.20 & 7.9 & 7.9 \\
+\textbf{Final (A128)} & 7.58 & 95.16 & +0.01 & 0.80 & 24.8 & 24.8 \\}
+\newcommand{\rnBytes}{44\,657\,408 & 10\,574\,768 & 76.3}
+\newcommand{\rnTestAcc}{95.11 & 95.20 & +0.09}
+\newcommand{\rnValAcc}{95.29 & 95.16 & -0.14}
+\newcommand{\rnSqnr}{$+\infty$ & 24.82 & 24.81 & 13.30}
+\newcommand{\rnFaultFinal}{+0.009 & 0.00 & 0.80 & 0.00}
+\newcommand{\rnLayerRows}{%
+c1 & 1,728 & 3.1e-02 & 1 & INT8 & scale TMR \\
+L1.0.c1 & 36,864 & 4.1e-03 & 3 & INT8 & scale TMR \\
+L1.0.c2 & 36,864 & 3.8e-03 & 5 & INT8 & scale TMR \\
+L1.1.c1 & 36,864 & 3.9e-03 & 4 & INT8 & scale TMR \\
+L1.1.c2 & 36,864 & 2.6e-03 & 6 & INT8 & scale TMR \\
+L2.0.c1 & 73,728 & 2.5e-03 & 7 & INT8 & scale TMR \\
+L2.0.c2 & 147,456 & 1.5e-03 & 8 & INT8 & scale TMR \\
+L2.0.ds & 8,192 & 8.8e-03 & 2 & INT8 & scale TMR \\
+L2.1.c1 & 147,456 & 1.1e-03 & 10 & INT8 & scale TMR \\
+L2.1.c2 & 147,456 & 7.1e-04 & 13 & INT8 & scale TMR \\
+L3.0.c1 & 294,912 & 9.9e-04 & 11 & INT8 & scale TMR \\
+L3.0.c2 & 589,824 & 7.4e-04 & 12 & INT8 & scale TMR \\
+L3.0.ds & 32,768 & 1.4e-03 & 9 & INT8 & scale TMR \\
+L3.1.c1 & 589,824 & 6.4e-04 & 14 & INT8 & scale TMR \\
+L3.1.c2 & 589,824 & 3.2e-04 & 15 & E4M11-SN & -- \\
+L4.0.c1 & 1,179,648 & 1.2e-04 & 17 & INT8 & scale TMR \\
+L4.0.c2 & 2,359,296 & 3.9e-05 & 19 & INT8 & scale TMR \\
+L4.0.ds & 131,072 & 9.3e-05 & 18 & INT8 & scale TMR \\
+L4.1.c1 & 2,359,296 & 2.9e-05 & 20 & INT8 & scale TMR \\
+L4.1.c2 & 2,359,296 & 9.2e-06 & 21 & INT4 & scale TMR \\
+fc & 5,120 & 1.5e-04 & 16 & INT8 & scale TMR \\}
+\newcommand{\rnMix}{19 $\times$ INT8 + scale TMR; 1 $\times$ E4M11-SN; 1 $\times$ INT4 + scale TMR}
+\newcommand{\mnFormatTable}{%
+FP16 & 16.00 & 91.87 & +4.52 & 81.70 & 73.7 & 33.1 \\
+BF16 & 16.00 & 91.77 & +16.25 & 81.70 & 55.6 & 34.4 \\
+E4M11-SN & 16.00 & 91.87 & +0.83 & 80.60 & 76.1 & 43.0 \\
+FP8 E4M3 & 8.00 & 91.73 & +0.98 & 36.30 & 28.1 & 20.3 \\
+FP8 E5M2 & 8.00 & 90.65 & +8.47 & 80.80 & 25.6 & -7.3 \\
+INT8 & 8.00 & 91.87 & +0.01 & 0.60 & 36.1 & 35.9 \\
+INT4 & 4.00 & 83.88 & +0.08 & 0.90 & 13.4 & 13.4 \\
+\textbf{Final (A000)} & 6.00 & 91.80 & +0.00 & 0.20 & 22.9 & 22.8 \\}
+\newcommand{\mnBytes}{8\,810\,240 & 1\,650\,940 & 81.3}
+\newcommand{\mnTestAcc}{91.69 & 91.62 & -0.07}
+\newcommand{\mnValAcc}{91.87 & 91.80 & -0.07}
+\newcommand{\mnSqnr}{$+\infty$ & 22.85 & 22.84 & 22.73}
+\newcommand{\mnFaultFinal}{+0.005 & 0.00 & 0.20 & 0.00}
+\newcommand{\mnLayerRows}{%
+stem & 864 & 6.7e-02 & 6 & E4M11-SN & SECDED \\
+b1.dw & 288 & 4.4e-01 & 1 & E4M11-SN & SECDED \\
+b1.proj & 512 & 1.7e-01 & 3 & E4M11-SN & SECDED \\
+b2.exp & 1,536 & 2.7e-02 & 12 & E4M11-SN & SECDED \\
+b2.dw & 864 & 2.5e-01 & 2 & E4M11-SN & SECDED \\
+b2.proj & 2,304 & 9.7e-02 & 5 & E4M11-SN & SECDED \\
+b3.exp & 3,456 & 9.8e-03 & 21 & E4M11-SN & SECDED \\
+b3.dw & 1,296 & 1.2e-01 & 4 & E4M11-SN & SECDED \\
+b3.proj & 3,456 & 3.4e-02 & 11 & E4M11-SN & SECDED \\
+b4.exp & 3,456 & 2.1e-02 & 15 & E4M11-SN & SECDED \\
+b4.dw & 1,296 & 4.1e-02 & 9 & E4M11-SN & SECDED \\
+b4.proj & 4,608 & 4.4e-02 & 7 & E4M11-SN & SECDED \\
+b5.exp & 6,144 & 5.8e-03 & 26 & E4M11-SN & SECDED \\
+b5.dw & 1,728 & 4.3e-02 & 8 & E4M11-SN & SECDED \\
+b5.proj & 6,144 & 1.2e-02 & 19 & E4M11-SN & SECDED \\
+b6.exp & 6,144 & 6.1e-03 & 25 & E4M11-SN & SECDED \\
+b6.dw & 1,728 & 4.1e-02 & 10 & E4M11-SN & SECDED \\
+b6.proj & 6,144 & 1.2e-02 & 20 & E4M11-SN & SECDED \\
+b7.exp & 6,144 & 1.4e-02 & 17 & E4M11-SN & SECDED \\
+b7.dw & 1,728 & 2.2e-02 & 14 & E4M11-SN & SECDED \\
+b7.proj & 12,288 & 1.5e-02 & 16 & E4M11-SN & SECDED \\
+b8.exp & 24,576 & 2.0e-03 & 34 & INT8 & scale TMR \\
+b8.dw & 3,456 & 1.2e-02 & 18 & E4M11-SN & SECDED \\
+b8.proj & 24,576 & 3.0e-03 & 31 & INT8 & scale TMR \\
+b9.exp & 24,576 & 1.9e-03 & 36 & INT8 & scale TMR \\
+b9.dw & 3,456 & 8.9e-03 & 22 & INT8 & scale TMR \\
+b9.proj & 24,576 & 2.3e-03 & 33 & INT8 & scale TMR \\
+b10.exp & 24,576 & 1.7e-03 & 37 & INT8 & scale TMR \\
+b10.dw & 3,456 & 6.6e-03 & 24 & INT8 & scale TMR \\
+b10.proj & 24,576 & 2.0e-03 & 35 & INT8 & scale TMR \\
+b11.exp & 24,576 & 4.1e-03 & 29 & INT8 & scale TMR \\
+b11.dw & 3,456 & 2.3e-02 & 13 & E4M11-SN & SECDED \\
+b11.proj & 36,864 & 4.8e-03 & 28 & INT8 & scale TMR \\
+b12.exp & 55,296 & 8.6e-04 & 43 & INT8 & scale TMR \\
+b12.dw & 5,184 & 6.7e-03 & 23 & INT8 & scale TMR \\
+b12.proj & 55,296 & 1.5e-03 & 38 & INT8 & scale TMR \\
+b13.exp & 55,296 & 8.0e-04 & 44 & INT8 & scale TMR \\
+b13.dw & 5,184 & 5.1e-03 & 27 & INT8 & scale TMR \\
+b13.proj & 55,296 & 1.3e-03 & 39 & INT8 & scale TMR \\
+b14.exp & 55,296 & 9.3e-04 & 42 & INT8 & scale TMR \\
+b14.dw & 5,184 & 3.5e-03 & 30 & INT8 & scale TMR \\
+b14.proj & 92,160 & 1.1e-03 & 41 & INT8 & scale TMR \\
+b15.exp & 153,600 & 9.6e-05 & 50 & INT4 & scale TMR \\
+b15.dw & 8,640 & 1.1e-03 & 40 & INT8 & scale TMR \\
+b15.proj & 153,600 & 1.7e-04 & 47 & INT4 & scale TMR \\
+b16.exp & 153,600 & 5.6e-05 & 51 & INT4 & scale TMR \\
+b16.dw & 8,640 & 4.5e-04 & 45 & INT8 & scale TMR \\
+b16.proj & 153,600 & 5.6e-05 & 52 & INT4 & scale TMR \\
+b17.exp & 153,600 & 3.2e-04 & 46 & INT8 & scale TMR \\
+b17.dw & 8,640 & 2.4e-03 & 32 & INT8 & scale TMR \\
+b17.proj & 307,200 & 1.5e-04 & 48 & INT4 & scale TMR \\
+head & 409,600 & 1.6e-05 & 53 & INT4 & scale TMR \\
+fc & 12,800 & 1.4e-04 & 49 & INT8 & scale TMR \\}
+\newcommand{\mnMix}{23 $\times$ E4M11-SN + SECDED; 24 $\times$ INT8 + scale TMR; 6 $\times$ INT4 + scale TMR}
