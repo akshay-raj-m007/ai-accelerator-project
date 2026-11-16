@@ -119,20 +119,20 @@
   \end{columns}
 \end{frame}
 
-% ------------------------------------------------------------------ 4. heatmaps
-\begin{frame}{Where do bit flips hurt? Accuracy lost per layer and format}
-  \centering
-  \includegraphics[width=0.78\textwidth,height=0.77\textheight,keepaspectratio]{rn_layer_heatmaps.png}\\[-1mm]
-  {\scriptsize Faults injected into one layer at a time, mean of 20 trials. INT8 and INT4 weights are almost unaffected; FP16 is the most fragile, and exponent-bit flips are the worst.
-  The first layers (conv1) are the most exposed. This is the measurement behind $R$.}
-\end{frame}
-
-% ------------------------------------------------------------------ 5. feature maps
+% ------------------------------------------------------------------ 4. feature maps
 \begin{frame}{What the layers see: feature maps with weights in different formats}
   \centering
   \includegraphics[width=0.66\textwidth,height=0.78\textheight,keepaspectratio]{rn_feature_maps.png}\\[-1mm]
   {\scriptsize One validation image (dog); per stage, three channels shown for FP32, E4M11-SN, FP8 and INT4 weights. Only weights are quantized.
   E4M11-SN and FP8 are nearly identical to FP32; INT4 deviates more (e.g.\ stem channel group 2, layer2, layer3). The dog's outline is clear in the stem and layer1; later stages are coarse and abstract.}
+\end{frame}
+
+% ------------------------------------------------------------------ 5. heatmaps
+\begin{frame}{Where do bit flips hurt? Accuracy lost per layer and format}
+  \centering
+  \includegraphics[width=0.78\textwidth,height=0.77\textheight,keepaspectratio]{rn_layer_heatmaps.png}\\[-1mm]
+  {\scriptsize Faults injected into one layer at a time, mean of 20 trials. INT8 and INT4 weights are almost unaffected; FP16 is the most fragile, and exponent-bit flips are the worst.
+  The first layers (conv1) are the most exposed. This is the measurement behind $R$.}
 \end{frame}
 
 % ------------------------------------------------------------------ 6. Fisher
