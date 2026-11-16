@@ -131,8 +131,8 @@
 \begin{frame}{What the layers see: feature maps with weights in different formats}
   \centering
   \includegraphics[width=0.66\textwidth,height=0.78\textheight,keepaspectratio]{rn_feature_maps.png}\\[-1mm]
-  {\scriptsize One validation image (ship); per stage, three channels shown for FP32, E4M11-SN, FP8 and INT4 weights. Only weights are quantized.
-  E4M11-SN and FP8 are nearly identical to FP32; INT4 deviates more, visibly in the early stages. Early stages look like the photo, later stages are coarse and abstract.}
+  {\scriptsize One validation image (dog); per stage, three channels shown for FP32, E4M11-SN, FP8 and INT4 weights. Only weights are quantized.
+  E4M11-SN and FP8 are nearly identical to FP32; INT4 deviates more (e.g.\ stem channel group 2, layer2, layer3). The dog's outline is clear in the stem and layer1; later stages are coarse and abstract.}
 \end{frame}
 
 % ------------------------------------------------------------------ 6. Fisher
