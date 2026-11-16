@@ -31,34 +31,26 @@
 % ------------------------------------------------------------------ 1. baseline
 \begin{frame}{Experiment 1: ResNet-18 on CIFAR-10, the FP32 baseline}
   \begin{columns}[T]
-    \begin{column}{0.49\textwidth}
-      \textbf{Model and data}\\[1mm]
-      \small
-      \begin{tabular}{@{}ll@{}}
-        \toprule
-        architecture & ResNet-18, CIFAR variant (3$\times$3 stem, no max-pool)\\
-        Conv/Linear layers (quantized) & 21\\
-        parameters & 11\,173\,962\\
-        \quad quantized weights & 11\,164\,352\\
-        \quad biases + BatchNorm (kept FP32) & 9\,610\\
-        FP32 weight storage & 44\,657\,408 B (44.7 MB)\\
-        classes & 10\\
-        images: train / validation / test & 45\,000 / 5\,000 / 10\,000\\
-        training & from scratch, 200 epochs\\
-        \bottomrule
-      \end{tabular}\\[3mm]
+    \begin{column}{0.48\textwidth}
       \textbf{Range of the trained weights}\\[1mm]
+      \small
       \begin{tabular}{@{}lr@{}}
         \toprule
         minimum / maximum & $-0.411$ / $+0.556$\\
         mean / standard deviation & $-0.0005$ / $0.0064$\\
-        std per layer (conv1 $\to$ layer4) & $0.067 \to 0.0014$ (fc 0.081)\\
+        std per layer (conv1 $\to$ layer4) & $0.067 \to 0.0014$\\
         weights with $|w|<2^{-7}$ & 87.2\,\%\\
         \bottomrule
-      \end{tabular}
+      \end{tabular}\\[5mm]
+      \textbf{Reading}
+      \begin{itemize}\small
+        \item Weights are small and shrink with depth: layer4 holds 75\,\% of all weights, std below 0.0064.
+        \item Weakest class: cat (88.4\,\%), mostly confused with dog.
+        \item Validation and test accuracy differ by 0.37 pp, within the noise of a 5\,000-image set (about 0.3 pp).
+      \end{itemize}
     \end{column}
-    \begin{column}{0.49\textwidth}
-      \textbf{Baseline accuracy} (highlighted = the reference values used everywhere later)\\[1mm]
+    \begin{column}{0.48\textwidth}
+      \textbf{Baseline accuracy} (highlighted = reference values used later)\\[1mm]
       \small
       \begin{tabular}{@{}lrrr@{}}
         \toprule
@@ -67,22 +59,15 @@
         \hlrow \textbf{test (official)} & 10\,000 & \textbf{95.11\,\%} & 0.1855\\
         \hlrow \textbf{validation (holdout)} & 5\,000 & \textbf{95.48\,\%} & 0.1704\\
         \bottomrule
-      \end{tabular}\\[3mm]
+      \end{tabular}\\[5mm]
       \textbf{SQNR after training}\\[1mm]
       \begin{tabular}{@{}lr@{}}
         \toprule
         \hlrow \textbf{FP32 trained weights (reference)} & \textbf{$+\infty$ dB}\\
         \bottomrule
-      \end{tabular}\\[1mm]
-      \footnotesize The trained FP32 weights are the reference, so their quantization error is 0 and SQNR is $+\infty$.
-      Every SQNR on the next slides is measured against these weights; as in the paper (Eq.\ 6), infinite SQNR means lossless storage.\\[3mm]
-      \small
-      \textbf{Reading}
-      \begin{itemize}\footnotesize
-        \item Weights are small, and shrink with depth: layer4 holds 75\,\% of all weights with std below 0.0064.
-        \item Weakest class: cat (88.4\,\%), mostly confused with dog.
-        \item Validation and test accuracy differ by 0.37 pp, within noise of a 5\,000-image set (std.\ error about 0.3 pp).
-      \end{itemize}
+      \end{tabular}\\[2mm]
+      \footnotesize The trained weights are the reference: error 0, so SQNR is $+\infty$ (lossless storage, paper Eq.\ 6).
+      Every later SQNR is measured against them.
     \end{column}
   \end{columns}
 \end{frame}
@@ -125,32 +110,28 @@
     & x_{l,d,p}=0\ \text{ if } R_{\text{scale}}(l,d,p)>\tau_{\text{scale}} && \text{scale-word risk} \le 1.0\text{ pp}
   \end{align*}
   \vspace{-4mm}
-  {\footnotesize $\widetilde{\cdot}$ = min--max normalised, $\lambda=1$, $N$ = number of quantized weights. Solved exactly as an integer linear programme (HiGHS);
-  each solution is assembled and measured end to end, and the final choice must also keep the measured clean loss $\le 0.5$ pp.}
-  \vspace{0mm}
+  {\footnotesize $\widetilde{\cdot}$ = min--max normalised, $\lambda=1$, $N$ = number of quantized weights.}
+  \vspace{1mm}
   \begin{columns}[T]
     \begin{column}{0.33\textwidth}
       \begin{block}{$Q$: quantization penalty}
-        \footnotesize
+        \small
         $Q(l,d)=\sum_{i\in l}F_i\,(w_i-\hat w_i)^2$\\[1mm]
-        Rounding error of layer $l$ in format $d$, weighted by the \textbf{Fisher information} $F_i$ (how sharply the loss curves along weight $i$).
-        Large for coarse formats in sensitive layers.
+        Fisher-weighted rounding error.
       \end{block}
     \end{column}
     \begin{column}{0.33\textwidth}
       \begin{block}{$R$: fault risk}
-        \footnotesize
-        $R(l,d,p)=8\cdot\frac{n_l}{N}\cdot\delta(l,d)\cdot\rho(p)$\\[1mm]
-        $\delta$ = measured accuracy drop per flipped bit in layer $l$ (format $d$); $n_l/N$ = share of the weights; $\rho(p)$ = residual after protection.
-        Large for FP16, tiny for INT weights.
-        $R_{\text{scale}}$: the same for one flipped scale-word bit.
+        \small
+        $R(l,d,p)=8\,\tfrac{n_l}{N}\,\delta(l,d)\,\rho(p)$\\[1mm]
+        Expected accuracy drop from bit flips.
       \end{block}
     \end{column}
     \begin{column}{0.33\textwidth}
       \begin{block}{$S$: storage}
-        \footnotesize
-        $S(l,d,p)$ = real stored bytes: payload + scales + protection copies\\[1mm]
-        16 bit (E4M11, FP16), 8 bit (FP8, INT8), 4 bit (INT4) per weight; scale TMR adds 8 bytes per INT layer.
+        \small
+        $S(l,d,p)$ in bytes\\[1mm]
+        Real stored size of the layer.
       \end{block}
     \end{column}
   \end{columns}
@@ -198,25 +179,26 @@
     validation accuracy (2\,952 images) & 95.29\,\% & 95.16\,\% & $-0.14$ pp\\
     validation cross-entropy & 0.1760 & 0.1707 & $-0.0052$\\
     global SQNR & $+\infty$ dB & 24.82 dB & --\\
-    weight storage & 44\,657\,408 B & 10\,574\,768 B & $4.2\times$ smaller ($-76.3\,\%$)\\
-    average bits per weight & 32 & 7.58 & --\\
+    weight storage & 44\,657\,408 B & 10\,574\,768 B & $4.2\times$ smaller\\
+    average bits per weight & 32 & 7.58 & $-76.3\,\%$\\
     \bottomrule
   \end{tabular}\\[3mm]
-  \textbf{After random bit flips in the stored weights}\\[1mm]
-  \begin{tabular}{@{}lrrr@{}}
+  \textbf{Accuracy drop after random bit flips}\\[1mm]
+  \begin{tabular}{@{}lrr@{}}
     \toprule
-    & mean drop & worst drop & SQNR after (median / worst)\\
+    & mean & worst\\
     \midrule
-    8 weight-bit flips, validation (300 trials, 1\,000 images) & 0.008 pp & 0.60 pp & 24.81 / 13.30 dB\\
-    8 weight-bit flips, test (100 trials, 10\,000 images) & 0.005 pp & 0.33 pp & \\
-    1 scale-word bit flip, test (100 trials) & 0.000 pp & 0.00 pp & 24.82 / 24.82 dB\\
+    8 weight bits, validation & 0.008 pp & 0.60 pp\\
+    8 weight bits, test & 0.005 pp & 0.33 pp\\
+    1 scale-word bit, test & 0.000 pp & 0.00 pp\\
     \bottomrule
-  \end{tabular}\\[2mm]
+  \end{tabular}\\[1mm]
+  {\scriptsize Validation: 300 trials on 1\,000 images. Test: 100 trials on 10\,000 images.}
   \begin{itemize}\footnotesize
-    \item All four constraints hold: $B=8$ (7.58 bit), clean loss $\le0.5$ pp (0.14 pp), fault drop $\le0.5$ pp (0.008 pp), scale-word drop $\le1.0$ pp (0.00 pp).
-    \item The test accuracy gain of 0.09 pp is within test-set noise (about 0.22 pp), not a benefit of quantization.
-    \item SQNR (24.8 dB) is below uniform INT8 (32.6 dB) because of the INT4 layer, yet the accuracy is unchanged: SQNR does not predict accuracy.
-    \item SQNR of the initial FP32 model is $+\infty$: error 0, lossless storage (definition of the paper, Eq.\ 6).
+    \item SQNR after 8 flips: median 24.81 dB, worst 13.30 dB.
+    \item All constraints hold: 7.58 bit, clean loss 0.14 pp, fault drop 0.008 pp, scale-flip drop 0.
+    \item Test gain of 0.09 pp is noise, not a benefit.
+    \item SQNR is below uniform INT8 (32.6 dB), yet accuracy is unchanged.
   \end{itemize}
 \end{frame}
 
