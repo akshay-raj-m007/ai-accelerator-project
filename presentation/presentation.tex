@@ -142,45 +142,41 @@
   {\scriptsize b = Fisher per weight (log), c = predicted loss increase $\tfrac12 Q$ if only this layer is INT4, d = measured. Early layers are small but sensitive; late layers hold most weights and are least sensitive.}
 \end{frame}
 
-% ------------------------------------------------------------------ 7. A128 figure
-\begin{frame}{Final assignment A128: Fisher sensitivity and the format each layer gets}
+% ------------------------------------------------------------------ 7. A117 figure
+\begin{frame}{Final assignment A117: Fisher sensitivity and the format each layer gets}
   \centering
-  \includegraphics[width=0.95\textwidth,height=0.72\textheight,keepaspectratio]{resnet18_fisher_vs_assignment.png}\\[-1mm]
-  {\scriptsize Left: Fisher sensitivity per weight (log); right: weights in the layer. Colour = assigned format. 19 layers INT8, 1 layer INT4 (L4.1.c2, the least sensitive layer), 1 layer E4M11-SN (L3.1.c2).
-  All INT layers have their scale word stored three times (scale TMR).}
+  \includegraphics[width=0.95\textwidth,height=0.72\textheight,keepaspectratio]{rn_assignment_A117.png}\\[-1mm]
+  {\scriptsize Top: Fisher sensitivity per weight (log); bottom: weights in the layer. Colour = assigned format. 5 layers E4M11-SN (16 bit), 13 layers INT8 and 3 layers INT4 (L4.0.c2, L4.1.c1, L4.1.c2),
+  INT layers with scale TMR. Mean bits per weight by stage (weighted): stem+layer1 12.0, layer2 9.1, layer3 9.1, layer4 4.6: early layers get more bits, late layers fewer.}
 \end{frame}
 
-% ------------------------------------------------------------------ 8. A128 metrics
-\begin{frame}{A128 compared with the FP32 model}
+% ------------------------------------------------------------------ 8. A117 metrics
+\begin{frame}{A117 compared with the FP32 model}
   \small
   \begin{tabular}{@{}lrrr@{}}
     \toprule
-    & FP32 baseline & A128 & change\\
+    & FP32 baseline & A117 & change\\
     \midrule
-    \hlrow \textbf{test accuracy (10\,000 images)} & \textbf{95.11\,\%} & \textbf{95.20\,\%} & $+0.09$ pp\\
-    validation accuracy (2\,952 images) & 95.29\,\% & 95.16\,\% & $-0.14$ pp\\
-    validation cross-entropy & 0.1760 & 0.1707 & $-0.0052$\\
-    global SQNR & $+\infty$ dB & 24.82 dB & --\\
-    weight storage & 44\,657\,408 B & 10\,574\,768 B & $4.2\times$ smaller\\
-    average bits per weight & 32 & 7.58 & $-76.3\,\%$\\
+    validation accuracy (2\,952 images) & 95.29\,\% & 95.12\,\% & $-0.17$ pp\\
+    validation cross-entropy & 0.1760 & 0.1611 & $-0.0149$\\
+    global SQNR & $+\infty$ dB & 14.70 dB & --\\
+    weight storage & 44\,657\,408 B & 8\,069\,696 B & $5.5\times$ smaller\\
+    average bits per weight & 32 & 5.78 & $-81.9\,\%$\\
     \bottomrule
   \end{tabular}\\[3mm]
-  \textbf{Accuracy drop after random bit flips}\\[1mm]
+  \textbf{Accuracy drop after random bit flips} (validation, 100 trials, 1\,000 images)\\[1mm]
   \begin{tabular}{@{}lrr@{}}
     \toprule
     & mean & worst\\
     \midrule
-    8 weight bits, validation & 0.008 pp & 0.60 pp\\
-    8 weight bits, test & 0.005 pp & 0.33 pp\\
-    1 scale-word bit, test & 0.000 pp & 0.00 pp\\
+    8 weight bits & 0.014 pp & 0.20 pp\\
+    1 scale-word bit & 0.000 pp & 0.00 pp\\
     \bottomrule
-  \end{tabular}\\[1mm]
-  {\scriptsize Validation: 300 trials on 1\,000 images. Test: 100 trials on 10\,000 images.}
+  \end{tabular}
   \begin{itemize}\footnotesize
-    \item SQNR after 8 flips: median 24.81 dB, worst 13.30 dB.
-    \item All constraints hold: 7.58 bit, clean loss 0.14 pp, fault drop 0.008 pp, scale-flip drop 0.
-    \item Test gain of 0.09 pp is noise, not a benefit.
-    \item SQNR is below uniform INT8 (32.6 dB), yet accuracy is unchanged.
+    \item All constraints hold: 5.78 bit $\le 8$, clean loss 0.17 pp $\le 0.5$, fault drop 0.014 pp $\le 0.5$, scale-flip drop 0 $\le 1.0$.
+    \item SQNR is low because 63\,\% of the weights are INT4 (the late layers); their error does not hurt accuracy, as their Fisher sensitivity is low.
+    \item Test-set accuracy was not measured for A117.
   \end{itemize}
 \end{frame}
 
