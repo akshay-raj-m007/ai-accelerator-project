@@ -30,8 +30,12 @@
 
 % ------------------------------------------------------------------ 1. baseline
 \begin{frame}{Experiment 1: ResNet-18 on CIFAR-10, the FP32 baseline}
-  \centering
   \small
+  \textbf{Setup.} A ResNet-18 (CIFAR variant: 3$\times$3 stem, no max-pooling) with 11\,173\,962 parameters is trained from scratch for 200 epochs
+  (SGD, learning rate 0.1, weight decay 5e-4, batch size 128) on CIFAR-10: 10 classes, 45\,000 training, 5\,000 validation and 10\,000 test images.
+  It has 21 Conv/Linear layers holding 11\,164\,352 weights (44.7 MB in FP32); these weights are the ones we quantize,
+  while biases and BatchNorm parameters (9\,610) stay FP32.\\[5mm]
+  \centering
   \textbf{Baseline accuracy} (highlighted = reference values used later)\\[2mm]
   \begin{tabular}{lrrr}
     \toprule
@@ -49,14 +53,7 @@
     std per layer (conv1 $\to$ layer4) & $0.067 \to 0.0014$\\
     weights with $|w|<2^{-7}$ & 87.2\,\%\\
     \bottomrule
-  \end{tabular}\\[6mm]
-  \textbf{SQNR after training}\\[2mm]
-  \begin{tabular}{lr}
-    \toprule
-    \hlrow \textbf{FP32 trained weights (reference)} & \textbf{$+\infty$ dB}\\
-    \bottomrule
-  \end{tabular}\\[2mm]
-  {\footnotesize The trained weights are the reference: error 0, so SQNR is $+\infty$ (lossless storage, paper Eq.\ 6). Every later SQNR is measured against them.}
+  \end{tabular}
 \end{frame}
 
 % ------------------------------------------------------------------ 2. datatype table
